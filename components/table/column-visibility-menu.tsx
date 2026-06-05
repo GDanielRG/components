@@ -9,12 +9,13 @@ import {
     DropdownMenuGroup,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 export default function ColumnVisibilityMenu<Key extends string>({
     controller,
     triggerDataTest,
     itemDataTestPrefix,
-    triggerLabel = 'Columnas',
+    triggerLabel,
 }: {
     controller: ColumnVisibilityController<Key>;
     triggerDataTest?: string;
@@ -22,6 +23,11 @@ export default function ColumnVisibilityMenu<Key extends string>({
     triggerLabel?: string;
 }) {
     const [open, setOpen] = useState(false);
+    const copy = useSharedComponentCopy() as {
+        columnsLabel?: string;
+    };
+    const resolvedTriggerLabel =
+        triggerLabel ?? copy.columnsLabel ?? 'Columnas';
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -35,7 +41,7 @@ export default function ColumnVisibilityMenu<Key extends string>({
                 }
             >
                 <Columns3CogIcon />
-                <span className="sr-only">{triggerLabel}</span>
+                <span className="sr-only">{resolvedTriggerLabel}</span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-fit">
                 <DropdownMenuGroup>

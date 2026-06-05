@@ -16,6 +16,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 type SortOrder = 'asc' | 'desc';
 type SortType = 'text' | 'numeric';
@@ -29,9 +30,9 @@ export default function ColumnHeaderMenu({
     currentSort,
     currentOrder,
     onSort,
-    ascendingLabel = 'Ascendente',
-    descendingLabel = 'Descendente',
-    hideColumnLabel = 'Ocultar columna',
+    ascendingLabel,
+    descendingLabel,
+    hideColumnLabel,
 }: {
     title: string;
     onHide: () => void;
@@ -46,6 +47,17 @@ export default function ColumnHeaderMenu({
     hideColumnLabel?: string;
 }) {
     const [open, setOpen] = useState(false);
+    const copy = useSharedComponentCopy() as {
+        sortAscendingLabel?: string;
+        sortDescendingLabel?: string;
+        hideColumnLabel?: string;
+    };
+    const resolvedAscendingLabel =
+        ascendingLabel ?? copy.sortAscendingLabel ?? 'Ascendente';
+    const resolvedDescendingLabel =
+        descendingLabel ?? copy.sortDescendingLabel ?? 'Descendente';
+    const resolvedHideColumnLabel =
+        hideColumnLabel ?? copy.hideColumnLabel ?? 'Ocultar columna';
 
     const isSortable = sortKey !== undefined && onSort !== undefined;
     const isActiveAsc =
@@ -83,14 +95,14 @@ export default function ColumnHeaderMenu({
                             onClick={() => onSort(sortKey, 'asc')}
                         >
                             <AscIcon />
-                            {ascendingLabel}
+                            {resolvedAscendingLabel}
                             {isActiveAsc && <CheckIcon className="ml-auto" />}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={() => onSort(sortKey, 'desc')}
                         >
                             <DescIcon />
-                            {descendingLabel}
+                            {resolvedDescendingLabel}
                             {isActiveDesc && <CheckIcon className="ml-auto" />}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -102,7 +114,7 @@ export default function ColumnHeaderMenu({
                     onClick={onHide}
                 >
                     <EyeClosedIcon />
-                    {hideColumnLabel}
+                    {resolvedHideColumnLabel}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

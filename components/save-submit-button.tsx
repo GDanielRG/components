@@ -1,15 +1,21 @@
 import { SaveIcon } from 'lucide-react';
 import LoadingButton from '@/components/loading-button';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 export default function SaveSubmitButton({
     processing,
-    label = 'Guardar',
+    label,
     dataTest = 'save-button',
 }: {
     processing: boolean;
     label?: string;
     dataTest?: string;
 }) {
+    const copy = useSharedComponentCopy() as {
+        saveLabel?: string;
+    };
+    const resolvedLabel = label ?? copy.saveLabel ?? 'Guardar';
+
     return (
         <div className="col-span-full flex justify-end">
             <LoadingButton
@@ -19,7 +25,7 @@ export default function SaveSubmitButton({
                 icon={SaveIcon}
                 data-test={dataTest}
             >
-                {label}
+                {resolvedLabel}
             </LoadingButton>
         </div>
     );

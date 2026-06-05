@@ -11,6 +11,7 @@ import {
     AlertDialogMedia,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 export default function DeleteConfirmationModal({
     isOpen,
@@ -20,8 +21,8 @@ export default function DeleteConfirmationModal({
     processing,
     onDestroy,
     confirmDataTest,
-    cancelLabel = 'Cancelar',
-    confirmLabel = 'Eliminar',
+    cancelLabel,
+    confirmLabel,
 }: {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
@@ -33,6 +34,14 @@ export default function DeleteConfirmationModal({
     cancelLabel?: string;
     confirmLabel?: string;
 }) {
+    const copy = useSharedComponentCopy() as {
+        dialogCancel?: string;
+        dialogDelete?: string;
+    };
+    const resolvedCancelLabel = cancelLabel ?? copy.dialogCancel ?? 'Cancelar';
+    const resolvedConfirmLabel =
+        confirmLabel ?? copy.dialogDelete ?? 'Eliminar';
+
     const submit = () => {
         if (!processing) {
             onDestroy();
@@ -56,7 +65,7 @@ export default function DeleteConfirmationModal({
                         onClick={() => setIsOpen(false)}
                         disabled={processing}
                     >
-                        {cancelLabel}
+                        {resolvedCancelLabel}
                     </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={submit}
@@ -72,7 +81,7 @@ export default function DeleteConfirmationModal({
                         ) : (
                             <Trash2 data-icon="inline-start" />
                         )}
-                        {confirmLabel}
+                        {resolvedConfirmLabel}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

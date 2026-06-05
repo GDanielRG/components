@@ -7,12 +7,13 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
 
 export default function ActionsDropdownMenu({
     children,
     trigger,
-    triggerLabel = 'Acciones',
+    triggerLabel,
     align = 'start',
     contentClassName,
 }: {
@@ -23,6 +24,11 @@ export default function ActionsDropdownMenu({
     contentClassName?: string;
 }) {
     const [open, setOpen] = useState(false);
+    const copy = useSharedComponentCopy() as {
+        actionsLabel?: string;
+    };
+    const resolvedTriggerLabel =
+        triggerLabel ?? copy.actionsLabel ?? 'Acciones';
 
     const triggerElement =
         typeof trigger === 'function'
@@ -34,7 +40,7 @@ export default function ActionsDropdownMenu({
                       data-test="actions-menu-trigger"
                   >
                       <MoreHorizontalIcon />
-                      <span className="sr-only">{triggerLabel}</span>
+                      <span className="sr-only">{resolvedTriggerLabel}</span>
                   </Button>
               ));
 

@@ -27,7 +27,7 @@ This registry contains shared code that is outside the starter/base repo surface
 - shared lightweight types and sidebar-sheet hook;
 - one custom UI primitive, `ui/active-trigger-icon`.
 
-It intentionally excludes stock shadcn/base-ui files, `use-mobile`, `lib/utils`, app-specific copy bags, domain forms, full search UI, export dialogs, quick-create flows, activity history, comments/documents, and generated backend route files.
+It intentionally excludes stock shadcn/base-ui files, `use-mobile`, `lib/utils`, app-specific copy bags as registry-owned files, domain forms, full search UI, export dialogs, quick-create flows, activity history, comments/documents, and generated backend route files.
 
 ## Consumer Prerequisites
 
@@ -39,6 +39,27 @@ npm install @inertiajs/core @inertiajs/react lucide-react
 ```
 
 They are intentionally not registry dependencies here because adding this sibling registry should not overwrite base/shadcn-owned `components/ui/*` files or silently bump app-owned package versions.
+
+Copy-bearing components read default labels from the consumer's local
+`@/hooks/use-shared-component-copy` hook. Keep that hook app-owned so Spanish,
+English, and translated apps can share the same component source without forking
+the registry item. For the v1 foundations bundle, consumers should expose these
+keys when the local defaults differ from the Spanish fallback:
+
+```ts
+actionsLabel;
+columnsLabel;
+dialogCancel;
+dialogDelete;
+hideColumnLabel;
+optionalLabel;
+saveLabel;
+sortAscendingLabel;
+sortDescendingLabel;
+```
+
+Component props such as `label`, `triggerLabel`, `cancelLabel`, and
+`confirmLabel` still override the hook for one-off wording.
 
 ## Validate
 
