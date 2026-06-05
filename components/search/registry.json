@@ -1,0 +1,40 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "search/query-utils",
+            "type": "registry:lib",
+            "title": "Search Query Utils",
+            "description": "Shared nested query-string helpers for server-driven search, filter, sort, and pagination URLs.",
+            "registryDependencies": ["GDanielRG/components/types/search"],
+            "files": [
+                {
+                    "path": "query-utils.ts",
+                    "type": "registry:lib",
+                    "target": "@components/search/query-utils.ts"
+                }
+            ]
+        },
+        {
+            "name": "search/use-search-navigation",
+            "type": "registry:hook",
+            "title": "Use Search Navigation",
+            "description": "Shared Inertia navigation helper for server-driven search/filter UIs.",
+            "dependencies": [
+                "@inertiajs/core@^3.2.0",
+                "@inertiajs/react@^3.2.0"
+            ],
+            "registryDependencies": [
+                "GDanielRG/components/search/query-utils",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "use-search-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@components/search/use-search-navigation.ts"
+                }
+            ]
+        }
+    ]
+}

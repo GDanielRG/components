@@ -1,0 +1,147 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "actions-dropdown-menu",
+            "type": "registry:component",
+            "title": "Actions Dropdown Menu",
+            "description": "Shared row and toolbar actions dropdown wrapper.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                }
+            ]
+        },
+        {
+            "name": "app-container",
+            "type": "registry:component",
+            "title": "App Container",
+            "description": "Shared horizontal content wrapper used by page headers and content.",
+            "files": [
+                {
+                    "path": "app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                }
+            ]
+        },
+        {
+            "name": "app-empty-card",
+            "type": "registry:component",
+            "title": "App Empty Card",
+            "description": "Shared bordered empty-state card.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                }
+            ]
+        },
+        {
+            "name": "app-pagination",
+            "type": "registry:component",
+            "title": "App Pagination",
+            "description": "Shared Laravel pagination renderer.",
+            "registryDependencies": ["GDanielRG/components/types/pagination"],
+            "files": [
+                {
+                    "path": "app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                }
+            ]
+        },
+        {
+            "name": "delete-confirmation-modal",
+            "type": "registry:component",
+            "title": "Delete Confirmation Modal",
+            "description": "Shared destructive confirmation modal.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                }
+            ]
+        },
+        {
+            "name": "destroy-confirmation-form",
+            "type": "registry:component",
+            "title": "Destroy Confirmation Form",
+            "description": "Inertia form wrapper around the shared delete confirmation modal.",
+            "dependencies": ["@inertiajs/react@^3.2.0"],
+            "registryDependencies": [
+                "GDanielRG/components/delete-confirmation-modal"
+            ],
+            "files": [
+                {
+                    "path": "destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                }
+            ]
+        },
+        {
+            "name": "loading-button",
+            "type": "registry:component",
+            "title": "Loading Button",
+            "description": "Button wrapper that swaps an optional icon for a spinner while processing.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                }
+            ]
+        },
+        {
+            "name": "optional-add-button",
+            "type": "registry:component",
+            "title": "Optional Add Button",
+            "description": "Collapsible trigger for optional form sections.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                }
+            ]
+        },
+        {
+            "name": "optional-label",
+            "type": "registry:component",
+            "title": "Optional Label",
+            "description": "Small muted optional-field label with configurable copy.",
+            "files": [
+                {
+                    "path": "optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                }
+            ]
+        },
+        {
+            "name": "save-submit-button",
+            "type": "registry:component",
+            "title": "Save Submit Button",
+            "description": "Right-aligned form submit button with processing state.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "registryDependencies": ["GDanielRG/components/loading-button"],
+            "files": [
+                {
+                    "path": "save-submit-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-submit-button.tsx"
+                }
+            ]
+        }
+    ]
+}

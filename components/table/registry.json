@@ -1,0 +1,84 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "table/column-header-menu",
+            "type": "registry:component",
+            "title": "Column Header Menu",
+            "description": "Shared sortable/hideable table column header menu.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "column-header-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/table/column-header-menu.tsx"
+                }
+            ]
+        },
+        {
+            "name": "table/column-visibility-menu",
+            "type": "registry:component",
+            "title": "Column Visibility Menu",
+            "description": "Shared table column visibility menu.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "registryDependencies": [
+                "GDanielRG/components/table/use-column-visibility"
+            ],
+            "files": [
+                {
+                    "path": "column-visibility-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/table/column-visibility-menu.tsx"
+                }
+            ]
+        },
+        {
+            "name": "table/row-actions-cell",
+            "type": "registry:component",
+            "title": "Row Actions Cell",
+            "description": "Shared table-cell wrapper for row action menus.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "registryDependencies": [
+                "GDanielRG/components/actions-dropdown-menu"
+            ],
+            "files": [
+                {
+                    "path": "row-actions-cell.tsx",
+                    "type": "registry:component",
+                    "target": "@components/table/row-actions-cell.tsx"
+                }
+            ]
+        },
+        {
+            "name": "table/use-column-visibility",
+            "type": "registry:lib",
+            "title": "Use Column Visibility",
+            "description": "Shared controller hook for hideable table columns.",
+            "files": [
+                {
+                    "path": "use-column-visibility.ts",
+                    "type": "registry:lib",
+                    "target": "@components/table/use-column-visibility.ts"
+                }
+            ]
+        },
+        {
+            "name": "table/use-sort",
+            "type": "registry:hook",
+            "title": "Use Sort",
+            "description": "Shared Inertia sort-state and navigation hook.",
+            "dependencies": ["@inertiajs/react@^3.2.0"],
+            "registryDependencies": [
+                "GDanielRG/components/search/query-utils",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "use-sort.ts",
+                    "type": "registry:hook",
+                    "target": "@components/table/use-sort.ts"
+                }
+            ]
+        }
+    ]
+}

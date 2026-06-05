@@ -1,0 +1,9 @@
+{
+    "name": "sibling-components",
+    "private": true,
+    "scripts": {
+        "registry:build": "mkdir -p public/r/types public/r/hooks public/r/ui public/r/search public/r/table && npx shadcn@latest build",
+        "registry:list": "npx shadcn@latest list GDanielRG/components",
+        "registry:validate": "npx shadcn@latest registry validate"
+    }
+}

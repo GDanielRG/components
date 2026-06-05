@@ -1,0 +1,57 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "types/options",
+            "type": "registry:file",
+            "title": "Select Option Type",
+            "description": "Shared option type used by select and filter props.",
+            "files": [
+                {
+                    "path": "options.ts",
+                    "type": "registry:file",
+                    "target": "~/resources/js/types/options.ts"
+                }
+            ]
+        },
+        {
+            "name": "types/pagination",
+            "type": "registry:file",
+            "title": "Pagination Types",
+            "description": "Shared Laravel pagination payload types.",
+            "files": [
+                {
+                    "path": "pagination.ts",
+                    "type": "registry:file",
+                    "target": "~/resources/js/types/pagination.ts"
+                }
+            ]
+        },
+        {
+            "name": "types/search",
+            "type": "registry:file",
+            "title": "Search Types",
+            "description": "Shared server-driven search filter types.",
+            "files": [
+                {
+                    "path": "search.ts",
+                    "type": "registry:file",
+                    "target": "~/resources/js/types/search.ts"
+                }
+            ]
+        },
+        {
+            "name": "types/wayfinder",
+            "type": "registry:file",
+            "title": "Wayfinder Types",
+            "description": "Shared route function type aliases for generated Laravel Wayfinder routes.",
+            "files": [
+                {
+                    "path": "wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "~/resources/js/types/wayfinder.ts"
+                }
+            ]
+        }
+    ]
+}

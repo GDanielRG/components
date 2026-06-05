@@ -1,0 +1,46 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "sibling-components",
+    "homepage": "https://github.com/GDanielRG/components",
+    "items": [
+        {
+            "name": "foundations",
+            "type": "registry:item",
+            "title": "Sibling Foundations",
+            "description": "Installs the first shared Laravel/Inertia component foundation for the sibling repos.",
+            "registryDependencies": [
+                "GDanielRG/components/types/options",
+                "GDanielRG/components/types/pagination",
+                "GDanielRG/components/types/search",
+                "GDanielRG/components/types/wayfinder",
+                "GDanielRG/components/hooks/use-sidebar-sheet",
+                "GDanielRG/components/app-container",
+                "GDanielRG/components/app-empty-card",
+                "GDanielRG/components/app-pagination",
+                "GDanielRG/components/loading-button",
+                "GDanielRG/components/save-submit-button",
+                "GDanielRG/components/actions-dropdown-menu",
+                "GDanielRG/components/delete-confirmation-modal",
+                "GDanielRG/components/destroy-confirmation-form",
+                "GDanielRG/components/optional-add-button",
+                "GDanielRG/components/optional-label",
+                "GDanielRG/components/ui/active-trigger-icon",
+                "GDanielRG/components/search/query-utils",
+                "GDanielRG/components/search/use-search-navigation",
+                "GDanielRG/components/table/use-column-visibility",
+                "GDanielRG/components/table/use-sort",
+                "GDanielRG/components/table/column-header-menu",
+                "GDanielRG/components/table/column-visibility-menu",
+                "GDanielRG/components/table/row-actions-cell"
+            ]
+        }
+    ],
+    "include": [
+        "types/registry.json",
+        "hooks/registry.json",
+        "components/registry.json",
+        "components/ui/registry.json",
+        "components/search/registry.json",
+        "components/table/registry.json"
+    ]
+}

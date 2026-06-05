@@ -1,0 +1,19 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "ui/active-trigger-icon",
+            "type": "registry:ui",
+            "title": "Active Trigger Icon",
+            "description": "Icon wrapper that reveals an active-state clear glyph on hover.",
+            "dependencies": ["lucide-react@^1.16.0"],
+            "files": [
+                {
+                    "path": "active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                }
+            ]
+        }
+    ]
+}
