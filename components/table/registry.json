@@ -6,7 +6,6 @@
             "type": "registry:component",
             "title": "Column Header Menu",
             "description": "Shared sortable/hideable table column header menu.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "files": [
                 {
                     "path": "column-header-menu.tsx",
@@ -20,7 +19,6 @@
             "type": "registry:component",
             "title": "Column Visibility Menu",
             "description": "Shared table column visibility menu.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "registryDependencies": [
                 "GDanielRG/components/table/use-column-visibility"
             ],
@@ -37,7 +35,6 @@
             "type": "registry:component",
             "title": "Row Actions Cell",
             "description": "Shared table-cell wrapper for row action menus.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "registryDependencies": [
                 "GDanielRG/components/actions-dropdown-menu"
             ],
@@ -67,7 +64,6 @@
             "type": "registry:hook",
             "title": "Use Sort",
             "description": "Shared Inertia sort-state and navigation hook.",
-            "dependencies": ["@inertiajs/react@^3.2.0"],
             "registryDependencies": [
                 "GDanielRG/components/search/query-utils",
                 "GDanielRG/components/types/wayfinder"

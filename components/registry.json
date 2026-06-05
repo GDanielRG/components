@@ -6,7 +6,6 @@
             "type": "registry:component",
             "title": "Actions Dropdown Menu",
             "description": "Shared row and toolbar actions dropdown wrapper.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "files": [
                 {
                     "path": "actions-dropdown-menu.tsx",
@@ -33,7 +32,6 @@
             "type": "registry:component",
             "title": "App Empty Card",
             "description": "Shared bordered empty-state card.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "files": [
                 {
                     "path": "app-empty-card.tsx",
@@ -61,7 +59,6 @@
             "type": "registry:component",
             "title": "Delete Confirmation Modal",
             "description": "Shared destructive confirmation modal.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "files": [
                 {
                     "path": "delete-confirmation-modal.tsx",
@@ -75,7 +72,6 @@
             "type": "registry:component",
             "title": "Destroy Confirmation Form",
             "description": "Inertia form wrapper around the shared delete confirmation modal.",
-            "dependencies": ["@inertiajs/react@^3.2.0"],
             "registryDependencies": [
                 "GDanielRG/components/delete-confirmation-modal"
             ],
@@ -92,7 +88,6 @@
             "type": "registry:component",
             "title": "Loading Button",
             "description": "Button wrapper that swaps an optional icon for a spinner while processing.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "files": [
                 {
                     "path": "loading-button.tsx",
@@ -106,7 +101,6 @@
             "type": "registry:component",
             "title": "Optional Add Button",
             "description": "Collapsible trigger for optional form sections.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "files": [
                 {
                     "path": "optional-add-button.tsx",
@@ -133,7 +127,6 @@
             "type": "registry:component",
             "title": "Save Submit Button",
             "description": "Right-aligned form submit button with processing state.",
-            "dependencies": ["lucide-react@^1.16.0"],
             "registryDependencies": ["GDanielRG/components/loading-button"],
             "files": [
                 {

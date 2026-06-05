@@ -2,7 +2,7 @@ import type {
     RouteDefinition,
     RouteFormDefinition,
     RouteQueryOptions,
-} from '@/wayfinder';
+} from '../wayfinder';
 
 export type { RouteDefinition, RouteFormDefinition, RouteQueryOptions };
 

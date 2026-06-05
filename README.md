@@ -35,9 +35,10 @@ The sibling apps already carry the stock UI primitives these files import. For a
 
 ```sh
 npx shadcn@latest add alert-dialog button collapsible dropdown-menu empty pagination table
+npm install @inertiajs/core @inertiajs/react lucide-react
 ```
 
-They are intentionally not registry dependencies here because adding this sibling registry should not overwrite base/shadcn-owned `components/ui/*` files.
+They are intentionally not registry dependencies here because adding this sibling registry should not overwrite base/shadcn-owned `components/ui/*` files or silently bump app-owned package versions.
 
 ## Validate
 

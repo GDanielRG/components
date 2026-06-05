@@ -20,10 +20,6 @@
             "type": "registry:hook",
             "title": "Use Search Navigation",
             "description": "Shared Inertia navigation helper for server-driven search/filter UIs.",
-            "dependencies": [
-                "@inertiajs/core@^3.2.0",
-                "@inertiajs/react@^3.2.0"
-            ],
             "registryDependencies": [
                 "GDanielRG/components/search/query-utils",
                 "GDanielRG/components/types/wayfinder"
