@@ -7,7 +7,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
-import type { PaginatedData } from '@/types/pagination';
+import type { PaginatedData } from '../types/pagination';
 
 interface AppPaginationProps<T> {
     paginatedData: PaginatedData<T>;

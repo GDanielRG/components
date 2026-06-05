@@ -6,7 +6,7 @@ import {
     parseCurrentQuery,
     resolveCurrentSearch,
 } from '@/components/search/query-utils';
-import type { RouteDefinition, RouteQueryOptions } from '@/types/wayfinder';
+import type { RouteDefinition, RouteQueryOptions } from '../../types/wayfinder';
 
 type SortOrder = 'asc' | 'desc';
 type SortRouteResolver = (

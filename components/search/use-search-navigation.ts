@@ -10,7 +10,7 @@ import type {
     SearchNavigationData,
     SearchNavigationPatch,
 } from '@/components/search/query-utils';
-import type { RouteDefinition, RouteFn } from '@/types/wayfinder';
+import type { RouteDefinition, RouteFn } from '../../types/wayfinder';
 
 export type SearchVisitOptions = VisitHelperOptions;
 

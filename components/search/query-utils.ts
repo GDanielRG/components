@@ -8,7 +8,7 @@
  *  - `contacts[sort]=-email`
  */
 
-import type { ServerSearchFilter } from '@/types/search';
+import type { ServerSearchFilter } from '../../types/search';
 
 export type SearchNavigationPrimitive = string | string[];
 export type SearchNavigationData = {
