@@ -10,7 +10,7 @@
                 {
                     "path": "options.ts",
                     "type": "registry:file",
-                    "target": "~/resources/js/types/options.ts"
+                    "target": "@/types/options.ts"
                 }
             ]
         },
@@ -23,7 +23,7 @@
                 {
                     "path": "pagination.ts",
                     "type": "registry:file",
-                    "target": "~/resources/js/types/pagination.ts"
+                    "target": "@/types/pagination.ts"
                 }
             ]
         },
@@ -36,7 +36,7 @@
                 {
                     "path": "search.ts",
                     "type": "registry:file",
-                    "target": "~/resources/js/types/search.ts"
+                    "target": "@/types/search.ts"
                 }
             ]
         },
@@ -49,7 +49,7 @@
                 {
                     "path": "wayfinder.ts",
                     "type": "registry:file",
-                    "target": "~/resources/js/types/wayfinder.ts"
+                    "target": "@/types/wayfinder.ts"
                 }
             ]
         }
