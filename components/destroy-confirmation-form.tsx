@@ -1,30 +1,49 @@
 import { Form } from '@inertiajs/react';
-import type { ComponentProps } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import DeleteConfirmationModal from '@/components/delete-confirmation-modal';
 
-type DestroyConfirmationFormProps = {
-    action: ComponentProps<typeof Form>['action'];
+type FormProps = Omit<ComponentProps<typeof Form>, 'children'>;
+
+type DestroyConfirmationFormBaseProps = {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     title: string;
-    description: string;
+    description: ReactNode;
+    confirmDataTest?: string;
     cancelLabel?: string;
     confirmLabel?: string;
 };
 
+type DestroyConfirmationFormProps = DestroyConfirmationFormBaseProps &
+    (
+        | {
+              action: FormProps['action'];
+              form?: never;
+          }
+        | {
+              action?: never;
+              form: FormProps;
+          }
+    );
+
 export default function DestroyConfirmationForm({
     action,
+    form,
     isOpen,
     setIsOpen,
     title,
     description,
+    confirmDataTest,
     cancelLabel,
     confirmLabel,
 }: DestroyConfirmationFormProps) {
+    const formProps: FormProps = form ?? { action };
+
     return (
         <Form
-            action={action}
+            {...formProps}
             showProgress={false}
+            options={{ preserveScroll: true, ...formProps.options }}
             disableWhileProcessing
             onSuccess={() => setIsOpen(false)}
         >
@@ -36,6 +55,7 @@ export default function DestroyConfirmationForm({
                     description={description}
                     processing={processing}
                     onDestroy={submit}
+                    confirmDataTest={confirmDataTest}
                     cancelLabel={cancelLabel}
                     confirmLabel={confirmLabel}
                 />

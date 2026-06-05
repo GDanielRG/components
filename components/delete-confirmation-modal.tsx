@@ -1,4 +1,5 @@
 import { LoaderCircle, Trash2 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -25,7 +26,7 @@ export default function DeleteConfirmationModal({
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     title: string;
-    description: string;
+    description: ReactNode;
     processing: boolean;
     onDestroy: () => void;
     confirmDataTest?: string;
