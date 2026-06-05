@@ -5,8 +5,6 @@ import DeleteConfirmationModal from '@/components/delete-confirmation-modal';
 type FormProps = Omit<ComponentProps<typeof Form>, 'children'>;
 
 type DestroyConfirmationFormBaseProps = {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
     title: string;
     description: ReactNode;
     confirmDataTest?: string;
@@ -14,23 +12,41 @@ type DestroyConfirmationFormBaseProps = {
     confirmLabel?: string;
 };
 
+type DestroyConfirmationFormControlProps =
+    | {
+          isOpen: boolean;
+          setIsOpen: (isOpen: boolean) => void;
+          open?: never;
+          onOpenChange?: never;
+      }
+    | {
+          isOpen?: never;
+          setIsOpen?: never;
+          open: boolean;
+          onOpenChange: (open: boolean) => void;
+      };
+
+type DestroyConfirmationFormRouteProps =
+    | {
+          action: FormProps['action'];
+          form?: never;
+      }
+    | {
+          action?: never;
+          form: FormProps;
+      };
+
 type DestroyConfirmationFormProps = DestroyConfirmationFormBaseProps &
-    (
-        | {
-              action: FormProps['action'];
-              form?: never;
-          }
-        | {
-              action?: never;
-              form: FormProps;
-          }
-    );
+    DestroyConfirmationFormControlProps &
+    DestroyConfirmationFormRouteProps;
 
 export default function DestroyConfirmationForm({
     action,
     form,
     isOpen,
     setIsOpen,
+    open,
+    onOpenChange,
     title,
     description,
     confirmDataTest,
@@ -38,6 +54,8 @@ export default function DestroyConfirmationForm({
     confirmLabel,
 }: DestroyConfirmationFormProps) {
     const formProps: FormProps = form ?? { action };
+    const resolvedIsOpen = isOpen ?? open;
+    const setResolvedIsOpen = setIsOpen ?? onOpenChange;
 
     return (
         <Form
@@ -45,12 +63,12 @@ export default function DestroyConfirmationForm({
             showProgress={false}
             options={{ preserveScroll: true, ...formProps.options }}
             disableWhileProcessing
-            onSuccess={() => setIsOpen(false)}
+            onSuccess={() => setResolvedIsOpen(false)}
         >
             {({ processing, submit }) => (
                 <DeleteConfirmationModal
-                    isOpen={isOpen || processing}
-                    setIsOpen={setIsOpen}
+                    isOpen={resolvedIsOpen || processing}
+                    setIsOpen={setResolvedIsOpen}
                     title={title}
                     description={description}
                     processing={processing}
