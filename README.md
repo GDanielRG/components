@@ -42,8 +42,7 @@ They are intentionally not registry dependencies here because adding this siblin
 ## Validate
 
 ```sh
-npm run registry:validate
-npm run registry:build
+npm run registry:check
 ```
 
 After the repo is pushed and public, list the GitHub source registry with:

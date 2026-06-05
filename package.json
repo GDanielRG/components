@@ -2,8 +2,14 @@
     "name": "sibling-components",
     "private": true,
     "scripts": {
+        "format:check": "prettier --check .",
         "registry:build": "mkdir -p public/r/types public/r/hooks public/r/ui public/r/search public/r/table && npx shadcn@latest build",
+        "registry:check": "npm run format:check && npm run registry:validate && npm run registry:build",
         "registry:list": "npx shadcn@latest list GDanielRG/components",
         "registry:validate": "npx shadcn@latest registry validate"
+    },
+    "devDependencies": {
+        "prettier": "3.8.3",
+        "shadcn": "4.10.0"
     }
 }

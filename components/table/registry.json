@@ -51,13 +51,13 @@
         },
         {
             "name": "table/use-column-visibility",
-            "type": "registry:lib",
+            "type": "registry:hook",
             "title": "Use Column Visibility",
             "description": "Shared controller hook for hideable table columns.",
             "files": [
                 {
                     "path": "use-column-visibility.ts",
-                    "type": "registry:lib",
+                    "type": "registry:hook",
                     "target": "@components/table/use-column-visibility.ts"
                 }
             ]
