@@ -12,10 +12,11 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
+import type { SharedComponentCopy } from '../types/shared-component-copy';
 
-export default function DeleteConfirmationModal({
-    isOpen,
-    setIsOpen,
+export function DeleteConfirmationModal({
+    open,
+    onOpenChange,
     title,
     description,
     processing,
@@ -24,8 +25,8 @@ export default function DeleteConfirmationModal({
     cancelLabel,
     confirmLabel,
 }: {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     title: string;
     description: ReactNode;
     processing: boolean;
@@ -34,13 +35,9 @@ export default function DeleteConfirmationModal({
     cancelLabel?: string;
     confirmLabel?: string;
 }) {
-    const copy = useSharedComponentCopy() as {
-        dialogCancel?: string;
-        dialogDelete?: string;
-    };
-    const resolvedCancelLabel = cancelLabel ?? copy.dialogCancel ?? 'Cancelar';
-    const resolvedConfirmLabel =
-        confirmLabel ?? copy.dialogDelete ?? 'Eliminar';
+    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const resolvedCancelLabel = cancelLabel ?? copy.dialogCancel;
+    const resolvedConfirmLabel = confirmLabel ?? copy.dialogDelete;
 
     const submit = () => {
         if (!processing) {
@@ -49,7 +46,7 @@ export default function DeleteConfirmationModal({
     };
 
     return (
-        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogMedia className="bg-destructive/10">
@@ -62,7 +59,7 @@ export default function DeleteConfirmationModal({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => onOpenChange(false)}
                         disabled={processing}
                     >
                         {resolvedCancelLabel}

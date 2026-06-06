@@ -1,4 +1,5 @@
 import { router, usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
 import {
     buildPathPatch,
     buildQueryDataFromCurrent,
@@ -31,7 +32,10 @@ export function useSort({
     routeFn,
 }: UseSortOptions): UseSortReturn {
     const { url } = usePage();
-    const currentData = parseCurrentQuery(resolveCurrentSearch(url));
+    const currentData = useMemo(
+        () => parseCurrentQuery(resolveCurrentSearch(url)),
+        [url],
+    );
 
     const sortValue = getQueryValue(currentData, sortPath);
     const sort = sortValue?.startsWith('-') ? sortValue.slice(1) : sortValue;

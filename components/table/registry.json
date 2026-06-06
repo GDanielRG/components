@@ -6,6 +6,9 @@
             "type": "registry:component",
             "title": "Column Header Menu",
             "description": "Shared sortable/hideable table column header menu.",
+            "registryDependencies": [
+                "GDanielRG/components/types/shared-component-copy"
+            ],
             "files": [
                 {
                     "path": "column-header-menu.tsx",
@@ -20,7 +23,8 @@
             "title": "Column Visibility Menu",
             "description": "Shared table column visibility menu.",
             "registryDependencies": [
-                "GDanielRG/components/table/use-column-visibility"
+                "GDanielRG/components/table/use-column-visibility",
+                "GDanielRG/components/types/shared-component-copy"
             ],
             "files": [
                 {
@@ -36,7 +40,8 @@
             "title": "Row Actions Cell",
             "description": "Shared table-cell wrapper for row action menus.",
             "registryDependencies": [
-                "GDanielRG/components/actions-dropdown-menu"
+                "GDanielRG/components/actions-dropdown-menu",
+                "GDanielRG/components/types/shared-component-copy"
             ],
             "files": [
                 {

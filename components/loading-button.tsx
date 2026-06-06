@@ -9,7 +9,7 @@ type LoadingButtonProps = ComponentProps<typeof Button> & {
     children: ReactNode;
 };
 
-export default function LoadingButton({
+export function LoadingButton({
     processing = false,
     disabled,
     icon: Icon,

@@ -41,6 +41,19 @@
             ]
         },
         {
+            "name": "types/shared-component-copy",
+            "type": "registry:file",
+            "title": "Shared Component Copy",
+            "description": "Shared default-copy contract consumed by the foundation components.",
+            "files": [
+                {
+                    "path": "shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "~/resources/js/types/shared-component-copy.ts"
+                }
+            ]
+        },
+        {
             "name": "types/wayfinder",
             "type": "registry:file",
             "title": "Wayfinder Types",

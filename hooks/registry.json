@@ -8,9 +8,9 @@
             "description": "Shared breakpoint hook for switching the sidebar into sheet mode.",
             "files": [
                 {
-                    "path": "use-sidebar-sheet.tsx",
+                    "path": "use-sidebar-sheet.ts",
                     "type": "registry:hook",
-                    "target": "@hooks/use-sidebar-sheet.tsx"
+                    "target": "@hooks/use-sidebar-sheet.ts"
                 }
             ]
         }

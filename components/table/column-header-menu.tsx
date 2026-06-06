@@ -17,11 +17,12 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
+import type { SharedComponentCopy } from '../../types/shared-component-copy';
 
 type SortOrder = 'asc' | 'desc';
 type SortType = 'text' | 'numeric';
 
-export default function ColumnHeaderMenu({
+export function ColumnHeaderMenu({
     title,
     onHide,
     canHide = true,
@@ -47,17 +48,10 @@ export default function ColumnHeaderMenu({
     hideColumnLabel?: string;
 }) {
     const [open, setOpen] = useState(false);
-    const copy = useSharedComponentCopy() as {
-        sortAscendingLabel?: string;
-        sortDescendingLabel?: string;
-        hideColumnLabel?: string;
-    };
-    const resolvedAscendingLabel =
-        ascendingLabel ?? copy.sortAscendingLabel ?? 'Ascendente';
-    const resolvedDescendingLabel =
-        descendingLabel ?? copy.sortDescendingLabel ?? 'Descendente';
-    const resolvedHideColumnLabel =
-        hideColumnLabel ?? copy.hideColumnLabel ?? 'Ocultar columna';
+    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const resolvedAscendingLabel = ascendingLabel ?? copy.sortAscendingLabel;
+    const resolvedDescendingLabel = descendingLabel ?? copy.sortDescendingLabel;
+    const resolvedHideColumnLabel = hideColumnLabel ?? copy.hideColumnLabel;
 
     const isSortable = sortKey !== undefined && onSort !== undefined;
     const isActiveAsc =

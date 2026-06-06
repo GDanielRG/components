@@ -6,6 +6,9 @@
             "type": "registry:component",
             "title": "Actions Dropdown Menu",
             "description": "Shared row and toolbar actions dropdown wrapper.",
+            "registryDependencies": [
+                "GDanielRG/components/types/shared-component-copy"
+            ],
             "files": [
                 {
                     "path": "actions-dropdown-menu.tsx",
@@ -59,6 +62,9 @@
             "type": "registry:component",
             "title": "Delete Confirmation Modal",
             "description": "Shared destructive confirmation modal.",
+            "registryDependencies": [
+                "GDanielRG/components/types/shared-component-copy"
+            ],
             "files": [
                 {
                     "path": "delete-confirmation-modal.tsx",
@@ -114,6 +120,9 @@
             "type": "registry:component",
             "title": "Optional Label",
             "description": "Small muted optional-field label with configurable copy.",
+            "registryDependencies": [
+                "GDanielRG/components/types/shared-component-copy"
+            ],
             "files": [
                 {
                     "path": "optional-label.tsx",
@@ -123,16 +132,32 @@
             ]
         },
         {
-            "name": "save-submit-button",
+            "name": "save-button",
             "type": "registry:component",
-            "title": "Save Submit Button",
-            "description": "Right-aligned form submit button with processing state.",
-            "registryDependencies": ["GDanielRG/components/loading-button"],
+            "title": "Save Button",
+            "description": "Submit button preset with a save icon and processing state.",
+            "registryDependencies": [
+                "GDanielRG/components/loading-button",
+                "GDanielRG/components/types/shared-component-copy"
+            ],
             "files": [
                 {
-                    "path": "save-submit-button.tsx",
+                    "path": "save-button.tsx",
                     "type": "registry:component",
-                    "target": "@components/save-submit-button.tsx"
+                    "target": "@components/save-button.tsx"
+                }
+            ]
+        },
+        {
+            "name": "form-actions",
+            "type": "registry:component",
+            "title": "Form Actions",
+            "description": "Right-aligned, full-width form footer layout wrapper.",
+            "files": [
+                {
+                    "path": "form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
                 }
             ]
         }

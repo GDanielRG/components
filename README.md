@@ -40,11 +40,13 @@ npm install @inertiajs/core @inertiajs/react lucide-react
 
 They are intentionally not registry dependencies here because adding this sibling registry should not overwrite base/shadcn-owned `components/ui/*` files or silently bump app-owned package versions.
 
-Copy-bearing components read default labels from the consumer's local
-`@/hooks/use-shared-component-copy` hook. Keep that hook app-owned so Spanish,
-English, and translated apps can share the same component source without forking
-the registry item. For the v1 foundations bundle, consumers should expose these
-keys when the local defaults differ from the Spanish fallback:
+Copy-bearing components read their default labels from the consumer's local
+`@/hooks/use-shared-component-copy` hook, typed against the registry-shipped
+`SharedComponentCopy` contract (`@/types/shared-component-copy`). Keep the hook
+app-owned so Spanish, English, and translated apps share the same component
+source without forking the registry item — the components carry no built-in
+default locale. Every consumer's hook MUST provide all of these keys (the type
+makes a missing key a compile error):
 
 ```ts
 actionsLabel;
@@ -60,6 +62,13 @@ sortDescendingLabel;
 
 Component props such as `label`, `triggerLabel`, `cancelLabel`, and
 `confirmLabel` still override the hook for one-off wording.
+
+## Conventions
+
+- Components use **named exports** (e.g. `import { SaveButton } from '@/components/save-button'`).
+- Dialog-style components use `open` / `onOpenChange`, matching the Base UI primitives they wrap.
+- Wrapper components spread `...props`, merge `className` via `cn`, and tag a `data-slot`.
+- The form submit is split into `save-button` (the button) and `form-actions` (the right-aligned, full-width footer layout); compose them, e.g. `<FormActions><SaveButton processing={processing} /></FormActions>`.
 
 ## Validate
 

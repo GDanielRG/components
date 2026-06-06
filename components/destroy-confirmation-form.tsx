@@ -1,10 +1,13 @@
 import { Form } from '@inertiajs/react';
 import type { ComponentProps, ReactNode } from 'react';
-import DeleteConfirmationModal from '@/components/delete-confirmation-modal';
+import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
 
-type FormProps = Omit<ComponentProps<typeof Form>, 'children'>;
-
-type DestroyConfirmationFormBaseProps = {
+type DestroyConfirmationFormProps = Omit<
+    ComponentProps<typeof Form>,
+    'children'
+> & {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
     title: string;
     description: ReactNode;
     confirmDataTest?: string;
@@ -12,39 +15,7 @@ type DestroyConfirmationFormBaseProps = {
     confirmLabel?: string;
 };
 
-type DestroyConfirmationFormControlProps =
-    | {
-          isOpen: boolean;
-          setIsOpen: (isOpen: boolean) => void;
-          open?: never;
-          onOpenChange?: never;
-      }
-    | {
-          isOpen?: never;
-          setIsOpen?: never;
-          open: boolean;
-          onOpenChange: (open: boolean) => void;
-      };
-
-type DestroyConfirmationFormRouteProps =
-    | {
-          action: FormProps['action'];
-          form?: never;
-      }
-    | {
-          action?: never;
-          form: FormProps;
-      };
-
-type DestroyConfirmationFormProps = DestroyConfirmationFormBaseProps &
-    DestroyConfirmationFormControlProps &
-    DestroyConfirmationFormRouteProps;
-
-export default function DestroyConfirmationForm({
-    action,
-    form,
-    isOpen,
-    setIsOpen,
+export function DestroyConfirmationForm({
     open,
     onOpenChange,
     title,
@@ -52,23 +23,25 @@ export default function DestroyConfirmationForm({
     confirmDataTest,
     cancelLabel,
     confirmLabel,
+    options,
+    onSuccess,
+    ...formProps
 }: DestroyConfirmationFormProps) {
-    const formProps: FormProps = form ?? { action };
-    const resolvedIsOpen = isOpen ?? open;
-    const setResolvedIsOpen = setIsOpen ?? onOpenChange;
-
     return (
         <Form
             {...formProps}
             showProgress={false}
-            options={{ preserveScroll: true, ...formProps.options }}
+            options={{ preserveScroll: true, ...options }}
             disableWhileProcessing
-            onSuccess={() => setResolvedIsOpen(false)}
+            onSuccess={(...args) => {
+                onOpenChange(false);
+                onSuccess?.(...args);
+            }}
         >
             {({ processing, submit }) => (
                 <DeleteConfirmationModal
-                    isOpen={resolvedIsOpen || processing}
-                    setIsOpen={setResolvedIsOpen}
+                    open={open || processing}
+                    onOpenChange={onOpenChange}
                     title={title}
                     description={description}
                     processing={processing}

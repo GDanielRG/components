@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import {
     Empty,
     EmptyContent,
@@ -10,31 +10,37 @@ import {
 } from '@/components/ui/empty';
 import { cn } from '@/lib/utils';
 
-type EmptyCardProps = {
-    className?: string;
-    icon: LucideIcon;
+type EmptyCardProps = Omit<
+    ComponentProps<typeof Empty>,
+    'children' | 'content'
+> & {
+    icon?: LucideIcon;
     title: string;
     subtitle: string;
     content?: ReactNode;
 };
 
 /**
- * Bordered empty-state card matching the sibling apps' `app-empty-card`: an
- * icon medallion, title, subtitle and an optional action slot.
+ * Bordered empty-state card: an optional icon medallion, title, subtitle and an
+ * optional action slot. Pass `className` to extend the wrapper and omit `icon`
+ * for icon-less states.
  */
-export default function EmptyCard({
+export function EmptyCard({
     className,
     icon: Icon,
     title,
     subtitle,
     content,
+    ...props
 }: EmptyCardProps) {
     return (
-        <Empty className={cn('border', className)}>
+        <Empty className={cn('border', className)} {...props}>
             <EmptyHeader>
-                <EmptyMedia variant="icon">
-                    <Icon />
-                </EmptyMedia>
+                {Icon ? (
+                    <EmptyMedia variant="icon">
+                        <Icon />
+                    </EmptyMedia>
+                ) : null}
                 <EmptyTitle>{title}</EmptyTitle>
                 <EmptyDescription>{subtitle}</EmptyDescription>
             </EmptyHeader>

@@ -1,9 +1,10 @@
 import { MoreHorizontalIcon } from 'lucide-react';
 import type { ReactElement, ReactNode } from 'react';
-import ActionsDropdownMenu from '@/components/actions-dropdown-menu';
+import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { TableCell } from '@/components/ui/table';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
+import type { SharedComponentCopy } from '../../types/shared-component-copy';
 
 type RowActionsProps = {
     children: ReactNode;
@@ -12,17 +13,14 @@ type RowActionsProps = {
     triggerLabel?: string;
 };
 
-export default function RowActions({
+export function RowActions({
     children,
     dataTestPrefix,
     trigger,
     triggerLabel,
 }: RowActionsProps) {
-    const copy = useSharedComponentCopy() as {
-        actionsLabel?: string;
-    };
-    const resolvedTriggerLabel =
-        triggerLabel ?? copy.actionsLabel ?? 'Acciones';
+    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const resolvedTriggerLabel = triggerLabel ?? copy.actionsLabel;
 
     return (
         <TableCell>

@@ -13,9 +13,7 @@ interface AppPaginationProps<T> {
     paginatedData: PaginatedData<T>;
 }
 
-export default function AppPagination<T>({
-    paginatedData,
-}: AppPaginationProps<T>) {
+export function AppPagination<T>({ paginatedData }: AppPaginationProps<T>) {
     return (
         <Pagination>
             <PaginationContent>

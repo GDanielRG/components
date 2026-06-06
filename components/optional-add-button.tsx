@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
-export default function OptionalAddButton({
+export function OptionalAddButton({
     children,
     buttonText,
     closedLabel,
@@ -42,8 +42,7 @@ export default function OptionalAddButton({
 
     return (
         <Collapsible
-            defaultOpen={defaultOpen}
-            open={open}
+            open={isOpen}
             onOpenChange={handleOpenChange}
             className={cn(
                 closedLabel && 'flex flex-col items-start gap-3',
