@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { SharedComponentCopy } from '../types/shared-component-copy';
+import type { ActionsCopy } from '../types/shared-component-copy';
 
 export function ActionsDropdownMenu({
     children,
@@ -25,7 +25,7 @@ export function ActionsDropdownMenu({
     contentClassName?: string;
 }) {
     const [open, setOpen] = useState(false);
-    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const copy: ActionsCopy = useSharedComponentCopy();
     const resolvedTriggerLabel = triggerLabel ?? copy.actionsLabel;
 
     const triggerElement =

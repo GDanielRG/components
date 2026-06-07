@@ -10,7 +10,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { SharedComponentCopy } from '../../types/shared-component-copy';
+import type { TableCopy } from '../../types/shared-component-copy';
 
 export function ColumnVisibilityMenu<Key extends string>({
     controller,
@@ -24,7 +24,7 @@ export function ColumnVisibilityMenu<Key extends string>({
     triggerLabel?: string;
 }) {
     const [open, setOpen] = useState(false);
-    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const copy: TableCopy = useSharedComponentCopy();
     const resolvedTriggerLabel = triggerLabel ?? copy.columnsLabel;
 
     return (

@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react';
 import { LoadingButton } from '@/components/loading-button';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { SharedComponentCopy } from '../types/shared-component-copy';
+import type { FormCopy } from '../types/shared-component-copy';
 
 type SaveButtonProps = Omit<
     ComponentProps<typeof LoadingButton>,
@@ -19,7 +19,7 @@ export function SaveButton({
     className,
     ...props
 }: SaveButtonProps) {
-    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const copy: FormCopy = useSharedComponentCopy();
 
     return (
         <LoadingButton

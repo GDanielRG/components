@@ -17,7 +17,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { SharedComponentCopy } from '../../types/shared-component-copy';
+import type { TableCopy } from '../../types/shared-component-copy';
 
 type SortOrder = 'asc' | 'desc';
 type SortType = 'text' | 'numeric';
@@ -48,7 +48,7 @@ export function ColumnHeaderMenu({
     hideColumnLabel?: string;
 }) {
     const [open, setOpen] = useState(false);
-    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const copy: TableCopy = useSharedComponentCopy();
     const resolvedAscendingLabel = ascendingLabel ?? copy.sortAscendingLabel;
     const resolvedDescendingLabel = descendingLabel ?? copy.sortDescendingLabel;
     const resolvedHideColumnLabel = hideColumnLabel ?? copy.hideColumnLabel;

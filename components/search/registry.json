@@ -31,6 +31,138 @@
                     "target": "@components/search/use-search-navigation.ts"
                 }
             ]
+        },
+        {
+            "name": "search/types",
+            "type": "registry:file",
+            "title": "Search Types",
+            "description": "Shared popover and applied-filter state types for the search cluster.",
+            "registryDependencies": [
+                "GDanielRG/components/search/use-search-navigation",
+                "GDanielRG/components/types/search"
+            ],
+            "files": [
+                {
+                    "path": "types.ts",
+                    "type": "registry:file",
+                    "target": "@components/search/types.ts"
+                }
+            ]
+        },
+        {
+            "name": "search/faceted-filters",
+            "type": "registry:component",
+            "title": "Faceted Filters",
+            "description": "Shared multiselect faceted-filter popover for server-driven search.",
+            "registryDependencies": [
+                "GDanielRG/components/types/search",
+                "GDanielRG/components/types/shared-component-copy"
+            ],
+            "files": [
+                {
+                    "path": "faceted-filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/faceted-filters.tsx"
+                }
+            ]
+        },
+        {
+            "name": "search/select-filter",
+            "type": "registry:component",
+            "title": "Select Filter",
+            "description": "Shared single-value filter popover with a radio list for server-driven search.",
+            "registryDependencies": [
+                "GDanielRG/components/types/search",
+                "GDanielRG/components/types/shared-component-copy"
+            ],
+            "files": [
+                {
+                    "path": "select-filter.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/select-filter.tsx"
+                }
+            ]
+        },
+        {
+            "name": "search/filters",
+            "type": "registry:component",
+            "title": "Filters",
+            "description": "Shared filter dispatcher composing faceted-multiselect and single-select filters.",
+            "registryDependencies": [
+                "GDanielRG/components/search/faceted-filters",
+                "GDanielRG/components/search/select-filter",
+                "GDanielRG/components/search/query-utils",
+                "GDanielRG/components/search/types",
+                "GDanielRG/components/search/use-search-navigation",
+                "GDanielRG/components/types/search"
+            ],
+            "files": [
+                {
+                    "path": "filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/filters.tsx"
+                }
+            ]
+        },
+        {
+            "name": "search/search-applied-filters",
+            "type": "registry:component",
+            "title": "Search Applied Filters",
+            "description": "Shared applied-filters bar with clear-search and clear-all controls.",
+            "registryDependencies": [
+                "GDanielRG/components/actions-dropdown-menu",
+                "GDanielRG/components/search/filters",
+                "GDanielRG/components/search/query-utils",
+                "GDanielRG/components/search/types",
+                "GDanielRG/components/types/shared-component-copy"
+            ],
+            "files": [
+                {
+                    "path": "search-applied-filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/search-applied-filters.tsx"
+                }
+            ]
+        },
+        {
+            "name": "search/search",
+            "type": "registry:component",
+            "title": "Search Controls",
+            "description": "Shared useSearch hook plus search input and results toolbar for server-driven index pages.",
+            "registryDependencies": [
+                "GDanielRG/components/search/filters",
+                "GDanielRG/components/search/query-utils",
+                "GDanielRG/components/search/search-applied-filters",
+                "GDanielRG/components/search/use-search-navigation",
+                "GDanielRG/components/search/types",
+                "GDanielRG/components/types/search",
+                "GDanielRG/components/types/shared-component-copy",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "search.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/search.tsx"
+                }
+            ]
+        },
+        {
+            "name": "search/index",
+            "type": "registry:file",
+            "title": "Search Barrel",
+            "description": "Shared search cluster barrel re-exporting the public surface.",
+            "registryDependencies": [
+                "GDanielRG/components/search/search",
+                "GDanielRG/components/search/search-applied-filters"
+            ],
+            "files": [
+                {
+                    "path": "index.ts",
+                    "type": "registry:file",
+                    "target": "@components/search/index.ts"
+                }
+            ]
         }
     ]
 }

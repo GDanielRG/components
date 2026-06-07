@@ -4,7 +4,7 @@ import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { TableCell } from '@/components/ui/table';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { SharedComponentCopy } from '../../types/shared-component-copy';
+import type { ActionsCopy } from '../../types/shared-component-copy';
 
 type RowActionsProps = {
     children: ReactNode;
@@ -19,7 +19,7 @@ export function RowActions({
     trigger,
     triggerLabel,
 }: RowActionsProps) {
-    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const copy: ActionsCopy = useSharedComponentCopy();
     const resolvedTriggerLabel = triggerLabel ?? copy.actionsLabel;
 
     return (

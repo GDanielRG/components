@@ -1,0 +1,60 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "activity/activity-triggers",
+            "type": "registry:component",
+            "title": "Activity Triggers",
+            "description": "Shared button-group composing the comments and documents triggers.",
+            "registryDependencies": [
+                "GDanielRG/components/comments/index",
+                "GDanielRG/components/documents/index",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "activity-triggers.tsx",
+                    "type": "registry:component",
+                    "target": "@components/activity/activity-triggers.tsx"
+                }
+            ]
+        },
+        {
+            "name": "activity/comments-documents-sidebar",
+            "type": "registry:hook",
+            "title": "Comments Documents Sidebar",
+            "description": "Shared right-sidebar controller hooks rendering tabbed comments and documents panels.",
+            "registryDependencies": [
+                "GDanielRG/components/comments/index",
+                "GDanielRG/components/documents/documents-panel",
+                "GDanielRG/components/hooks/use-sidebar-sheet",
+                "GDanielRG/components/types/shared-component-copy",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "comments-documents-sidebar.tsx",
+                    "type": "registry:hook",
+                    "target": "@components/activity/comments-documents-sidebar.tsx"
+                }
+            ]
+        },
+        {
+            "name": "activity/index",
+            "type": "registry:file",
+            "title": "Activity Barrel",
+            "description": "Shared activity cluster barrel re-exporting the public surface.",
+            "registryDependencies": [
+                "GDanielRG/components/activity/activity-triggers",
+                "GDanielRG/components/activity/comments-documents-sidebar"
+            ],
+            "files": [
+                {
+                    "path": "index.ts",
+                    "type": "registry:file",
+                    "target": "@components/activity/index.ts"
+                }
+            ]
+        }
+    ]
+}

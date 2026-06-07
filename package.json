@@ -3,7 +3,7 @@
     "private": true,
     "scripts": {
         "format:check": "prettier --check .",
-        "registry:build": "mkdir -p public/r/types public/r/hooks public/r/ui public/r/search public/r/table && npx shadcn@latest build",
+        "registry:build": "mkdir -p public/r/types public/r/hooks public/r/ui public/r/search public/r/table public/r/comments public/r/documents public/r/activity && npx shadcn@latest build",
         "registry:check": "npm run format:check && npm run registry:validate && npm run registry:build",
         "registry:list": "npx shadcn@latest list GDanielRG/components",
         "registry:validate": "npx shadcn@latest registry validate"

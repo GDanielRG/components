@@ -12,7 +12,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { SharedComponentCopy } from '../types/shared-component-copy';
+import type { DialogCopy } from '../types/shared-component-copy';
 
 export function DeleteConfirmationModal({
     open,
@@ -35,7 +35,7 @@ export function DeleteConfirmationModal({
     cancelLabel?: string;
     confirmLabel?: string;
 }) {
-    const copy: SharedComponentCopy = useSharedComponentCopy();
+    const copy: DialogCopy = useSharedComponentCopy();
     const resolvedCancelLabel = cancelLabel ?? copy.dialogCancel;
     const resolvedConfirmLabel = confirmLabel ?? copy.dialogDelete;
 

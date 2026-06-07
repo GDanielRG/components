@@ -1,0 +1,81 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "items": [
+        {
+            "name": "comments/comment-form",
+            "type": "registry:component",
+            "title": "Comment Form",
+            "description": "Shared create/edit comment form with cancel and submit actions.",
+            "registryDependencies": [
+                "GDanielRG/components/loading-button",
+                "GDanielRG/components/types/shared-component-copy",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "comment-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-form.tsx"
+                }
+            ]
+        },
+        {
+            "name": "comments/comment-list",
+            "type": "registry:component",
+            "title": "Comment List",
+            "description": "Shared comment list with inline edit, delete dialog, and author avatars.",
+            "registryDependencies": [
+                "GDanielRG/components/actions-dropdown-menu",
+                "GDanielRG/components/comments/comment-form",
+                "GDanielRG/components/delete-confirmation-modal",
+                "GDanielRG/components/hooks/use-sidebar-sheet",
+                "GDanielRG/components/types/shared-component-copy",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "comment-list.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-list.tsx"
+                }
+            ]
+        },
+        {
+            "name": "comments/comment-triggers",
+            "type": "registry:component",
+            "title": "Comment Triggers",
+            "description": "Shared comments toggle button and comment-list popover triggers.",
+            "registryDependencies": [
+                "GDanielRG/components/comments/comment-list",
+                "GDanielRG/components/ui/active-trigger-icon",
+                "GDanielRG/components/types/shared-component-copy",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "comment-triggers.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-triggers.tsx"
+                }
+            ]
+        },
+        {
+            "name": "comments/index",
+            "type": "registry:file",
+            "title": "Comments Barrel",
+            "description": "Shared comments cluster barrel re-exporting the public surface.",
+            "registryDependencies": [
+                "GDanielRG/components/comments/comment-form",
+                "GDanielRG/components/comments/comment-list",
+                "GDanielRG/components/comments/comment-triggers"
+            ],
+            "files": [
+                {
+                    "path": "index.ts",
+                    "type": "registry:file",
+                    "target": "@components/comments/index.ts"
+                }
+            ]
+        }
+    ]
+}

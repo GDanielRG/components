@@ -90,6 +90,22 @@
             ]
         },
         {
+            "name": "dialog-form-layout",
+            "type": "registry:component",
+            "title": "Dialog Form Layout",
+            "description": "Card-based dialog scaffold with header, scrollable body, and cancel/submit footer.",
+            "registryDependencies": [
+                "GDanielRG/components/types/shared-component-copy"
+            ],
+            "files": [
+                {
+                    "path": "dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                }
+            ]
+        },
+        {
             "name": "loading-button",
             "type": "registry:component",
             "title": "Loading Button",
@@ -158,6 +174,25 @@
                     "path": "form-actions.tsx",
                     "type": "registry:component",
                     "target": "@components/form-actions.tsx"
+                }
+            ]
+        },
+        {
+            "name": "export-dialog",
+            "type": "registry:component",
+            "title": "Export Dialog",
+            "description": "Alert-dialog form that emails a filtered data export, composed with the search applied-filters summary.",
+            "registryDependencies": [
+                "GDanielRG/components/search/search",
+                "GDanielRG/components/search/search-applied-filters",
+                "GDanielRG/components/types/shared-component-copy",
+                "GDanielRG/components/types/wayfinder"
+            ],
+            "files": [
+                {
+                    "path": "export-dialog.tsx",
+                    "type": "registry:component",
+                    "target": "@components/export-dialog.tsx"
                 }
             ]
         }
