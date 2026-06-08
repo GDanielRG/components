@@ -36,5 +36,9 @@ The release helper pins every internal registry dependency in `registry.json`, v
 and smoke-tests the pinned graph. Commit and tag that pinned registry on a release branch; keep
 `main` with bare internal dependencies.
 
+Treat a published release tag as immutable: never re-point or delete it — ship fixes as a new
+version. Each release pins the whole bundle graph to its tag, and consumers may pin to that tag or to
+its commit SHA.
+
 Use semantic versioning. Removing or renaming a prop or copy key, adding a required injected route,
 or raising the supported baseline is a breaking change.

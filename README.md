@@ -12,8 +12,14 @@ the [frontend baseline](docs/CONSUMER_CONTRACT.md):
 npx shadcn add GDanielRG/components/foundations#v1.0.0
 ```
 
-Pin installs to a release tag. ShadCN refs are not inherited across registry dependencies, so each
-release pins its complete bundle graph.
+Always pin to a release ref — a tag or a commit SHA — never a branch. ShadCN does not inherit a ref
+across registry dependencies, so each release pins every internal bundle to its tag: `#v1.0.0`
+resolves all seven bundles at that release. Published release tags are never re-pointed, so a tag pin
+is stable. To pin to a ref that cannot move even in principle, use the release's commit SHA:
+
+```sh
+npx shadcn add GDanielRG/components/foundations#85cb9244b166aa5f7d1f496efb6f8ec8a81c6dd7
+```
 
 The consumer also provides two intentionally app-owned files:
 
