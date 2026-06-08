@@ -1,12 +1,12 @@
-# Sibling Components
+# Components
 
-Shared frontend building blocks for the Laravel/Inertia React sibling repos, distributed as a
+Shared frontend building blocks for Laravel + Inertia React apps built on Base UI, distributed as a
 public [shadcn GitHub registry](https://ui.shadcn.com/docs/registry/github).
 
 ## Install
 
 Use this registry in a Laravel/Inertia React app that has been migrated to Base UI and aligned with
-the [ecosystem frontend baseline](docs/CONSUMER_CONTRACT.md):
+the [frontend baseline](docs/CONSUMER_CONTRACT.md):
 
 ```sh
 npx shadcn add GDanielRG/components/foundations#v1.0.0

@@ -1,6 +1,6 @@
 {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "sibling-components",
+    "name": "components",
     "homepage": "https://github.com/GDanielRG/components",
     "items": [
         {
@@ -418,8 +418,8 @@
         {
             "name": "foundations",
             "type": "registry:item",
-            "title": "Sibling Foundations",
-            "description": "Installs the full shared Laravel/Inertia component foundation for the sibling repos.",
+            "title": "Foundations",
+            "description": "Installs the full shared Laravel/Inertia component foundation.",
             "registryDependencies": [
                 "GDanielRG/components/core",
                 "GDanielRG/components/search",

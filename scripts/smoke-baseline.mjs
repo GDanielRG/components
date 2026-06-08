@@ -1,6 +1,6 @@
 // Dependency-resolving install smoke test.
 //
-// Installs the working-tree registry into the supported ecosystem baseline,
+// Installs the working-tree registry into the supported baseline,
 // retaining stock shadcn dependencies and versioned npm dependencies, then
 // type-checks the complete installed result.
 import fs from 'node:fs';

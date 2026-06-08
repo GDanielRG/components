@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 
 // Minimal shell matching the contract the activity bundle composes against:
 // <AppRightSidebar open onOpenChange>{children}</AppRightSidebar> and a close
-// button taking onClick. Real siblings render a Base UI dialog here.
+// button taking onClick. Real consumers render a Base UI dialog here.
 export function AppRightSidebar({
     open,
     onOpenChange,

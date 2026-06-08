@@ -1,5 +1,5 @@
 {
-    "name": "sibling-components",
+    "name": "components",
     "private": true,
     "license": "MIT",
     "packageManager": "npm@10.9.8",

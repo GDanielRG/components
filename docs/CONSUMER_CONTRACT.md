@@ -1,6 +1,6 @@
 # Consumer contract
 
-This registry targets the sibling ecosystem baseline, not an arbitrary React project.
+This registry targets a specific Laravel + Inertia + Base UI baseline, not an arbitrary React project.
 
 ## Supported baseline
 
@@ -15,7 +15,7 @@ This registry targets the sibling ecosystem baseline, not an arbitrary React pro
 | ShadCN CLI                    | 4.11.0             |
 
 The registry declares the Inertia and Lucide runtime dependencies its files import. Align the full
-baseline before installing so the starter, generated routes, stock ShadCN primitives, and shared
+baseline before installing so generated routes, stock ShadCN primitives, and shared
 components are tested as one frontend foundation.
 
 ## Required project shape
