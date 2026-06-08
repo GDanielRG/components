@@ -2,19 +2,19 @@ import { Link } from '@inertiajs/react';
 import { FunnelXIcon, LoaderCircle, SearchIcon } from 'lucide-react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { Filters } from '@/components/search/filters';
+import type {
+    SearchAppliedFiltersState,
+    SearchFilterPopoverState,
+} from '@/components/search/types';
+import type { SearchCopy } from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { SearchCopy } from '../../types/shared-component-copy';
 import { buildPathPatch, clearedFilterValues } from './query-utils';
 import type { SearchNavigationPatch } from './query-utils';
-import type {
-    SearchAppliedFiltersState,
-    SearchFilterPopoverState,
-} from './types';
 
 type SearchAppliedFiltersProps = {
     appliedFilters: SearchAppliedFiltersState;

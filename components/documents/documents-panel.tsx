@@ -5,24 +5,30 @@ import type { ReactNode } from 'react';
 import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
 import { DocumentsPanelItem } from '@/components/documents/documents-panel-item';
 import { SidebarDocumentUploadCard } from '@/components/documents/sidebar-document-upload-card';
-import type { ExistingDocumentData } from '@/components/documents/types';
+import type {
+    Document,
+    ExistingDocumentData,
+} from '@/components/documents/types';
 import { usePendingDocumentsUpload } from '@/components/documents/use-pending-documents-upload';
 import {
     getAcceptedDocumentMimes,
     getDocumentDisplayName,
 } from '@/components/documents/utils';
+import type { DocumentsCopy } from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { Button } from '@/components/ui/button';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { Document } from '@/types';
-import type { RouteDefinition } from '@/types/wayfinder';
-import DocumentController from '@/wayfinder/App/Http/Controllers/Documents/DocumentController';
-import type { DocumentsCopy } from '../../types/shared-component-copy';
 
 interface DocumentsPanelProps {
     documents: Document[];
     allowedDocumentMimes: string[];
     maxDocumentKilobytes: number;
     storeAction: RouteDefinition<'post'>;
+    updateDocumentAction: (
+        documentId: number,
+    ) => RouteDefinition<'put' | 'patch' | 'post'>;
+    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
 }
 
 interface DocumentsPanelParts {
@@ -56,6 +62,9 @@ export function useDocumentsPanel({
     allowedDocumentMimes,
     maxDocumentKilobytes,
     storeAction,
+    updateDocumentAction,
+    destroyDocumentAction,
+    showDocumentAction,
 }: DocumentsPanelProps): DocumentsPanelParts {
     const copy: DocumentsCopy = useSharedComponentCopy();
     const mappedDocuments = useMemo<ExistingDocumentData[]>(
@@ -94,7 +103,7 @@ export function useDocumentsPanel({
 
         setDeleteProcessing(true);
 
-        router.delete(DocumentController.destroy(documentToDelete), {
+        router.delete(destroyDocumentAction(documentToDelete.id), {
             preserveScroll: true,
             onFinish: () => {
                 setDeleteProcessing(false);
@@ -126,6 +135,8 @@ export function useDocumentsPanel({
                     <DocumentsPanelItem
                         key={`document-${document.id}-${document.updated_at ?? document.created_at}`}
                         document={document}
+                        updateDocumentAction={updateDocumentAction}
+                        showDocumentAction={showDocumentAction}
                         onDelete={
                             document.can_be_deleted
                                 ? () => confirmDeleteDocument(document)

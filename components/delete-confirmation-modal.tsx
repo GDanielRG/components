@@ -1,5 +1,6 @@
 import { LoaderCircle, Trash2 } from 'lucide-react';
 import type { ReactNode } from 'react';
+import type { DialogCopy } from '@/components/types/shared-component-copy';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -12,7 +13,6 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { DialogCopy } from '../types/shared-component-copy';
 
 export function DeleteConfirmationModal({
     open,

@@ -11,9 +11,9 @@ import {
     generateTempId,
     getDocumentFileSizeError,
 } from '@/components/documents/utils';
+import type { DocumentsCopy } from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { RouteDefinition } from '@/types/wayfinder';
-import type { DocumentsCopy } from '../../types/shared-component-copy';
 
 type ValidationErrors = Record<string, string | string[]>;
 type DocumentBatchItemErrorField = keyof DocumentBatchItemErrors;

@@ -3,7 +3,13 @@ import { DownloadCloudIcon, FilesIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
+import type { Document } from '@/components/documents/types';
 import { getDocumentDisplayName } from '@/components/documents/utils';
+import type {
+    DialogCopy,
+    DocumentsCopy,
+} from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -18,15 +24,10 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { Document } from '@/types';
-import DocumentController from '@/wayfinder/App/Http/Controllers/Documents/DocumentController';
-import type {
-    DialogCopy,
-    DocumentsCopy,
-} from '../../types/shared-component-copy';
 
 interface DocumentDeleteDialogProps {
     documentId: number;
+    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     onClose?: () => void;
@@ -35,6 +36,7 @@ interface DocumentDeleteDialogProps {
 
 export function DocumentDeleteDialog({
     documentId,
+    destroyDocumentAction,
     isOpen,
     setIsOpen,
     onClose,
@@ -44,7 +46,7 @@ export function DocumentDeleteDialog({
 
     return (
         <Form
-            action={DocumentController.destroy(documentId)}
+            action={destroyDocumentAction(documentId)}
             options={{ preserveScroll: true }}
             disableWhileProcessing
             onSuccess={() => onSuccess?.()}
@@ -73,17 +75,19 @@ export function DocumentDeleteDialog({
     );
 }
 
-interface DocumentsListContentProps {
-    documents: Document[];
+interface DocumentsListContentProps<D extends Document> {
+    documents: D[];
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     showHeader?: boolean;
-    onDeleteDocument?: (document: Document) => void;
+    onDeleteDocument?: (document: D) => void;
 }
 
-function DocumentsListContent({
+function DocumentsListContent<D extends Document>({
     documents,
+    showDocumentAction,
     showHeader = true,
     onDeleteDocument,
-}: DocumentsListContentProps) {
+}: DocumentsListContentProps<D>) {
     const copy: DialogCopy & DocumentsCopy = useSharedComponentCopy();
 
     return (
@@ -108,6 +112,7 @@ function DocumentsListContent({
                     <DocumentActionsDropdown
                         key={document.id}
                         document={document}
+                        showDocumentAction={showDocumentAction}
                         onDelete={deleteAction}
                     />
                 );
@@ -118,12 +123,16 @@ function DocumentsListContent({
 
 interface DocumentsListDropdownProps {
     documents: Document[];
+    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     trigger?: React.ReactElement;
     compact?: boolean;
 }
 
 export function DocumentsListDropdown({
     documents,
+    destroyDocumentAction,
+    showDocumentAction,
     trigger,
     compact = false,
 }: DocumentsListDropdownProps) {
@@ -156,6 +165,7 @@ export function DocumentsListDropdown({
                 <DropdownMenuContent side="right" className="w-fit">
                     <DocumentsListContent
                         documents={documents}
+                        showDocumentAction={showDocumentAction}
                         onDeleteDocument={handleDeleteDocument}
                     />
                 </DropdownMenuContent>
@@ -164,6 +174,7 @@ export function DocumentsListDropdown({
             {documentToDelete && (
                 <DocumentDeleteDialog
                     documentId={documentToDelete}
+                    destroyDocumentAction={destroyDocumentAction}
                     isOpen={deleteDocumentIsOpen}
                     setIsOpen={setDeleteDocumentIsOpen}
                     onClose={() => setDocumentToDelete(null)}
@@ -177,17 +188,19 @@ export function DocumentsListDropdown({
     );
 }
 
-interface DocumentsListSubMenuProps {
-    documents: Document[];
+interface DocumentsListSubMenuProps<D extends Document> {
+    documents: D[];
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     label?: string;
-    onDeleteDocument?: (document: Document) => void;
+    onDeleteDocument?: (document: D) => void;
 }
 
-export function DocumentsListSubMenu({
+export function DocumentsListSubMenu<D extends Document>({
     documents,
+    showDocumentAction,
     label,
     onDeleteDocument,
-}: DocumentsListSubMenuProps) {
+}: DocumentsListSubMenuProps<D>) {
     const copy: DialogCopy & DocumentsCopy = useSharedComponentCopy();
 
     if (documents.length === 0) {
@@ -203,6 +216,7 @@ export function DocumentsListSubMenu({
             <DropdownMenuSubContent align="center" side="bottom">
                 <DocumentsListContent
                     documents={documents}
+                    showDocumentAction={showDocumentAction}
                     onDeleteDocument={onDeleteDocument}
                 />
             </DropdownMenuSubContent>
@@ -212,11 +226,13 @@ export function DocumentsListSubMenu({
 
 interface DocumentActionsDropdownProps {
     document: Document;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     onDelete?: () => void;
 }
 
 function DocumentActionsDropdown({
     document,
+    showDocumentAction,
     onDelete,
 }: DocumentActionsDropdownProps) {
     const copy: DialogCopy & DocumentsCopy = useSharedComponentCopy();
@@ -236,7 +252,7 @@ function DocumentActionsDropdown({
                 <DropdownMenuItem
                     render={
                         <a
-                            href={DocumentController.show(document.id).url}
+                            href={showDocumentAction(document.id).url}
                             target="_blank"
                             rel="noopener noreferrer"
                         />

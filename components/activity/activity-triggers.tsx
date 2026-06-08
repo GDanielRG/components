@@ -2,17 +2,20 @@ import {
     CommentsListPopover,
     CommentsToggleButton,
 } from '@/components/comments';
+import type { Comment } from '@/components/comments/types';
 import {
     DocumentsListDropdown,
     DocumentsToggleButton,
 } from '@/components/documents';
+import type { Document } from '@/components/documents/types';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { ButtonGroup } from '@/components/ui/button-group';
-import type { Comment, Document } from '@/types';
-import type { RouteDefinition } from '@/types/wayfinder';
 
 interface ActivityTriggersProps {
     comments: Comment[];
     documents: Document[];
+    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     destroyCommentForm?: (commentId: number) => RouteDefinition<'delete'>;
     compact?: boolean;
     className?: string;
@@ -26,6 +29,8 @@ interface ActivityTriggersProps {
 export function ActivityTriggers({
     comments,
     documents,
+    destroyDocumentAction,
+    showDocumentAction,
     destroyCommentForm,
     compact = false,
     className,
@@ -33,7 +38,12 @@ export function ActivityTriggers({
 }: ActivityTriggersProps) {
     return (
         <ButtonGroup className={className}>
-            <DocumentsListDropdown documents={documents} compact={compact} />
+            <DocumentsListDropdown
+                documents={documents}
+                destroyDocumentAction={destroyDocumentAction}
+                showDocumentAction={showDocumentAction}
+                compact={compact}
+            />
             <CommentsListPopover
                 comments={comments}
                 destroyFormAction={destroyCommentForm}

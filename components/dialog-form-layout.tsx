@@ -1,5 +1,6 @@
 import { XIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
+import type { DialogCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
 import {
     CardAction,
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/card';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { DialogCopy } from '../types/shared-component-copy';
 
 interface DialogFormLayoutProps {
     title: ReactNode;

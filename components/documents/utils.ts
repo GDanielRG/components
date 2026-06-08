@@ -1,8 +1,8 @@
 import type {
     DocumentData,
     ExistingDocumentData,
+    Document,
 } from '@/components/documents/types';
-import type { Document } from '@/types';
 
 type DisplayableDocument = DocumentData | Pick<Document, 'name' | 'path'>;
 

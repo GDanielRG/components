@@ -14,12 +14,12 @@ import {
     getDocumentDisplayName,
     isExistingDocument,
 } from '@/components/documents/utils';
+import type { DocumentsCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { DocumentsCopy } from '../../types/shared-component-copy';
 
 interface DocumentItemProps {
     document: DocumentData;

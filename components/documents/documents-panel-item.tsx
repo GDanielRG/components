@@ -17,6 +17,11 @@ import { DocumentFileIcon } from '@/components/documents/document-file-icon';
 import type { ExistingDocumentData } from '@/components/documents/types';
 import { getDocumentDisplayName } from '@/components/documents/utils';
 import { OptionalAddButton } from '@/components/optional-add-button';
+import type {
+    DocumentsCopy,
+    FormCopy,
+} from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -39,11 +44,6 @@ import {
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
 import { cn } from '@/lib/utils';
-import DocumentController from '@/wayfinder/App/Http/Controllers/Documents/DocumentController';
-import type {
-    DocumentsCopy,
-    FormCopy,
-} from '../../types/shared-component-copy';
 
 const existingDocumentErrorFields = ['name', 'description', 'file'] as const;
 
@@ -55,12 +55,18 @@ interface ExistingDocumentFormData {
 
 interface DocumentsPanelItemProps {
     document: ExistingDocumentData;
+    updateDocumentAction: (
+        documentId: number,
+    ) => RouteDefinition<'put' | 'patch' | 'post'>;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     onDelete?: () => void;
     acceptedMimes?: string;
 }
 
 export function DocumentsPanelItem({
     document,
+    updateDocumentAction,
+    showDocumentAction,
     onDelete,
     acceptedMimes,
 }: DocumentsPanelItemProps) {
@@ -69,7 +75,7 @@ export function DocumentsPanelItem({
     const [isEditingMetadata, setIsEditingMetadata] = useState(false);
     const isSidebarSheet = useIsSidebarSheet();
     const form = useForm<ExistingDocumentFormData>(
-        DocumentController.update(document.id),
+        updateDocumentAction(document.id),
         {
             name: document.name ?? '',
             description: document.description ?? '',
@@ -194,6 +200,7 @@ export function DocumentsPanelItem({
                                     />
                                     <ExistingDocumentActionsMenu
                                         document={document}
+                                        showDocumentAction={showDocumentAction}
                                         showMetadataEditor={showMetadataEditor}
                                         metadataActionLabel={
                                             metadataActionLabel
@@ -259,6 +266,7 @@ export function DocumentsPanelItem({
 
                                     <ExistingDocumentActionsMenu
                                         document={document}
+                                        showDocumentAction={showDocumentAction}
                                         showMetadataEditor={showMetadataEditor}
                                         metadataActionLabel={
                                             metadataActionLabel
@@ -334,6 +342,7 @@ export function DocumentsPanelItem({
 
 interface ExistingDocumentActionsMenuProps {
     document: ExistingDocumentData;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     showMetadataEditor: boolean;
     metadataActionLabel: string;
     rowProcessing: boolean;
@@ -347,6 +356,7 @@ interface ExistingDocumentActionsMenuProps {
 
 function ExistingDocumentActionsMenu({
     document,
+    showDocumentAction,
     showMetadataEditor,
     metadataActionLabel,
     rowProcessing,
@@ -378,7 +388,7 @@ function ExistingDocumentActionsMenu({
             <DropdownMenuItem
                 render={
                     <a
-                        href={DocumentController.show(document.id).url}
+                        href={showDocumentAction(document.id).url}
                         target="_blank"
                         rel="noopener noreferrer"
                     />

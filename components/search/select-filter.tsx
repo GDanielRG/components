@@ -1,5 +1,7 @@
 import { FunnelPlusIcon, FunnelXIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
+import type { ServerSearchFilter } from '@/components/types/server-search';
+import type { SearchCopy } from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
@@ -12,8 +14,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { ServerSearchFilter } from '@/types';
-import type { SearchCopy } from '../../types/shared-component-copy';
 
 function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;

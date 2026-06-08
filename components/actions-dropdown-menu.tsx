@@ -1,6 +1,7 @@
 import { MoreHorizontalIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import type { ActionsCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -9,7 +10,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { ActionsCopy } from '../types/shared-component-copy';
 
 export function ActionsDropdownMenu({
     children,

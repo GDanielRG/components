@@ -1,9 +1,9 @@
 import { FilePlusIcon, FilesIcon } from 'lucide-react';
+import type { DocumentsCopy } from '@/components/types/shared-component-copy';
 import { ActiveTriggerIcon } from '@/components/ui/active-trigger-icon';
 import { Button } from '@/components/ui/button';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { DocumentsCopy } from '../../types/shared-component-copy';
 
 interface DocumentsToggleButtonProps {
     onClick: () => void;

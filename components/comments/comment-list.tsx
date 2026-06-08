@@ -8,7 +8,13 @@ import {
 import { useState } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { CommentForm } from '@/components/comments/comment-form';
+import type { Comment } from '@/components/comments/types';
 import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
+import type {
+    CommentsCopy,
+    DialogCopy,
+} from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,12 +40,6 @@ import {
 } from '@/components/ui/tooltip';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
-import type { Comment } from '@/types';
-import type { RouteDefinition } from '@/types/wayfinder';
-import type {
-    CommentsCopy,
-    DialogCopy,
-} from '../../types/shared-component-copy';
 
 interface CommentListProps {
     comments: Comment[];

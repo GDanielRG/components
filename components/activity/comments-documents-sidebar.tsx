@@ -10,7 +10,11 @@ import {
     AppRightSidebarCloseButton,
 } from '@/components/app-right-sidebar';
 import { CommentForm, CommentList } from '@/components/comments';
+import type { Comment } from '@/components/comments/types';
 import { useDocumentsPanel } from '@/components/documents/documents-panel';
+import type { Document } from '@/components/documents/types';
+import type { ActivityCopy } from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -23,9 +27,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
 import { cn } from '@/lib/utils';
-import type { Comment, Document } from '@/types';
-import type { RouteDefinition } from '@/types/wayfinder';
-import type { ActivityCopy } from '../../types/shared-component-copy';
 
 type CommentsDocumentsSidebarTab = 'comments' | 'documents';
 
@@ -41,6 +42,11 @@ interface UseCommentsDocumentsSidebarProps {
     maxDocumentKilobytes: number;
     storeCommentForm: RouteDefinition<'post'>;
     storeDocumentAction: RouteDefinition<'post'>;
+    updateDocumentAction: (
+        documentId: number,
+    ) => RouteDefinition<'put' | 'patch' | 'post'>;
+    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     updateCommentForm: (commentId: number) => RouteDefinition<'put' | 'patch'>;
     destroyCommentForm: (commentId: number) => RouteDefinition<'delete'>;
     defaultOpen?: boolean;
@@ -51,6 +57,11 @@ interface UseDocumentsSidebarProps {
     allowedDocumentMimes: string[];
     maxDocumentKilobytes: number;
     storeDocumentAction: RouteDefinition<'post'>;
+    updateDocumentAction: (
+        documentId: number,
+    ) => RouteDefinition<'put' | 'patch' | 'post'>;
+    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
+    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     defaultOpen?: boolean;
 }
 
@@ -97,6 +108,9 @@ export function useCommentsDocumentsSidebar({
     maxDocumentKilobytes,
     storeCommentForm,
     storeDocumentAction,
+    updateDocumentAction,
+    destroyDocumentAction,
+    showDocumentAction,
     updateCommentForm,
     destroyCommentForm,
     defaultOpen,
@@ -129,6 +143,9 @@ export function useCommentsDocumentsSidebar({
         allowedDocumentMimes,
         maxDocumentKilobytes,
         storeAction: storeDocumentAction,
+        updateDocumentAction,
+        destroyDocumentAction,
+        showDocumentAction,
     });
 
     const clearEditingComment = () => {
@@ -234,6 +251,9 @@ export function useDocumentsSidebar({
     allowedDocumentMimes,
     maxDocumentKilobytes,
     storeDocumentAction,
+    updateDocumentAction,
+    destroyDocumentAction,
+    showDocumentAction,
     defaultOpen,
 }: UseDocumentsSidebarProps) {
     const resolvedDefaultOpen = defaultOpen ?? documents.length > 0;
@@ -253,6 +273,9 @@ export function useDocumentsSidebar({
         allowedDocumentMimes,
         maxDocumentKilobytes,
         storeAction: storeDocumentAction,
+        updateDocumentAction,
+        destroyDocumentAction,
+        showDocumentAction,
     });
 
     const handleOpenChange = (nextOpen: boolean) => {

@@ -1,3 +1,4 @@
+import type { PaginatedData } from '@/components/types/paginated-data';
 import {
     Pagination,
     PaginationContent,
@@ -7,13 +8,16 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
-import type { PaginatedData } from '../types/pagination';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 interface AppPaginationProps<T> {
     paginatedData: PaginatedData<T>;
 }
 
 export function AppPagination<T>({ paginatedData }: AppPaginationProps<T>) {
+    const { paginationNextLabel, paginationPreviousLabel } =
+        useSharedComponentCopy();
+
     return (
         <Pagination>
             <PaginationContent>
@@ -21,6 +25,7 @@ export function AppPagination<T>({ paginatedData }: AppPaginationProps<T>) {
                     <PaginationPrevious
                         disabled={!paginatedData.prev_page_url}
                         href={paginatedData.prev_page_url ?? '#'}
+                        text={paginationPreviousLabel}
                     ></PaginationPrevious>
                 </PaginationItem>
                 {paginatedData.links.slice(1, -1).map((link, index) => (
@@ -41,6 +46,7 @@ export function AppPagination<T>({ paginatedData }: AppPaginationProps<T>) {
                     <PaginationNext
                         disabled={!paginatedData.next_page_url}
                         href={paginatedData.next_page_url ?? '#'}
+                        text={paginationNextLabel}
                     ></PaginationNext>
                 </PaginationItem>
             </PaginationContent>

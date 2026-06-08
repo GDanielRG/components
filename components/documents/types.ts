@@ -1,5 +1,22 @@
 import type { CancelToken } from '@inertiajs/core';
-import type { Document } from '@/types';
+
+// Narrow structural contract for a persisted document. The consumer's richer
+// domain `Document` (an Eloquent resource) is assignable to this.
+export interface Document {
+    id: number;
+    name: string | null;
+    description: string | null;
+    path: string;
+    created_at: string | null;
+    updated_at: string | null;
+    deleted_at?: string | null;
+    formatted_created_at?: string | null;
+    formatted_created_at_diff?: string | null;
+    formatted_updated_at?: string | null;
+    formatted_updated_at_diff?: string | null;
+    can_be_updated?: boolean;
+    can_be_deleted?: boolean;
+}
 
 type ExistingDocumentModelFields =
     | 'id'

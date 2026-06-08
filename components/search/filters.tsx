@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { FacetedFilters } from '@/components/search/faceted-filters';
 import { SelectFilter } from '@/components/search/select-filter';
+import type { SearchFilterPopoverState } from '@/components/search/types';
+import type { ServerSearchFilter } from '@/components/types/server-search';
 import { cn } from '@/lib/utils';
-import type { ServerSearchFilter } from '@/types';
 import { buildPathPatch } from './query-utils';
-import type { SearchFilterPopoverState } from './types';
 import type { SearchNavigationController } from './use-search-navigation';
 
 interface FiltersProps {

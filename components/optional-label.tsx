@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
+import type { FormCopy } from '@/components/types/shared-component-copy';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { FormCopy } from '../types/shared-component-copy';
 
 type OptionalLabelProps = Omit<ComponentProps<'span'>, 'children'> & {
     label?: string;

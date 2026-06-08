@@ -12,10 +12,10 @@ import {
     isExistingDocument,
 } from '@/components/documents/utils';
 import { OptionalLabel } from '@/components/optional-label';
+import type { DocumentsCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { DocumentsCopy } from '../../types/shared-component-copy';
 
 interface DocumentsFormSectionProps {
     documents: DocumentData[];

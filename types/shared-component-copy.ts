@@ -22,6 +22,11 @@ export interface FormCopy {
     saveLabel: string;
 }
 
+export interface PaginationCopy {
+    paginationNextLabel: string;
+    paginationPreviousLabel: string;
+}
+
 export interface ActionsCopy {
     actionsLabel: string;
 }
@@ -110,6 +115,7 @@ export interface SharedComponentCopy
     extends
         DialogCopy,
         FormCopy,
+        PaginationCopy,
         ActionsCopy,
         TableCopy,
         CommentsCopy,

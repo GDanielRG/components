@@ -3,6 +3,10 @@ import { DocumentErrorMessages } from '@/components/documents/document-error-mes
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
 import type { DocumentUploadBatch } from '@/components/documents/types';
 import { getDocumentDisplayName } from '@/components/documents/utils';
+import type {
+    DialogCopy,
+    DocumentsCopy,
+} from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,10 +35,6 @@ import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type {
-    DialogCopy,
-    DocumentsCopy,
-} from '../../types/shared-component-copy';
 
 const formatBytes = (bytes: number): string => {
     if (bytes < 1024) {

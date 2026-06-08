@@ -2,6 +2,9 @@ import { MessageCircleIcon, MessageCirclePlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactElement } from 'react';
 import { CommentList } from '@/components/comments/comment-list';
+import type { Comment } from '@/components/comments/types';
+import type { CommentsCopy } from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import { ActiveTriggerIcon } from '@/components/ui/active-trigger-icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -12,9 +15,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
-import type { Comment } from '@/types';
-import type { RouteDefinition } from '@/types/wayfinder';
-import type { CommentsCopy } from '../../types/shared-component-copy';
 
 interface CommentsToggleButtonProps {
     onClick: () => void;

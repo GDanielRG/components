@@ -1,6 +1,12 @@
 import { Form } from '@inertiajs/react';
 import { ArrowUpIcon, LoaderCircle, SaveIcon } from 'lucide-react';
 import { LoadingButton } from '@/components/loading-button';
+import type {
+    CommentsCopy,
+    DialogCopy,
+    FormCopy,
+} from '@/components/types/shared-component-copy';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import {
     InputGroup,
     InputGroupAddon,
@@ -13,12 +19,6 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { RouteDefinition } from '@/types/wayfinder';
-import type {
-    CommentsCopy,
-    DialogCopy,
-    FormCopy,
-} from '../../types/shared-component-copy';
 
 interface CommentFormProps {
     formAction: RouteDefinition<'post' | 'put' | 'patch'>;

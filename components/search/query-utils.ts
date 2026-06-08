@@ -1,14 +1,4 @@
-/**
- * Robust URL query-param utilities for server-driven search/filter/pagination.
- *
- * Handles scalar keys, array keys, and nested PHP-style bracket notation such as:
- *  - `sort=-name`
- *  - `filter[search]=foo`
- *  - `filter[role][]=1`
- *  - `contacts[sort]=-email`
- */
-
-import type { ServerSearchFilter } from '../../types/search';
+import type { ServerSearchFilter } from '@/components/types/server-search';
 
 export type SearchNavigationPrimitive = string | string[];
 export type SearchNavigationData = {

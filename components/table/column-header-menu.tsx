@@ -8,6 +8,7 @@ import {
     EyeClosedIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import type { TableCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -17,7 +18,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import type { TableCopy } from '../../types/shared-component-copy';
 
 type SortOrder = 'asc' | 'desc';
 type SortType = 'text' | 'numeric';

@@ -1,4 +1,4 @@
-import type { ServerSearchFilter } from '@/types';
+import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchNavigationController } from './use-search-navigation';
 
 export interface SearchFilterPopoverState {
