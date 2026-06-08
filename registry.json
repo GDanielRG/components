@@ -1,434 +1,434 @@
 {
-    "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "sibling-components",
-    "homepage": "https://github.com/GDanielRG/components",
-    "items": [
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "sibling-components",
+  "homepage": "https://github.com/GDanielRG/components",
+  "items": [
+    {
+      "name": "core",
+      "type": "registry:item",
+      "title": "Core Foundation",
+      "description": "Shared types, hooks, and generic UI primitives every other bundle builds on.",
+      "registryDependencies": [
+        "alert-dialog",
+        "button",
+        "card",
+        "collapsible",
+        "dialog",
+        "dropdown-menu",
+        "empty"
+      ],
+      "files": [
         {
-            "name": "core",
-            "type": "registry:item",
-            "title": "Core Foundation",
-            "description": "Shared types, hooks, and generic UI primitives every other bundle builds on.",
-            "registryDependencies": [
-                "alert-dialog",
-                "button",
-                "card",
-                "collapsible",
-                "dialog",
-                "dropdown-menu",
-                "empty"
-            ],
-            "files": [
-                {
-                    "path": "types/options.ts",
-                    "type": "registry:file",
-                    "target": "@components/types/options.ts"
-                },
-                {
-                    "path": "types/paginated-data.ts",
-                    "type": "registry:file",
-                    "target": "@components/types/paginated-data.ts"
-                },
-                {
-                    "path": "types/server-search.ts",
-                    "type": "registry:file",
-                    "target": "@components/types/server-search.ts"
-                },
-                {
-                    "path": "types/shared-component-copy.ts",
-                    "type": "registry:file",
-                    "target": "@components/types/shared-component-copy.ts"
-                },
-                {
-                    "path": "types/wayfinder.ts",
-                    "type": "registry:file",
-                    "target": "@components/types/wayfinder.ts"
-                },
-                {
-                    "path": "hooks/use-sidebar-sheet.ts",
-                    "type": "registry:hook",
-                    "target": "@hooks/use-sidebar-sheet.ts"
-                },
-                {
-                    "path": "components/ui/active-trigger-icon.tsx",
-                    "type": "registry:ui",
-                    "target": "@ui/active-trigger-icon.tsx"
-                },
-                {
-                    "path": "components/ui/pagination.tsx",
-                    "type": "registry:ui",
-                    "target": "@ui/pagination.tsx"
-                },
-                {
-                    "path": "components/actions-dropdown-menu.tsx",
-                    "type": "registry:component",
-                    "target": "@components/actions-dropdown-menu.tsx"
-                },
-                {
-                    "path": "components/app-container.tsx",
-                    "type": "registry:component",
-                    "target": "@components/app-container.tsx"
-                },
-                {
-                    "path": "components/app-empty-card.tsx",
-                    "type": "registry:component",
-                    "target": "@components/app-empty-card.tsx"
-                },
-                {
-                    "path": "components/app-pagination.tsx",
-                    "type": "registry:component",
-                    "target": "@components/app-pagination.tsx"
-                },
-                {
-                    "path": "components/delete-confirmation-modal.tsx",
-                    "type": "registry:component",
-                    "target": "@components/delete-confirmation-modal.tsx"
-                },
-                {
-                    "path": "components/destroy-confirmation-form.tsx",
-                    "type": "registry:component",
-                    "target": "@components/destroy-confirmation-form.tsx"
-                },
-                {
-                    "path": "components/dialog-form-layout.tsx",
-                    "type": "registry:component",
-                    "target": "@components/dialog-form-layout.tsx"
-                },
-                {
-                    "path": "components/loading-button.tsx",
-                    "type": "registry:component",
-                    "target": "@components/loading-button.tsx"
-                },
-                {
-                    "path": "components/optional-add-button.tsx",
-                    "type": "registry:component",
-                    "target": "@components/optional-add-button.tsx"
-                },
-                {
-                    "path": "components/optional-label.tsx",
-                    "type": "registry:component",
-                    "target": "@components/optional-label.tsx"
-                },
-                {
-                    "path": "components/save-button.tsx",
-                    "type": "registry:component",
-                    "target": "@components/save-button.tsx"
-                },
-                {
-                    "path": "components/form-actions.tsx",
-                    "type": "registry:component",
-                    "target": "@components/form-actions.tsx"
-                }
-            ],
-            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+          "path": "types/options.ts",
+          "type": "registry:file",
+          "target": "@components/types/options.ts"
         },
         {
-            "name": "search",
-            "type": "registry:item",
-            "title": "Search",
-            "description": "Server-driven search controls: useSearch, filters, applied filters, and the export dialog.",
-            "registryDependencies": [
-                "GDanielRG/components/core",
-                "alert-dialog",
-                "badge",
-                "button",
-                "button-group",
-                "dropdown-menu",
-                "field",
-                "input",
-                "popover",
-                "radio-group",
-                "separator"
-            ],
-            "files": [
-                {
-                    "path": "components/search/query-utils.ts",
-                    "type": "registry:lib",
-                    "target": "@components/search/query-utils.ts"
-                },
-                {
-                    "path": "components/search/use-search-navigation.ts",
-                    "type": "registry:hook",
-                    "target": "@components/search/use-search-navigation.ts"
-                },
-                {
-                    "path": "components/search/types.ts",
-                    "type": "registry:file",
-                    "target": "@components/search/types.ts"
-                },
-                {
-                    "path": "components/search/faceted-filters.tsx",
-                    "type": "registry:component",
-                    "target": "@components/search/faceted-filters.tsx"
-                },
-                {
-                    "path": "components/search/select-filter.tsx",
-                    "type": "registry:component",
-                    "target": "@components/search/select-filter.tsx"
-                },
-                {
-                    "path": "components/search/filters.tsx",
-                    "type": "registry:component",
-                    "target": "@components/search/filters.tsx"
-                },
-                {
-                    "path": "components/search/search-applied-filters.tsx",
-                    "type": "registry:component",
-                    "target": "@components/search/search-applied-filters.tsx"
-                },
-                {
-                    "path": "components/search/search.tsx",
-                    "type": "registry:component",
-                    "target": "@components/search/search.tsx"
-                },
-                {
-                    "path": "components/search/index.ts",
-                    "type": "registry:file",
-                    "target": "@components/search/index.ts"
-                },
-                {
-                    "path": "components/export-dialog.tsx",
-                    "type": "registry:component",
-                    "target": "@components/export-dialog.tsx"
-                }
-            ],
-            "dependencies": [
-                "@inertiajs/core@^3.3.1",
-                "@inertiajs/react@^3.3.1",
-                "lucide-react@^1.17.0"
-            ]
+          "path": "types/paginated-data.ts",
+          "type": "registry:file",
+          "target": "@components/types/paginated-data.ts"
         },
         {
-            "name": "table",
-            "type": "registry:item",
-            "title": "Table",
-            "description": "Column header/visibility menus, row actions, and sort/visibility hooks for index tables.",
-            "registryDependencies": [
-                "GDanielRG/components/search",
-                "GDanielRG/components/core",
-                "button",
-                "dropdown-menu",
-                "table"
-            ],
-            "files": [
-                {
-                    "path": "components/table/column-header-menu.tsx",
-                    "type": "registry:component",
-                    "target": "@components/table/column-header-menu.tsx"
-                },
-                {
-                    "path": "components/table/column-visibility-menu.tsx",
-                    "type": "registry:component",
-                    "target": "@components/table/column-visibility-menu.tsx"
-                },
-                {
-                    "path": "components/table/row-actions-cell.tsx",
-                    "type": "registry:component",
-                    "target": "@components/table/row-actions-cell.tsx"
-                },
-                {
-                    "path": "components/table/use-column-visibility.ts",
-                    "type": "registry:hook",
-                    "target": "@components/table/use-column-visibility.ts"
-                },
-                {
-                    "path": "components/table/use-sort.ts",
-                    "type": "registry:hook",
-                    "target": "@components/table/use-sort.ts"
-                }
-            ],
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+          "path": "types/server-search.ts",
+          "type": "registry:file",
+          "target": "@components/types/server-search.ts"
         },
         {
-            "name": "comments",
-            "type": "registry:item",
-            "title": "Comments",
-            "description": "Polymorphic comment list, form, and inline triggers.",
-            "registryDependencies": [
-                "GDanielRG/components/core",
-                "avatar",
-                "button",
-                "dropdown-menu",
-                "input-group",
-                "item",
-                "popover",
-                "scroll-area",
-                "tooltip"
-            ],
-            "files": [
-                {
-                    "path": "components/comments/comment-form.tsx",
-                    "type": "registry:component",
-                    "target": "@components/comments/comment-form.tsx"
-                },
-                {
-                    "path": "components/comments/comment-list.tsx",
-                    "type": "registry:component",
-                    "target": "@components/comments/comment-list.tsx"
-                },
-                {
-                    "path": "components/comments/comment-triggers.tsx",
-                    "type": "registry:component",
-                    "target": "@components/comments/comment-triggers.tsx"
-                },
-                {
-                    "path": "components/comments/index.ts",
-                    "type": "registry:file",
-                    "target": "@components/comments/index.ts"
-                },
-                {
-                    "path": "components/comments/types.ts",
-                    "type": "registry:file",
-                    "target": "@components/comments/types.ts"
-                }
-            ],
-            "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories.",
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+          "path": "types/shared-component-copy.ts",
+          "type": "registry:file",
+          "target": "@components/types/shared-component-copy.ts"
         },
         {
-            "name": "documents",
-            "type": "registry:item",
-            "title": "Documents",
-            "description": "Polymorphic document list, upload panel, and inline triggers.",
-            "registryDependencies": [
-                "GDanielRG/components/core",
-                "badge",
-                "button",
-                "card",
-                "dropdown-menu",
-                "field",
-                "input",
-                "item",
-                "popover",
-                "progress",
-                "scroll-area",
-                "textarea",
-                "tooltip"
-            ],
-            "files": [
-                {
-                    "path": "components/documents/types.ts",
-                    "type": "registry:file",
-                    "target": "@components/documents/types.ts"
-                },
-                {
-                    "path": "components/documents/utils.ts",
-                    "type": "registry:lib",
-                    "target": "@components/documents/utils.ts"
-                },
-                {
-                    "path": "components/documents/document-file-icon.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/document-file-icon.tsx"
-                },
-                {
-                    "path": "components/documents/document-error-messages.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/document-error-messages.tsx"
-                },
-                {
-                    "path": "components/documents/document-item.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/document-item.tsx"
-                },
-                {
-                    "path": "components/documents/documents-toggle-button.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/documents-toggle-button.tsx"
-                },
-                {
-                    "path": "components/documents/documents-list.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/documents-list.tsx"
-                },
-                {
-                    "path": "components/documents/documents-form-section.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/documents-form-section.tsx"
-                },
-                {
-                    "path": "components/documents/documents-panel-item.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/documents-panel-item.tsx"
-                },
-                {
-                    "path": "components/documents/sidebar-document-upload-card.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/sidebar-document-upload-card.tsx"
-                },
-                {
-                    "path": "components/documents/use-pending-documents-upload.ts",
-                    "type": "registry:hook",
-                    "target": "@components/documents/use-pending-documents-upload.ts"
-                },
-                {
-                    "path": "components/documents/documents-panel.tsx",
-                    "type": "registry:component",
-                    "target": "@components/documents/documents-panel.tsx"
-                },
-                {
-                    "path": "components/documents/index.ts",
-                    "type": "registry:file",
-                    "target": "@components/documents/index.ts"
-                }
-            ],
-            "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories.",
-            "dependencies": [
-                "@inertiajs/core@^3.3.1",
-                "@inertiajs/react@^3.3.1",
-                "lucide-react@^1.17.0"
-            ]
+          "path": "types/wayfinder.ts",
+          "type": "registry:file",
+          "target": "@components/types/wayfinder.ts"
         },
         {
-            "name": "activity",
-            "type": "registry:item",
-            "title": "Activity",
-            "description": "Combined comments + documents right-sidebar and inline activity triggers.",
-            "registryDependencies": [
-                "GDanielRG/components/comments",
-                "GDanielRG/components/documents",
-                "GDanielRG/components/core",
-                "badge",
-                "button",
-                "button-group",
-                "scroll-area",
-                "sidebar",
-                "tabs"
-            ],
-            "files": [
-                {
-                    "path": "components/activity/activity-triggers.tsx",
-                    "type": "registry:component",
-                    "target": "@components/activity/activity-triggers.tsx"
-                },
-                {
-                    "path": "components/activity/comments-documents-sidebar.tsx",
-                    "type": "registry:component",
-                    "target": "@components/activity/comments-documents-sidebar.tsx"
-                },
-                {
-                    "path": "components/activity/index.ts",
-                    "type": "registry:file",
-                    "target": "@components/activity/index.ts"
-                }
-            ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence).",
-            "dependencies": ["lucide-react@^1.17.0"]
+          "path": "hooks/use-sidebar-sheet.ts",
+          "type": "registry:hook",
+          "target": "@hooks/use-sidebar-sheet.ts"
         },
         {
-            "name": "foundations",
-            "type": "registry:item",
-            "title": "Sibling Foundations",
-            "description": "Installs the full shared Laravel/Inertia component foundation for the sibling repos.",
-            "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/search",
-                "GDanielRG/components/table",
-                "GDanielRG/components/comments",
-                "GDanielRG/components/documents",
-                "GDanielRG/components/activity"
-            ],
-            "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
+          "path": "components/ui/active-trigger-icon.tsx",
+          "type": "registry:ui",
+          "target": "@ui/active-trigger-icon.tsx"
+        },
+        {
+          "path": "components/ui/pagination.tsx",
+          "type": "registry:ui",
+          "target": "@ui/pagination.tsx"
+        },
+        {
+          "path": "components/actions-dropdown-menu.tsx",
+          "type": "registry:component",
+          "target": "@components/actions-dropdown-menu.tsx"
+        },
+        {
+          "path": "components/app-container.tsx",
+          "type": "registry:component",
+          "target": "@components/app-container.tsx"
+        },
+        {
+          "path": "components/app-empty-card.tsx",
+          "type": "registry:component",
+          "target": "@components/app-empty-card.tsx"
+        },
+        {
+          "path": "components/app-pagination.tsx",
+          "type": "registry:component",
+          "target": "@components/app-pagination.tsx"
+        },
+        {
+          "path": "components/delete-confirmation-modal.tsx",
+          "type": "registry:component",
+          "target": "@components/delete-confirmation-modal.tsx"
+        },
+        {
+          "path": "components/destroy-confirmation-form.tsx",
+          "type": "registry:component",
+          "target": "@components/destroy-confirmation-form.tsx"
+        },
+        {
+          "path": "components/dialog-form-layout.tsx",
+          "type": "registry:component",
+          "target": "@components/dialog-form-layout.tsx"
+        },
+        {
+          "path": "components/loading-button.tsx",
+          "type": "registry:component",
+          "target": "@components/loading-button.tsx"
+        },
+        {
+          "path": "components/optional-add-button.tsx",
+          "type": "registry:component",
+          "target": "@components/optional-add-button.tsx"
+        },
+        {
+          "path": "components/optional-label.tsx",
+          "type": "registry:component",
+          "target": "@components/optional-label.tsx"
+        },
+        {
+          "path": "components/save-button.tsx",
+          "type": "registry:component",
+          "target": "@components/save-button.tsx"
+        },
+        {
+          "path": "components/form-actions.tsx",
+          "type": "registry:component",
+          "target": "@components/form-actions.tsx"
         }
-    ]
+      ],
+      "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
+      "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+    },
+    {
+      "name": "search",
+      "type": "registry:item",
+      "title": "Search",
+      "description": "Server-driven search controls: useSearch, filters, applied filters, and the export dialog.",
+      "registryDependencies": [
+        "GDanielRG/components/core#v1.0.0",
+        "alert-dialog",
+        "badge",
+        "button",
+        "button-group",
+        "dropdown-menu",
+        "field",
+        "input",
+        "popover",
+        "radio-group",
+        "separator"
+      ],
+      "files": [
+        {
+          "path": "components/search/query-utils.ts",
+          "type": "registry:lib",
+          "target": "@components/search/query-utils.ts"
+        },
+        {
+          "path": "components/search/use-search-navigation.ts",
+          "type": "registry:hook",
+          "target": "@components/search/use-search-navigation.ts"
+        },
+        {
+          "path": "components/search/types.ts",
+          "type": "registry:file",
+          "target": "@components/search/types.ts"
+        },
+        {
+          "path": "components/search/faceted-filters.tsx",
+          "type": "registry:component",
+          "target": "@components/search/faceted-filters.tsx"
+        },
+        {
+          "path": "components/search/select-filter.tsx",
+          "type": "registry:component",
+          "target": "@components/search/select-filter.tsx"
+        },
+        {
+          "path": "components/search/filters.tsx",
+          "type": "registry:component",
+          "target": "@components/search/filters.tsx"
+        },
+        {
+          "path": "components/search/search-applied-filters.tsx",
+          "type": "registry:component",
+          "target": "@components/search/search-applied-filters.tsx"
+        },
+        {
+          "path": "components/search/search.tsx",
+          "type": "registry:component",
+          "target": "@components/search/search.tsx"
+        },
+        {
+          "path": "components/search/index.ts",
+          "type": "registry:file",
+          "target": "@components/search/index.ts"
+        },
+        {
+          "path": "components/export-dialog.tsx",
+          "type": "registry:component",
+          "target": "@components/export-dialog.tsx"
+        }
+      ],
+      "dependencies": [
+        "@inertiajs/core@^3.3.1",
+        "@inertiajs/react@^3.3.1",
+        "lucide-react@^1.17.0"
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:item",
+      "title": "Table",
+      "description": "Column header/visibility menus, row actions, and sort/visibility hooks for index tables.",
+      "registryDependencies": [
+        "GDanielRG/components/search#v1.0.0",
+        "GDanielRG/components/core#v1.0.0",
+        "button",
+        "dropdown-menu",
+        "table"
+      ],
+      "files": [
+        {
+          "path": "components/table/column-header-menu.tsx",
+          "type": "registry:component",
+          "target": "@components/table/column-header-menu.tsx"
+        },
+        {
+          "path": "components/table/column-visibility-menu.tsx",
+          "type": "registry:component",
+          "target": "@components/table/column-visibility-menu.tsx"
+        },
+        {
+          "path": "components/table/row-actions-cell.tsx",
+          "type": "registry:component",
+          "target": "@components/table/row-actions-cell.tsx"
+        },
+        {
+          "path": "components/table/use-column-visibility.ts",
+          "type": "registry:hook",
+          "target": "@components/table/use-column-visibility.ts"
+        },
+        {
+          "path": "components/table/use-sort.ts",
+          "type": "registry:hook",
+          "target": "@components/table/use-sort.ts"
+        }
+      ],
+      "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+    },
+    {
+      "name": "comments",
+      "type": "registry:item",
+      "title": "Comments",
+      "description": "Polymorphic comment list, form, and inline triggers.",
+      "registryDependencies": [
+        "GDanielRG/components/core#v1.0.0",
+        "avatar",
+        "button",
+        "dropdown-menu",
+        "input-group",
+        "item",
+        "popover",
+        "scroll-area",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "components/comments/comment-form.tsx",
+          "type": "registry:component",
+          "target": "@components/comments/comment-form.tsx"
+        },
+        {
+          "path": "components/comments/comment-list.tsx",
+          "type": "registry:component",
+          "target": "@components/comments/comment-list.tsx"
+        },
+        {
+          "path": "components/comments/comment-triggers.tsx",
+          "type": "registry:component",
+          "target": "@components/comments/comment-triggers.tsx"
+        },
+        {
+          "path": "components/comments/index.ts",
+          "type": "registry:file",
+          "target": "@components/comments/index.ts"
+        },
+        {
+          "path": "components/comments/types.ts",
+          "type": "registry:file",
+          "target": "@components/comments/types.ts"
+        }
+      ],
+      "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories.",
+      "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+    },
+    {
+      "name": "documents",
+      "type": "registry:item",
+      "title": "Documents",
+      "description": "Polymorphic document list, upload panel, and inline triggers.",
+      "registryDependencies": [
+        "GDanielRG/components/core#v1.0.0",
+        "badge",
+        "button",
+        "card",
+        "dropdown-menu",
+        "field",
+        "input",
+        "item",
+        "popover",
+        "progress",
+        "scroll-area",
+        "textarea",
+        "tooltip"
+      ],
+      "files": [
+        {
+          "path": "components/documents/types.ts",
+          "type": "registry:file",
+          "target": "@components/documents/types.ts"
+        },
+        {
+          "path": "components/documents/utils.ts",
+          "type": "registry:lib",
+          "target": "@components/documents/utils.ts"
+        },
+        {
+          "path": "components/documents/document-file-icon.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/document-file-icon.tsx"
+        },
+        {
+          "path": "components/documents/document-error-messages.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/document-error-messages.tsx"
+        },
+        {
+          "path": "components/documents/document-item.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/document-item.tsx"
+        },
+        {
+          "path": "components/documents/documents-toggle-button.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/documents-toggle-button.tsx"
+        },
+        {
+          "path": "components/documents/documents-list.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/documents-list.tsx"
+        },
+        {
+          "path": "components/documents/documents-form-section.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/documents-form-section.tsx"
+        },
+        {
+          "path": "components/documents/documents-panel-item.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/documents-panel-item.tsx"
+        },
+        {
+          "path": "components/documents/sidebar-document-upload-card.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/sidebar-document-upload-card.tsx"
+        },
+        {
+          "path": "components/documents/use-pending-documents-upload.ts",
+          "type": "registry:hook",
+          "target": "@components/documents/use-pending-documents-upload.ts"
+        },
+        {
+          "path": "components/documents/documents-panel.tsx",
+          "type": "registry:component",
+          "target": "@components/documents/documents-panel.tsx"
+        },
+        {
+          "path": "components/documents/index.ts",
+          "type": "registry:file",
+          "target": "@components/documents/index.ts"
+        }
+      ],
+      "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories.",
+      "dependencies": [
+        "@inertiajs/core@^3.3.1",
+        "@inertiajs/react@^3.3.1",
+        "lucide-react@^1.17.0"
+      ]
+    },
+    {
+      "name": "activity",
+      "type": "registry:item",
+      "title": "Activity",
+      "description": "Combined comments + documents right-sidebar and inline activity triggers.",
+      "registryDependencies": [
+        "GDanielRG/components/comments#v1.0.0",
+        "GDanielRG/components/documents#v1.0.0",
+        "GDanielRG/components/core#v1.0.0",
+        "badge",
+        "button",
+        "button-group",
+        "scroll-area",
+        "sidebar",
+        "tabs"
+      ],
+      "files": [
+        {
+          "path": "components/activity/activity-triggers.tsx",
+          "type": "registry:component",
+          "target": "@components/activity/activity-triggers.tsx"
+        },
+        {
+          "path": "components/activity/comments-documents-sidebar.tsx",
+          "type": "registry:component",
+          "target": "@components/activity/comments-documents-sidebar.tsx"
+        },
+        {
+          "path": "components/activity/index.ts",
+          "type": "registry:file",
+          "target": "@components/activity/index.ts"
+        }
+      ],
+      "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence).",
+      "dependencies": ["lucide-react@^1.17.0"]
+    },
+    {
+      "name": "foundations",
+      "type": "registry:item",
+      "title": "Sibling Foundations",
+      "description": "Installs the full shared Laravel/Inertia component foundation for the sibling repos.",
+      "registryDependencies": [
+        "GDanielRG/components/core#v1.0.0",
+        "GDanielRG/components/search#v1.0.0",
+        "GDanielRG/components/table#v1.0.0",
+        "GDanielRG/components/comments#v1.0.0",
+        "GDanielRG/components/documents#v1.0.0",
+        "GDanielRG/components/activity#v1.0.0"
+      ],
+      "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
+    }
+  ]
 }
