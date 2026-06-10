@@ -123,6 +123,38 @@
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
+            "name": "sidebar",
+            "type": "registry:item",
+            "title": "Sidebar",
+            "description": "Fleet sidebar primitives: provider with keyboard-shortcut and mobile overrides, sheet-based mobile rendering, and the menu/rail/inset family.",
+            "registryDependencies": [
+                "button",
+                "input",
+                "separator",
+                "sheet",
+                "skeleton",
+                "tooltip"
+            ],
+            "files": [
+                {
+                    "path": "components/ui/sidebar.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/sidebar.tsx"
+                },
+                {
+                    "path": "hooks/use-mobile.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile.ts"
+                }
+            ],
+            "docs": "Visible/sr-only copy is prop-overridable (SidebarTrigger/SidebarRail `label`, Sidebar `sheetTitle`/`sheetDescription`; English defaults). Radius is themeable via the `--sidebar-radius` and `--sidebar-surface-radius` CSS hooks (default `--radius-xl`/`--radius-2xl`).",
+            "dependencies": [
+                "@base-ui/react@^1.5.0",
+                "class-variance-authority@^0.7.1",
+                "lucide-react@^1.17.0"
+            ]
+        },
+        {
             "name": "search",
             "type": "registry:item",
             "title": "Search",
@@ -388,11 +420,11 @@
                 "GDanielRG/components/comments",
                 "GDanielRG/components/documents",
                 "GDanielRG/components/core",
+                "GDanielRG/components/sidebar",
                 "badge",
                 "button",
                 "button-group",
                 "scroll-area",
-                "sidebar",
                 "tabs"
             ],
             "files": [
@@ -422,6 +454,7 @@
             "description": "Installs the full shared Laravel/Inertia component foundation.",
             "registryDependencies": [
                 "GDanielRG/components/core",
+                "GDanielRG/components/sidebar",
                 "GDanielRG/components/search",
                 "GDanielRG/components/table",
                 "GDanielRG/components/comments",
