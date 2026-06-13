@@ -6,6 +6,7 @@ import {
     TrashIcon,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { DocumentErrorMessages } from '@/components/documents/document-error-messages';
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
@@ -74,7 +75,7 @@ export function DocumentItem({
         };
     };
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newName = e.target.value;
         const updatedDocument = { ...document, name: newName };
 
@@ -85,9 +86,7 @@ export function DocumentItem({
         }
     };
 
-    const handleDescriptionChange = (
-        e: React.ChangeEvent<HTMLTextAreaElement>,
-    ) => {
+    const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         const newDescription = e.target.value;
         const updatedDocument = { ...document, description: newDescription };
 
@@ -98,7 +97,7 @@ export function DocumentItem({
         }
     };
 
-    const handleFileReplace = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileReplace = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
 
         if (!file) {

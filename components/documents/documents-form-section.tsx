@@ -1,5 +1,6 @@
 import { FilePlusIcon } from 'lucide-react';
 import { useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
 import { DocumentItem } from '@/components/documents/document-item';
 import type { DocumentData } from '@/components/documents/types';
@@ -89,7 +90,7 @@ export function DocumentsFormSection({
               )
             : undefined);
 
-    const handleFilesChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFilesChanged = (e: ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
 
         if (files.length) {

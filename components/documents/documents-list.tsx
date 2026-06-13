@@ -1,6 +1,7 @@
 import { Form } from '@inertiajs/react';
 import { DownloadCloudIcon, FilesIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
+import type { ReactElement } from 'react';
 import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
 import type { Document } from '@/components/documents/types';
@@ -125,7 +126,7 @@ interface DocumentsListDropdownProps {
     documents: Document[];
     destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
-    trigger?: React.ReactElement;
+    trigger?: ReactElement;
     compact?: boolean;
 }
 

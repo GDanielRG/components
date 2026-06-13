@@ -32,6 +32,7 @@ route contracts.
 ## Bundles
 
 - `core` — shared types, hooks, pagination, and generic components
+- `sidebar` — fleet sidebar provider, rail, and menu primitives
 - `search` — server-driven search controls and export dialog
 - `table` — sorting, visibility, and row-action helpers
 - `comments` — polymorphic comment UI

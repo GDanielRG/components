@@ -2,7 +2,7 @@
 
 ## Source
 
-The root `registry.json` is the only registry manifest. It defines seven supported bundles and
+The root `registry.json` is the only registry manifest. It defines eight supported bundles and
 references source files under `components/`, `hooks/`, and `types/`.
 
 Keep shared-type imports under `@/components/*`. ShadCN rewrites unregistered `@/types/*` imports and

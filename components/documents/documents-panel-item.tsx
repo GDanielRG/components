@@ -11,6 +11,7 @@ import {
     TrashIcon,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import type { ChangeEvent } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { DocumentErrorMessages } from '@/components/documents/document-error-messages';
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
@@ -111,19 +112,19 @@ export function DocumentsPanelItem({
         metadataActionLabel = copy.documentsEditMetadata;
     }
 
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         form.setData('name', event.target.value);
         form.clearErrors('name');
     };
 
     const handleDescriptionChange = (
-        event: React.ChangeEvent<HTMLTextAreaElement>,
+        event: ChangeEvent<HTMLTextAreaElement>,
     ) => {
         form.setData('description', event.target.value);
         form.clearErrors('description');
     };
 
-    const handleFileReplace = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileReplace = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
 
         if (!file) {

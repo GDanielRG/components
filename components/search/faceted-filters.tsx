@@ -5,7 +5,7 @@ import {
     SearchIcon,
 } from 'lucide-react';
 import { useState } from 'react';
-import type { ComponentProps } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
@@ -90,7 +90,7 @@ export function FacetedFilters({
                 function renderTrigger(
                     props: ComponentProps<typeof Button>,
                     open: boolean,
-                ): React.JSX.Element {
+                ): ReactElement {
                     return (
                         <Button
                             {...props}

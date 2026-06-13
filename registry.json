@@ -59,6 +59,11 @@
                     "target": "@ui/pagination.tsx"
                 },
                 {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
                     "path": "components/actions-dropdown-menu.tsx",
                     "type": "registry:component",
                     "target": "@components/actions-dropdown-menu.tsx"
@@ -284,7 +289,6 @@
                 "input-group",
                 "item",
                 "popover",
-                "scroll-area",
                 "tooltip"
             ],
             "files": [
@@ -333,7 +337,6 @@
                 "item",
                 "popover",
                 "progress",
-                "scroll-area",
                 "textarea",
                 "tooltip"
             ],
@@ -424,7 +427,6 @@
                 "badge",
                 "button",
                 "button-group",
-                "scroll-area",
                 "tabs"
             ],
             "files": [
