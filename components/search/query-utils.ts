@@ -343,3 +343,32 @@ export function clearedFilterValues(
 ): SearchNavigationPatch {
     return { [filter.key]: null };
 }
+
+export interface SearchClearControl {
+    key: string;
+    scope?: 'filter' | 'query';
+}
+
+export function buildClearAllPatch(
+    filters: ServerSearchFilter[],
+    controls: SearchClearControl[] = [],
+): SearchNavigationPatch {
+    const topLevelReset: SearchNavigationPatch = {};
+    const filterReset: SearchNavigationPatch = {
+        search: null,
+        ...filters.reduce<SearchNavigationPatch>(
+            (patch, filter) => ({ ...patch, ...clearedFilterValues(filter) }),
+            {},
+        ),
+    };
+
+    for (const control of controls) {
+        if ((control.scope ?? 'filter') === 'query') {
+            topLevelReset[control.key] = null;
+        } else {
+            filterReset[control.key] = null;
+        }
+    }
+
+    return { ...topLevelReset, filter: filterReset };
+}

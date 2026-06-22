@@ -2,13 +2,12 @@ import {
     FilesIcon,
     MessageCircleIcon,
     MessageCirclePlusIcon,
+    PanelRightCloseIcon,
+    PanelRightOpenIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
-import {
-    AppRightSidebar,
-    AppRightSidebarCloseButton,
-} from '@/components/app-right-sidebar';
+import { AppRightSidebar } from '@/components/app-right-sidebar';
 import { CommentForm, CommentList } from '@/components/comments';
 import type { Comment } from '@/components/comments/types';
 import { useDocumentsPanel } from '@/components/documents/documents-panel';
@@ -174,6 +173,16 @@ export function useCommentsDocumentsSidebar({
         closeSidebar();
     };
 
+    const toggleSidebar = () => {
+        if (open) {
+            handleClose();
+
+            return;
+        }
+
+        setOpen(true);
+    };
+
     const handleTabChange = (tab: CommentsDocumentsSidebarTab) => {
         setActiveTab(tab);
 
@@ -192,13 +201,16 @@ export function useCommentsDocumentsSidebar({
         activePanel: open ? activeTab : null,
         openCommentsTab,
         openDocumentsTab,
+        toolbar: !open ? (
+            <SidebarToggleButton open={false} onToggle={toggleSidebar} />
+        ) : null,
         rightSidebar: (
             <CommentsDocumentsSidebar
                 open={open}
                 onOpenChange={handleOpenChange}
                 activeTab={activeTab}
                 onTabChange={handleTabChange}
-                onClose={handleClose}
+                onToggle={toggleSidebar}
                 comments={{
                     count: comments.length,
                     hasContent: comments.length > 0,
@@ -282,17 +294,30 @@ export function useDocumentsSidebar({
         setOpen(nextOpen);
     };
 
+    const toggleSidebar = () => {
+        if (open) {
+            closeSidebar();
+
+            return;
+        }
+
+        setOpen(true);
+    };
+
     return {
         documentCount: documentsPanel.count,
         activePanel: open ? activeTab : null,
         openDocumentsTab,
+        toolbar: !open ? (
+            <SidebarToggleButton open={false} onToggle={toggleSidebar} />
+        ) : null,
         rightSidebar: (
             <CommentsDocumentsSidebar
                 open={open}
                 onOpenChange={handleOpenChange}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
-                onClose={closeSidebar}
+                onToggle={toggleSidebar}
                 documents={{
                     count: documentsPanel.count,
                     hasContent: documentsPanel.hasContent,
@@ -311,12 +336,103 @@ interface SidebarSection {
     hasContent?: boolean;
 }
 
+function SidebarToggleButton({
+    open,
+    onToggle,
+}: {
+    open: boolean;
+    onToggle: () => void;
+}) {
+    const copy: ActivityCopy = useSharedComponentCopy();
+
+    return (
+        <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            aria-label={copy.activityToggleSidebar}
+            aria-expanded={open}
+            data-test="activity-sidebar-toggle"
+            onClick={onToggle}
+            className="aria-expanded:bg-transparent aria-expanded:hover:bg-muted"
+        >
+            {open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
+        </Button>
+    );
+}
+
+function ActivityTabs({
+    activeTab,
+    onTabChange,
+    comments,
+    documents,
+}: {
+    activeTab: CommentsDocumentsSidebarTab;
+    onTabChange: (tab: CommentsDocumentsSidebarTab) => void;
+    comments?: SidebarSection;
+    documents?: SidebarSection;
+}) {
+    const copy: ActivityCopy = useSharedComponentCopy();
+
+    return (
+        <Tabs
+            value={activeTab}
+            onValueChange={(value: string) =>
+                onTabChange(value as CommentsDocumentsSidebarTab)
+            }
+        >
+            <TabsList>
+                {comments && (
+                    <TabsTrigger
+                        value="comments"
+                        aria-label={copy.activityCommentsTab}
+                        data-test="activity-tab-comments"
+                    >
+                        <MessageCircleIcon />
+                        {(comments.count ?? 0) > 0 && (
+                            <Badge
+                                variant={
+                                    activeTab === 'comments'
+                                        ? 'secondary'
+                                        : 'ghost'
+                                }
+                            >
+                                {comments.count}
+                            </Badge>
+                        )}
+                    </TabsTrigger>
+                )}
+                {documents && (
+                    <TabsTrigger
+                        value="documents"
+                        aria-label={copy.activityDocumentsTab}
+                        data-test="activity-tab-documents"
+                    >
+                        <FilesIcon />
+                        {(documents.count ?? 0) > 0 && (
+                            <Badge
+                                variant={
+                                    activeTab === 'documents'
+                                        ? 'secondary'
+                                        : 'ghost'
+                                }
+                            >
+                                {documents.count}
+                            </Badge>
+                        )}
+                    </TabsTrigger>
+                )}
+            </TabsList>
+        </Tabs>
+    );
+}
+
 interface CommentsDocumentsSidebarProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     activeTab: CommentsDocumentsSidebarTab;
     onTabChange: (tab: CommentsDocumentsSidebarTab) => void;
-    onClose: () => void;
+    onToggle: () => void;
     comments?: SidebarSection;
     documents?: SidebarSection;
 }
@@ -326,11 +442,10 @@ function CommentsDocumentsSidebar({
     onOpenChange,
     activeTab,
     onTabChange,
-    onClose,
+    onToggle,
     comments,
     documents,
 }: CommentsDocumentsSidebarProps) {
-    const copy: ActivityCopy = useSharedComponentCopy();
     const availableTabs = {
         comments: comments !== undefined,
         documents: documents !== undefined,
@@ -352,87 +467,38 @@ function CommentsDocumentsSidebar({
 
     return (
         <AppRightSidebar open={open} onOpenChange={onOpenChange}>
-            <Tabs
-                value={resolvedActiveTab}
-                orientation="vertical"
-                onValueChange={(value: string) =>
-                    onTabChange(value as CommentsDocumentsSidebarTab)
-                }
-                className="min-h-0 flex-1 flex-col gap-0"
-            >
-                <SidebarHeader className="px-4 lg:px-0 lg:pt-0 lg:pb-4">
-                    <div className="flex justify-between gap-3">
-                        <TabsList className="h-auto flex-col items-stretch gap-2">
-                            {comments && (
-                                <TabsTrigger
-                                    value="comments"
-                                    className="w-full justify-start"
-                                >
-                                    <MessageCircleIcon className="size-4" />
-                                    <span>{copy.activityCommentsTab}</span>
-                                    {(comments.count ?? 0) > 0 && (
-                                        <Badge
-                                            variant={
-                                                resolvedActiveTab === 'comments'
-                                                    ? 'secondary'
-                                                    : 'ghost'
-                                            }
-                                        >
-                                            {comments.count}
-                                        </Badge>
-                                    )}
-                                </TabsTrigger>
-                            )}
-                            {documents && (
-                                <TabsTrigger
-                                    value="documents"
-                                    className="w-full justify-start"
-                                >
-                                    <FilesIcon className="size-4" />
-                                    <span>{copy.activityDocumentsTab}</span>
-                                    {(documents.count ?? 0) > 0 && (
-                                        <Badge
-                                            variant={
-                                                resolvedActiveTab ===
-                                                'documents'
-                                                    ? 'secondary'
-                                                    : 'ghost'
-                                            }
-                                        >
-                                            {documents.count}
-                                        </Badge>
-                                    )}
-                                </TabsTrigger>
-                            )}
-                        </TabsList>
+            <SidebarHeader className="min-h-13 flex-row items-center justify-between gap-2 px-4 py-2 lg:px-0">
+                <ActivityTabs
+                    activeTab={resolvedActiveTab}
+                    onTabChange={onTabChange}
+                    comments={comments}
+                    documents={documents}
+                />
+                <SidebarToggleButton open={open} onToggle={onToggle} />
+            </SidebarHeader>
 
-                        <AppRightSidebarCloseButton onClick={onClose} />
-                    </div>
-                </SidebarHeader>
+            {showActiveContent && (
+                <SidebarContent
+                    data-test="activity-sidebar-content"
+                    className="m-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden rounded-xl border bg-background shadow-sm lg:mx-0 lg:border-0"
+                >
+                    <ScrollArea className="h-full min-h-0">
+                        {activeSection?.content}
+                    </ScrollArea>
+                </SidebarContent>
+            )}
 
-                {showActiveContent && (
-                    <SidebarContent
-                        data-test="activity-sidebar-content"
-                        className="m-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden rounded-xl border bg-background shadow-sm lg:mx-0 lg:border-0"
-                    >
-                        <ScrollArea className="h-full min-h-0">
-                            {activeSection?.content}
-                        </ScrollArea>
-                    </SidebarContent>
-                )}
-
-                {activeSection?.footer && (
-                    <SidebarFooter
-                        data-test="activity-sidebar-footer"
-                        className={cn(
-                            'px-4 lg:px-0 lg:pb-0',
-                            showActiveContent ? 'lg:pt-4' : 'pt-0',
-                        )}
-                    >
-                        {activeSection.footer}
-                    </SidebarFooter>
-                )}
-            </Tabs>
+            {activeSection?.footer && (
+                <SidebarFooter
+                    data-test="activity-sidebar-footer"
+                    className={cn(
+                        'px-4 lg:px-0 lg:pb-0',
+                        showActiveContent ? 'lg:pt-4' : 'pt-0',
+                    )}
+                >
+                    {activeSection.footer}
+                </SidebarFooter>
+            )}
         </AppRightSidebar>
     );
 }

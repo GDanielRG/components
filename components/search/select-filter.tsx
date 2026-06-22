@@ -26,12 +26,18 @@ type SelectFilterProps = {
     onOpenChange: (open: boolean) => void;
     onValueChange: (value: string | null) => void;
     testIdPrefix?: string;
+    /**
+     * Whether the value can be cleared back to "none". Required view controls
+     * (e.g. grouping / period) that always carry a default pass `false` so the
+     * popover omits the clear action and the trigger never reads as empty.
+     */
+    clearable?: boolean;
 };
 
 /**
  * Single-value filter rendered as a Popover-with-form: the trigger mirrors the
  * faceted-filter chip and the popup holds a radio list. Picking an option
- * commits immediately; the clear action resets it.
+ * commits immediately; the clear action resets it (unless `clearable` is false).
  */
 export function SelectFilter({
     filter,
@@ -40,6 +46,7 @@ export function SelectFilter({
     onOpenChange,
     onValueChange,
     testIdPrefix,
+    clearable = true,
 }: SelectFilterProps) {
     const copy: SearchCopy = useSharedComponentCopy();
     const selectedOption =
@@ -114,7 +121,7 @@ export function SelectFilter({
                             );
                         })}
                     </RadioGroup>
-                    {selectedOption && (
+                    {clearable && selectedOption && (
                         <Button
                             data-test={resolveTestId(
                                 `filter-${filter.key}-clear`,

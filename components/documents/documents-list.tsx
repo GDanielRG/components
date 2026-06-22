@@ -263,10 +263,16 @@ function DocumentActionsDropdown({
                     {copy.documentsDownload}
                 </DropdownMenuItem>
                 {onDelete && (
-                    <DropdownMenuItem variant="destructive" onClick={onDelete}>
-                        <TrashIcon />
-                        {copy.dialogDelete}
-                    </DropdownMenuItem>
+                    <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            variant="destructive"
+                            onClick={onDelete}
+                        >
+                            <TrashIcon />
+                            {copy.dialogDelete}
+                        </DropdownMenuItem>
+                    </>
                 )}
             </DropdownMenuSubContent>
         </DropdownMenuSub>

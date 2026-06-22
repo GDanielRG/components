@@ -3,6 +3,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import type { ActionsCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
+import { DropdownMenuGroup } from '@/components/ui/dropdown-menu';
 import { TableCell } from '@/components/ui/table';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
@@ -46,7 +47,7 @@ export function RowActions({
                     ))
                 }
             >
-                {children}
+                <DropdownMenuGroup>{children}</DropdownMenuGroup>
             </ActionsDropdownMenu>
         </TableCell>
     );

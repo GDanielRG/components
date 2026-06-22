@@ -1,16 +1,18 @@
 import { usePage } from '@inertiajs/react';
-import { SearchIcon } from 'lucide-react';
+import { FunnelPlusIcon, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactNode, SubmitEventHandler } from 'react';
 import { ExportDialog } from '@/components/export-dialog';
 import { Filters } from '@/components/search/filters';
 import {
+    buildClearAllPatch,
     getQueryValue,
     getQueryValues,
     parseCurrentQuery,
     resolveCurrentSearch,
 } from '@/components/search/query-utils';
-import { SearchAppliedFilters } from '@/components/search/search-applied-filters';
+import type { SearchClearControl } from '@/components/search/query-utils';
+import { SearchAppliedFiltersDisclosure } from '@/components/search/search-applied-filters';
 import type {
     SearchAppliedFiltersState,
     SearchFilterPopoverState,
@@ -37,9 +39,14 @@ export interface UseSearchReturn extends SearchNavigationController {
     filterPopoverState: SearchFilterPopoverState;
 }
 
+export interface UseSearchOptions {
+    viewControls?: SearchClearControl[];
+}
+
 export function useSearch(
     routeFn: RouteFn,
     filters: ServerSearchFilter[] = [],
+    options: UseSearchOptions = {},
 ): UseSearchReturn {
     const { url } = usePage();
 
@@ -89,6 +96,7 @@ export function useSearch(
             selectValues,
             navigation,
             searchValue: initialSearch,
+            clearAllPatch: buildClearAllPatch(filters, options.viewControls),
         },
         filterPopoverState,
     };
@@ -104,6 +112,10 @@ export function SearchControls({
     className?: string;
 }) {
     const copy: SearchCopy = useSharedComponentCopy();
+    const [filtersAreDisclosed, setFiltersAreDisclosed] = useState(false);
+    const hasInactiveFilters = search.filters.some(
+        (filter) => (search.filterValues[filter.key] ?? []).length === 0,
+    );
     const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -142,7 +154,19 @@ export function SearchControls({
                 </Button>
             </ButtonGroup>
 
-            {search.filters.length > 0 && (
+            {hasInactiveFilters && !filtersAreDisclosed && (
+                <Button
+                    data-test="search-filters-disclosure-trigger"
+                    type="button"
+                    variant="outline"
+                    onClick={() => setFiltersAreDisclosed(true)}
+                >
+                    <FunnelPlusIcon data-icon="inline-start" />
+                    {copy.searchFiltersTrigger}
+                </Button>
+            )}
+
+            {filtersAreDisclosed && (
                 <Filters
                     filters={search.filters}
                     filterValues={search.filterValues}
@@ -162,35 +186,42 @@ export function SearchResults({
     exportAction,
     exportTitle,
     toolbar,
+    testIdPrefix,
+    children,
 }: {
     search: UseSearchReturn;
     resultsMessage: string;
     exportAction?: RouteMutationFn;
     exportTitle?: string;
     toolbar?: ReactNode;
+    testIdPrefix?: string;
+    children?: ReactNode;
 }) {
     return (
-        <div className="flex flex-wrap justify-between gap-3">
-            <div className="flex flex-col gap-2 self-center">
-                <p className="line-clamp-2 text-xs leading-none text-muted-foreground">
+        <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+                <p className="line-clamp-2 min-w-0 flex-1 text-xs leading-none text-muted-foreground">
                     {resultsMessage}
                 </p>
-                <SearchAppliedFilters
+                {(toolbar || exportAction) && (
+                    <ButtonGroup className="shrink-0">
+                        {exportAction && (
+                            <ExportDialog
+                                exportAction={exportAction}
+                                search={search}
+                                title={exportTitle}
+                            />
+                        )}
+                        {toolbar}
+                    </ButtonGroup>
+                )}
+            </div>
+            {children ?? (
+                <SearchAppliedFiltersDisclosure
                     appliedFilters={search.appliedFilters}
                     popoverState={search.filterPopoverState}
+                    testIdPrefix={testIdPrefix}
                 />
-            </div>
-            {(toolbar || exportAction) && (
-                <ButtonGroup className="ml-auto shrink-0 self-end">
-                    {exportAction && (
-                        <ExportDialog
-                            exportAction={exportAction}
-                            search={search}
-                            title={exportTitle}
-                        />
-                    )}
-                    {toolbar}
-                </ButtonGroup>
             )}
         </div>
     );

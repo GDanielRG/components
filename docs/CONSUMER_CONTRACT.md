@@ -24,8 +24,10 @@ components are tested as one frontend foundation.
 - TypeScript alias: `@/*` resolves to `resources/js/*`.
 - `@/hooks/use-shared-component-copy` returns the locale-specific
   `SharedComponentCopy` contract installed at `@/components/types/shared-component-copy`.
-- `@/components/app-right-sidebar` exports controlled `AppRightSidebar` and
-  `AppRightSidebarCloseButton` components.
+  Archive consumers must provide the `ArchiveCopy` slice:
+  `archiveBadgeLabel`, `archiveBadgeTooltip`, and `archiveConfirmLabel`.
+- `@/components/app-right-sidebar` exports the controlled `AppRightSidebar`
+  component.
 
 The copy hook and sidebar shell stay app-owned because locale and shell styling intentionally vary
 between consumers. Registry installs and reinstalls never overwrite them.

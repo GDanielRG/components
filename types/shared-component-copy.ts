@@ -31,6 +31,12 @@ export interface ActionsCopy {
     actionsLabel: string;
 }
 
+export interface ArchiveCopy {
+    archiveBadgeLabel: string;
+    archiveBadgeTooltip: (formattedArchivedAt: string) => string;
+    archiveConfirmLabel: string;
+}
+
 export interface TableCopy {
     columnsLabel: string;
     hideColumnLabel: string;
@@ -56,6 +62,7 @@ export interface ActivityCopy {
     activityAddComment: string;
     activityCommentsTab: string;
     activityDocumentsTab: string;
+    activityToggleSidebar: string;
 }
 
 export interface DocumentsCopy {
@@ -102,10 +109,12 @@ export interface ExportCopy {
 }
 
 export interface SearchCopy {
+    searchAppliedFiltersTrigger: string;
     searchClearFilter: string;
     searchClearFilters: string;
     searchClearSearch: string;
     searchClearing: string;
+    searchFiltersTrigger: string;
     searchNoResults: string;
     searchPlaceholder: string;
     searchSelectedCount: (count: number) => string;
@@ -117,6 +126,7 @@ export interface SharedComponentCopy
         FormCopy,
         PaginationCopy,
         ActionsCopy,
+        ArchiveCopy,
         TableCopy,
         CommentsCopy,
         ActivityCopy,

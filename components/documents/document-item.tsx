@@ -17,7 +17,10 @@ import {
 } from '@/components/documents/utils';
 import type { DocumentsCopy } from '@/components/types/shared-component-copy';
 import { Button } from '@/components/ui/button';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import {
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
@@ -157,6 +160,7 @@ export function DocumentItem({
                         </DropdownMenuItem>
                     )}
 
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem variant="destructive" onClick={onDelete}>
                         <TrashIcon />
                         {copy.documentsDeleteTitle}

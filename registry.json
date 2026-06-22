@@ -128,6 +128,32 @@
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
+            "name": "archive",
+            "type": "registry:item",
+            "title": "Archive",
+            "description": "Archive status badge and confirmation modal for soft-delete-backed archive flows.",
+            "registryDependencies": [
+                "GDanielRG/components/core",
+                "alert-dialog",
+                "badge",
+                "tooltip"
+            ],
+            "files": [
+                {
+                    "path": "components/archive-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/archive-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/archived-status-badge.tsx",
+                    "type": "registry:component",
+                    "target": "@components/archived-status-badge.tsx"
+                }
+            ],
+            "docs": "Requires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.",
+            "dependencies": ["lucide-react@^1.17.0"]
+        },
+        {
             "name": "sidebar",
             "type": "registry:item",
             "title": "Sidebar",
@@ -461,7 +487,8 @@
                 "GDanielRG/components/table",
                 "GDanielRG/components/comments",
                 "GDanielRG/components/documents",
-                "GDanielRG/components/activity"
+                "GDanielRG/components/activity",
+                "GDanielRG/components/archive"
             ],
             "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
         }
