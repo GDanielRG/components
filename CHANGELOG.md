@@ -1,8 +1,39 @@
 # Changelog
 
-This project follows semantic versioning; pin installs to a tag (e.g. `…/foundations#v1.0.0`).
+The fleet is **pre-production**. Shared waves now ship as immutable, dated **snapshot
+tags** (`snapshot-YYYYMMDD-<short-sha>`); strict semantic versioning resumes at the
+production cutover. See [docs/MAINTAINING.md](docs/MAINTAINING.md) for the two-phase
+release policy. Pin installs to a snapshot tag, e.g.
+`…/foundations#snapshot-20260623-<sha>`.
 
-## v1.1.0 — 2026-06-12
+## Snapshots (pre-production)
+
+### Pending — next snapshot
+
+Everything on `main` since the `v1.1.0` entry below, awaiting a `snapshot-*` tag. Cut it
+with `npm run registry:release -- snapshot-YYYYMMDD-<short-sha>` (maintainer tags/pushes).
+
+- **Added** the `archive` bundle and folded it into `foundations`: `ArchivedStatusBadge`,
+  `ArchiveConfirmationModal`, and `ArchiveConfirmationForm` — the Form + modal pairing that
+  mirrors `DestroyConfirmationForm` (archive reuses the DELETE route).
+- **Comments:** the `Comment` type and `comment-list` now read a uniform
+  `author?: { name, avatar }` shape and fall back to the legacy `employee.user.name`, so
+  Employee-authored and User-authored comment surfaces share one component. Backward
+  compatible — existing consumers that emit `employee` need no backend change.
+- **Rebuilt** `comments-documents-sidebar` from primitives and reworked the `search` bundle.
+- ⚠ **Breaking (frontend contract)** carried on `main` since `v1.1.0` — a snapshot tag has no
+  SemVer signal, so adopt these explicitly in any fresh consumer (all siblings already have):
+  `onClose → onToggle`; search renames `reset → clearAll`, `controls → viewControls`,
+  `SearchViewControl → SearchClearControl`, `buildResetPatch → buildClearAllPatch`, and the
+  `showAppliedFilters` boolean → a `children` slot; `AppRightSidebarCloseButton` dropped from
+  the app-owned export contract; the `archive` bundle requires new `ArchiveCopy` copy keys.
+
+## Semantic versions (historical, pre-production)
+
+> These early `v1.x` labels predate the snapshot policy. `v1.0.0` is the only minted git tag;
+> `v1.1.0` was documented but never tagged. Kept for provenance.
+
+## v1.1.0 — 2026-06-12 (documented, not tagged)
 
 - Added the `sidebar` consumption bundle (`components/ui/sidebar.tsx` +
   `hooks/use-mobile.ts`): provider with keyboard-shortcut and mobile

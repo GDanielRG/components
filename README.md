@@ -12,13 +12,18 @@ the [frontend baseline](docs/CONSUMER_CONTRACT.md):
 npx shadcn add GDanielRG/components/foundations#v1.0.0
 ```
 
-Always pin to a release ref — a tag or a commit SHA — never a branch. ShadCN does not inherit a ref
-across registry dependencies, so each release pins every internal bundle to its tag: `#v1.0.0`
-resolves all seven bundles at that release. Published release tags are never re-pointed, so a tag pin
-is stable. To pin to a ref that cannot move even in principle, use the release's commit SHA:
+Always pin to a **release ref** — a published tag (or that tag's commit SHA), never a branch and
+never a bare `main` SHA. ShadCN does not inherit a ref across registry dependencies, so each release
+pins every internal bundle to one immutable ref: `#v1.0.0` resolves all of that release's bundles at
+that ref. A bare `main` commit SHA is _not_ a safe pin — on `main` the internal deps carry no ref, so
+the nested bundles would resolve against the default branch instead of your SHA.
+
+The fleet is pre-production, so the latest shared state is published as a dated, immutable **snapshot
+tag** rather than a semantic version (see [the maintenance guide](docs/MAINTAINING.md) for the
+two-phase release policy). Install the most recent one — for example:
 
 ```sh
-npx shadcn add GDanielRG/components/foundations#85cb9244b166aa5f7d1f496efb6f8ec8a81c6dd7
+npx shadcn add GDanielRG/components/foundations#snapshot-20260623-<short-sha>
 ```
 
 The consumer also provides two intentionally app-owned files:
@@ -32,6 +37,7 @@ route contracts.
 ## Bundles
 
 - `core` — shared types, hooks, pagination, and generic components
+- `archive` — archive status badge, confirmation modal, and form for soft-delete archive flows
 - `sidebar` — fleet sidebar provider, rail, and menu primitives
 - `search` — server-driven search controls and export dialog
 - `table` — sorting, visibility, and row-action helpers

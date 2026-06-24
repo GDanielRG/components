@@ -145,13 +145,18 @@
                     "target": "@components/archive-confirmation-modal.tsx"
                 },
                 {
+                    "path": "components/archive-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/archive-confirmation-form.tsx"
+                },
+                {
                     "path": "components/archived-status-badge.tsx",
                     "type": "registry:component",
                     "target": "@components/archived-status-badge.tsx"
                 }
             ],
             "docs": "Requires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.",
-            "dependencies": ["lucide-react@^1.17.0"]
+            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
             "name": "sidebar",

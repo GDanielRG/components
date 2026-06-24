@@ -117,7 +117,7 @@ function CommentItem({
 }: CommentItemProps) {
     const copy: CommentsCopy & DialogCopy = useSharedComponentCopy();
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const authoredName = comment.employee?.user?.name;
+    const authoredName = comment.author?.name ?? comment.employee?.user?.name;
     const initials = authoredName ? getInitials(authoredName) : null;
     const canManageComment = Boolean(comment.can_be_managed);
     const hasPrimaryAction = isEditing

@@ -122,6 +122,7 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
     const clearSearchRoute = navigation.buildRoute(
         buildPathPatch(['filter', 'search'], null),
     );
+
     return (
         <div className={cn('flex flex-wrap items-center gap-2', className)}>
             {hasSearch && (
