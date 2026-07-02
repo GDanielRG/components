@@ -22,6 +22,8 @@ components are tested as one frontend foundation.
 
 - `components.json` aliases: `@/components`, `@/components/ui`, `@/hooks`, and `@/lib/utils`.
 - TypeScript alias: `@/*` resolves to `resources/js/*`.
+- `@/lib/utils` exports both `cn` (stock ShadCN) and `toUrl(href)` — the fleet-standard
+  Inertia href→string resolver the graduated `use-current-url` hook imports.
 - `@/hooks/use-shared-component-copy` returns the locale-specific
   `SharedComponentCopy` contract installed at `@/components/types/shared-component-copy`.
   Archive consumers must provide the `ArchiveCopy` slice:
@@ -40,3 +42,11 @@ Comments receive `storeCommentForm`, `updateCommentForm`, and `destroyCommentFor
 Pass generated Wayfinder controller actions into those props. Shared components depend only on the
 small structural route contracts installed at `@/components/types/wayfinder`; they never hardcode a
 consumer controller.
+
+## Live comment updates
+
+The activity sidebar owns the visual comments/documents shell and accepts an optional
+`renderCommentLiveUpdates({ enabled })` render prop. Keep broadcast clients, generated Wayfinder
+channel helpers, and app-specific Echo/Reverb hooks in the consuming app, then return a headless
+subscriber from that render prop. The sidebar passes `enabled=false` while a user is creating or
+editing a comment so remote reloads cannot clobber local draft state.

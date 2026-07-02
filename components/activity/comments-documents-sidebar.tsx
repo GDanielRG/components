@@ -1,4 +1,5 @@
 import {
+    ArrowDownIcon,
     FilesIcon,
     MessageCircleIcon,
     MessageCirclePlusIcon,
@@ -8,6 +9,14 @@ import {
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { AppRightSidebar } from '@/components/app-right-sidebar';
+import {
+    MessageScroller,
+    MessageScrollerButton,
+    MessageScrollerContent,
+    MessageScrollerItem,
+    MessageScrollerProvider,
+    MessageScrollerViewport,
+} from '@/components/chat/message-scroller';
 import { CommentForm, CommentList } from '@/components/comments';
 import type { Comment } from '@/components/comments/types';
 import { useDocumentsPanel } from '@/components/documents/documents-panel';
@@ -29,6 +38,8 @@ import { cn } from '@/lib/utils';
 
 type CommentsDocumentsSidebarTab = 'comments' | 'documents';
 
+type RenderCommentLiveUpdates = (state: { enabled: boolean }) => ReactNode;
+
 interface UseCommentsDocumentsSidebarStateProps {
     defaultOpen?: boolean;
     defaultTab?: CommentsDocumentsSidebarTab;
@@ -48,6 +59,28 @@ interface UseCommentsDocumentsSidebarProps {
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     updateCommentForm: (commentId: number) => RouteDefinition<'put' | 'patch'>;
     destroyCommentForm: (commentId: number) => RouteDefinition<'delete'>;
+    renderCommentLiveUpdates?: RenderCommentLiveUpdates;
+    /**
+     * Optional ephemeral typing indicator appended after the comment list as a
+     * trailing scroller item. Pass a falsy value (e.g. `null`) when nobody is
+     * typing so the scroller never reserves an empty item. App-owned: the
+     * registry only places it.
+     */
+    commentTypingIndicator?: ReactNode;
+    /**
+     * Fires with the create-composer draft on every change, for live typing
+     * presence. Wired to the create `CommentForm`'s `onContentChange`.
+     */
+    onCommentDraftChange?: (content: string) => void;
+    /** Fires when the create-composer textarea receives focus. */
+    onCommentDraftFocus?: () => void;
+    /** Fires when the create-composer textarea loses focus. */
+    onCommentDraftBlur?: () => void;
+    /**
+     * Fires whenever the create composer closes (cancel, successful submit, tab
+     * change, or sidebar close) so the app can stop broadcasting typing.
+     */
+    onCommentComposerClose?: () => void;
     defaultOpen?: boolean;
 }
 
@@ -112,6 +145,12 @@ export function useCommentsDocumentsSidebar({
     showDocumentAction,
     updateCommentForm,
     destroyCommentForm,
+    renderCommentLiveUpdates,
+    commentTypingIndicator,
+    onCommentDraftChange,
+    onCommentDraftFocus,
+    onCommentDraftBlur,
+    onCommentComposerClose,
     defaultOpen,
 }: UseCommentsDocumentsSidebarProps) {
     const copy: ActivityCopy = useSharedComponentCopy();
@@ -125,6 +164,7 @@ export function useCommentsDocumentsSidebar({
         comments.length > 0 || documents.length === 0
             ? 'comments'
             : 'documents';
+    const chronologicalComments = comments.slice().reverse();
     const {
         activeTab,
         closeSidebar,
@@ -153,6 +193,7 @@ export function useCommentsDocumentsSidebar({
 
     const hideCreateComment = () => {
         setIsCreatingComment(false);
+        onCommentComposerClose?.();
     };
 
     const clearCommentComposerState = () => {
@@ -205,55 +246,82 @@ export function useCommentsDocumentsSidebar({
             <SidebarToggleButton open={false} onToggle={toggleSidebar} />
         ) : null,
         rightSidebar: (
-            <CommentsDocumentsSidebar
-                open={open}
-                onOpenChange={handleOpenChange}
-                activeTab={activeTab}
-                onTabChange={handleTabChange}
-                onToggle={toggleSidebar}
-                comments={{
-                    count: comments.length,
-                    hasContent: comments.length > 0,
-                    content: (
-                        <CommentList
-                            comments={comments}
-                            updateFormAction={updateCommentForm}
-                            editingCommentId={editingCommentId}
-                            onEdit={handleEditComment}
-                            onCancelEdit={clearEditingComment}
-                            destroyFormAction={destroyCommentForm}
-                        />
-                    ),
-                    footer: isCreatingComment ? (
-                        <CommentForm
-                            formAction={storeCommentForm}
-                            mode="create"
-                            onCancel={hideCreateComment}
-                            autoFocus
-                        />
-                    ) : (
-                        <div className="flex flex-col gap-2 sm:flex-row">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="lg"
-                                className="w-full justify-center sm:flex-1"
-                                data-test="add-comment-button"
-                                onClick={() => setIsCreatingComment(true)}
-                            >
-                                <MessageCirclePlusIcon />
-                                {copy.activityAddComment}
-                            </Button>
-                        </div>
-                    ),
-                }}
-                documents={{
-                    count: documentsPanel.count,
-                    hasContent: documentsPanel.hasContent,
-                    content: documentsPanel.content,
-                    footer: documentsPanel.footer,
-                }}
-            />
+            <>
+                {renderCommentLiveUpdates?.({
+                    enabled: !isCreatingComment && editingCommentId === null,
+                })}
+                <CommentsDocumentsSidebar
+                    open={open}
+                    onOpenChange={handleOpenChange}
+                    activeTab={activeTab}
+                    onTabChange={handleTabChange}
+                    onToggle={toggleSidebar}
+                    comments={{
+                        count: comments.length,
+                        hasContent: comments.length > 0,
+                        content: (
+                            <>
+                                <CommentList
+                                    comments={chronologicalComments}
+                                    updateFormAction={updateCommentForm}
+                                    editingCommentId={editingCommentId}
+                                    onEdit={handleEditComment}
+                                    onCancelEdit={clearEditingComment}
+                                    destroyFormAction={destroyCommentForm}
+                                    renderContainer={(items) => items}
+                                    renderItem={(item, comment) => (
+                                        <MessageScrollerItem
+                                            key={comment.id}
+                                            messageId={String(comment.id)}
+                                        >
+                                            {item}
+                                        </MessageScrollerItem>
+                                    )}
+                                />
+                                {commentTypingIndicator ? (
+                                    <MessageScrollerItem
+                                        messageId="comment-typing-indicator"
+                                        className="empty:hidden"
+                                    >
+                                        {commentTypingIndicator}
+                                    </MessageScrollerItem>
+                                ) : null}
+                            </>
+                        ),
+                        footer: isCreatingComment ? (
+                            <CommentForm
+                                formAction={storeCommentForm}
+                                mode="create"
+                                onCancel={hideCreateComment}
+                                onContentChange={onCommentDraftChange}
+                                onContentFocus={onCommentDraftFocus}
+                                onContentBlur={onCommentDraftBlur}
+                                autoFocus
+                            />
+                        ) : (
+                            <div className="flex flex-col gap-2 sm:flex-row">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="lg"
+                                    className="w-full justify-center sm:flex-1"
+                                    data-test="add-comment-button"
+                                    onClick={() => setIsCreatingComment(true)}
+                                >
+                                    <MessageCirclePlusIcon data-icon="inline-start" />
+                                    {copy.activityAddComment}
+                                </Button>
+                            </div>
+                        ),
+                    }}
+                    documents={{
+                        count: documentsPanel.count,
+                        hasContent: documentsPanel.hasContent,
+                        content: documentsPanel.content,
+                        footer: documentsPanel.footer,
+                    }}
+                />
+            </>
         ),
     };
 }
@@ -356,7 +424,11 @@ function SidebarToggleButton({
             onClick={onToggle}
             className="aria-expanded:bg-transparent aria-expanded:hover:bg-muted"
         >
-            {open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
+            {open ? (
+                <PanelRightCloseIcon data-icon="icon" />
+            ) : (
+                <PanelRightOpenIcon data-icon="icon" />
+            )}
         </Button>
     );
 }
@@ -446,6 +518,7 @@ function CommentsDocumentsSidebar({
     comments,
     documents,
 }: CommentsDocumentsSidebarProps) {
+    const copy: ActivityCopy = useSharedComponentCopy();
     const availableTabs = {
         comments: comments !== undefined,
         documents: documents !== undefined,
@@ -480,11 +553,38 @@ function CommentsDocumentsSidebar({
             {showActiveContent && (
                 <SidebarContent
                     data-test="activity-sidebar-content"
-                    className="m-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden rounded-xl border bg-background shadow-sm lg:mx-0 lg:border-0"
+                    className={cn(
+                        'm-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden lg:mx-0',
+                        resolvedActiveTab === 'comments' &&
+                            'rounded-xl border bg-background shadow-sm lg:border-0',
+                    )}
                 >
-                    <ScrollArea className="h-full min-h-0">
-                        {activeSection?.content}
-                    </ScrollArea>
+                    {resolvedActiveTab === 'comments' ? (
+                        <MessageScrollerProvider
+                            autoScroll
+                            defaultScrollPosition="end"
+                        >
+                            <MessageScroller>
+                                <MessageScrollerViewport
+                                    aria-label={copy.activityCommentsTab}
+                                >
+                                    <MessageScrollerContent className="gap-2 py-2">
+                                        {activeSection?.content}
+                                    </MessageScrollerContent>
+                                </MessageScrollerViewport>
+                                <MessageScrollerButton>
+                                    <ArrowDownIcon data-icon="icon" />
+                                    <span className="sr-only">
+                                        {copy.activityScrollToLatest}
+                                    </span>
+                                </MessageScrollerButton>
+                            </MessageScroller>
+                        </MessageScrollerProvider>
+                    ) : (
+                        <ScrollArea fadeEdges="y" className="h-full min-h-0">
+                            {activeSection?.content}
+                        </ScrollArea>
+                    )}
                 </SidebarContent>
             )}
 

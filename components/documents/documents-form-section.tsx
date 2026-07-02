@@ -154,7 +154,7 @@ export function DocumentsFormSection({
                 {resolvedLabel} {isOptional && <OptionalLabel />}
             </FieldLabel>
 
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
                 {documents.map((document, index) => {
                     const documentErrors = getDocumentErrors(index);
 
@@ -185,7 +185,7 @@ export function DocumentsFormSection({
                     onClick={() => fileInputRef.current?.click()}
                     className="w-full sm:w-auto"
                 >
-                    <FilePlusIcon />
+                    <FilePlusIcon data-icon="inline-start" />
                     {resolvedButtonText}
                 </Button>
             </div>

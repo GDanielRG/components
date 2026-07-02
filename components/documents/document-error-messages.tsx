@@ -17,7 +17,7 @@ export function DocumentErrorMessages({
     }
 
     return (
-        <div className={cn('space-y-1 pt-1', className)}>
+        <div className={cn('flex flex-col gap-1 pt-1', className)}>
             {filteredMessages.map((message, index) => (
                 <FieldError key={`${index}-${message}`}>{message}</FieldError>
             ))}

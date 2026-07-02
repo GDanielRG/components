@@ -5,8 +5,18 @@ import { cn } from '@/lib/utils';
 function ScrollArea({
     className,
     children,
+    fadeEdges = false,
     ...props
-}: ScrollAreaPrimitive.Root.Props) {
+}: ScrollAreaPrimitive.Root.Props & {
+    /**
+     * Mask the scroll edges with the owned `scroll-fade` utility as an
+     * overflow-more cue. Applied to the Viewport (not the Root) so the
+     * ScrollBar sibling stays unclipped. `true`/`'y'` fades the block axis,
+     * `'x'` the inline axis. Defaults to `false` (no mask, byte-identical to
+     * an unfaded ScrollArea).
+     */
+    fadeEdges?: boolean | 'y' | 'x';
+}) {
     return (
         <ScrollAreaPrimitive.Root
             data-slot="scroll-area"
@@ -15,7 +25,12 @@ function ScrollArea({
         >
             <ScrollAreaPrimitive.Viewport
                 data-slot="scroll-area-viewport"
-                className="size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1"
+                className={cn(
+                    'size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1',
+                    fadeEdges === 'x' && 'scroll-fade-x',
+                    (fadeEdges === true || fadeEdges === 'y') &&
+                        'scroll-fade-y',
+                )}
             >
                 {children}
             </ScrollAreaPrimitive.Viewport>

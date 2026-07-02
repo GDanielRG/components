@@ -10,6 +10,12 @@ bundles (`core`, `archive`, `sidebar`, `search`, `table`, `comments`, `documents
 Keep shared-type imports under `@/components/*`. ShadCN rewrites unregistered `@/types/*` imports and
 some relative type imports incorrectly during installation.
 
+A registry `types/*` file must not share a basename with a component in the same install (e.g. a
+`types/edit-history.ts` next to `components/edit-history.tsx`). ShadCN's import rewriter collapses the
+two same-named modules and points the component's type import at itself, surfacing on install as a
+`Circular definition of import alias` / `declares X locally, but it is not exported` tsc error. Name
+the type file distinctly (`types/edit-history-entry.ts`).
+
 Keep app-owned imports limited to:
 
 - `@/hooks/use-shared-component-copy`

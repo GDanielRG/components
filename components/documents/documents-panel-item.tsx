@@ -3,7 +3,6 @@ import {
     CloudAlertIcon,
     DownloadCloudIcon,
     FileTextIcon,
-    LoaderCircle,
     MoreHorizontalIcon,
     RefreshCwIcon,
     RotateCcwIcon,
@@ -13,6 +12,7 @@ import {
 import { useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
+import { TimestampWithReveal } from '@/components/chat/timestamp-with-reveal';
 import { DocumentErrorMessages } from '@/components/documents/document-error-messages';
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
 import type { ExistingDocumentData } from '@/components/documents/types';
@@ -23,27 +23,26 @@ import type {
     FormCopy,
 } from '@/components/types/shared-component-copy';
 import type { RouteDefinition } from '@/components/types/wayfinder';
+import {
+    Attachment,
+    AttachmentActions,
+    AttachmentContent,
+    AttachmentDescription,
+    AttachmentMedia,
+    AttachmentTitle,
+} from '@/components/ui/attachment';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
+    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
 import { cn } from '@/lib/utils';
 
 const existingDocumentErrorFields = ['name', 'description', 'file'] as const;
@@ -74,7 +73,6 @@ export function DocumentsPanelItem({
     const copy: DocumentsCopy & FormCopy = useSharedComponentCopy();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isEditingMetadata, setIsEditingMetadata] = useState(false);
-    const isSidebarSheet = useIsSidebarSheet();
     const form = useForm<ExistingDocumentFormData>(
         updateDocumentAction(document.id),
         {
@@ -169,66 +167,83 @@ export function DocumentsPanelItem({
     };
 
     const fileError = form.errors.file;
+    const hasFileError = Boolean(fileError);
     const showSaveButton =
         saveState === 'unsaved-changes' &&
         (showMetadataEditor || hasPendingFile);
 
+    let attachmentState:
+        'idle' | 'uploading' | 'processing' | 'error' | 'done' = 'done';
+
+    if (hasFileError) {
+        attachmentState = 'error';
+    } else if (form.processing && hasPendingFile) {
+        attachmentState = 'uploading';
+    }
+
     return (
-        <div data-document-item className="bg-background">
-            <Item className="items-start gap-2 rounded-none border-0 px-2 py-2.5 sm:gap-2.5 sm:px-3 sm:py-3">
-                <ItemMedia className="mt-0.5 self-start">
-                    <DocumentItemMedia
-                        displayName={displayName}
-                        processing={form.processing}
-                        hasPendingFile={hasPendingFile}
-                        hasFileError={Boolean(fileError)}
-                    />
-                </ItemMedia>
+        <div data-document-item>
+            <Attachment
+                state={attachmentState}
+                className={cn(
+                    'w-full items-start',
+                    showMetadataEditor &&
+                        'border-transparent bg-transparent focus-within:ring-0',
+                )}
+            >
+                <AttachmentMedia>
+                    {form.processing && hasPendingFile ? (
+                        <Spinner />
+                    ) : (
+                        <DocumentFileIcon fileName={displayName} />
+                    )}
+                </AttachmentMedia>
 
-                <ItemContent className="min-w-0 gap-1.5">
-                    <ItemTitle className="line-clamp-none block w-full text-sm leading-snug">
-                        {showMetadataEditor ? (
-                            <div className="space-y-2">
-                                <div className="flex items-start gap-2">
-                                    <Input
-                                        type="text"
-                                        value={editableName}
-                                        onChange={handleNameChange}
-                                        placeholder={
-                                            copy.documentsNamePlaceholder
-                                        }
-                                        data-test={`document-name-input-${document.id}`}
-                                    />
-                                    <ExistingDocumentActionsMenu
-                                        document={document}
-                                        showDocumentAction={showDocumentAction}
-                                        showMetadataEditor={showMetadataEditor}
-                                        metadataActionLabel={
-                                            metadataActionLabel
-                                        }
-                                        rowProcessing={form.processing}
-                                        saveState={saveState}
-                                        onToggleMetadataEditor={
-                                            toggleMetadataEditor
-                                        }
-                                        onReplaceFile={() =>
-                                            fileInputRef.current?.click()
-                                        }
-                                        onDiscardChanges={() => {
-                                            discardChanges();
-                                        }}
-                                        onDelete={onDelete}
-                                        buttonVariant="outline"
-                                    />
-                                </div>
+                <AttachmentContent>
+                    {showMetadataEditor ? (
+                        <FieldGroup className="gap-2">
+                            <Field
+                                data-invalid={
+                                    Boolean(form.errors.name) || undefined
+                                }
+                            >
+                                <FieldLabel
+                                    htmlFor={`document-name-input-${document.id}`}
+                                    className="sr-only"
+                                >
+                                    {copy.documentsNamePlaceholder}
+                                </FieldLabel>
+                                <Input
+                                    id={`document-name-input-${document.id}`}
+                                    type="text"
+                                    value={editableName}
+                                    onChange={handleNameChange}
+                                    placeholder={copy.documentsNamePlaceholder}
+                                    aria-invalid={Boolean(form.errors.name)}
+                                    data-test={`document-name-input-${document.id}`}
+                                />
+                            </Field>
 
+                            <Field
+                                data-invalid={
+                                    Boolean(form.errors.description) ||
+                                    undefined
+                                }
+                            >
                                 <OptionalAddButton
                                     buttonText={copy.documentsAddDescription}
                                     defaultOpen={Boolean(
                                         currentDocument.description,
                                     )}
                                 >
+                                    <FieldLabel
+                                        htmlFor={`document-description-input-${document.id}`}
+                                        className="sr-only"
+                                    >
+                                        {copy.documentsDescriptionPlaceholder}
+                                    </FieldLabel>
                                     <Textarea
+                                        id={`document-description-input-${document.id}`}
                                         value={
                                             currentDocument.description || ''
                                         }
@@ -237,84 +252,61 @@ export function DocumentsPanelItem({
                                             copy.documentsDescriptionPlaceholder
                                         }
                                         rows={3}
+                                        aria-invalid={Boolean(
+                                            form.errors.description,
+                                        )}
                                         data-test={`document-description-input-${document.id}`}
                                     />
                                 </OptionalAddButton>
-                            </div>
-                        ) : (
-                            <>
-                                <span
-                                    className={cn(
-                                        'mr-1.5 break-words text-foreground sm:mr-2',
-                                        fileError && 'text-destructive',
-                                    )}
-                                >
-                                    {displayName || copy.documentsFallbackName}
-                                </span>
+                            </Field>
+                        </FieldGroup>
+                    ) : (
+                        <>
+                            <AttachmentTitle
+                                className={cn(fileError && 'text-destructive')}
+                            >
+                                {displayName || copy.documentsFallbackName}
+                            </AttachmentTitle>
 
-                                <span className="inline-flex items-center gap-1.5 align-baseline whitespace-nowrap sm:gap-2">
-                                    {hasSavedDate && (
-                                        <SavedDocumentTimestamp
-                                            formattedUpdatedAt={
-                                                document.formatted_updated_at
-                                            }
-                                            formattedUpdatedAtDiff={
-                                                document.formatted_updated_at_diff
-                                            }
-                                            isSidebarSheet={isSidebarSheet}
-                                        />
-                                    )}
-
-                                    <ExistingDocumentActionsMenu
-                                        document={document}
-                                        showDocumentAction={showDocumentAction}
-                                        showMetadataEditor={showMetadataEditor}
-                                        metadataActionLabel={
-                                            metadataActionLabel
+                            {currentDocument.description ? (
+                                <AttachmentDescription>
+                                    {currentDocument.description}
+                                </AttachmentDescription>
+                            ) : (
+                                hasSavedDate &&
+                                document.formatted_updated_at &&
+                                document.formatted_updated_at_diff && (
+                                    <TimestampWithReveal
+                                        className="mt-0.5"
+                                        relativeLabel={
+                                            document.formatted_updated_at_diff
                                         }
-                                        rowProcessing={form.processing}
-                                        saveState={saveState}
-                                        onToggleMetadataEditor={
-                                            toggleMetadataEditor
+                                        absoluteLabel={
+                                            document.formatted_updated_at
                                         }
-                                        onReplaceFile={() =>
-                                            fileInputRef.current?.click()
-                                        }
-                                        onDiscardChanges={() => {
-                                            discardChanges();
-                                        }}
-                                        onDelete={onDelete}
-                                        buttonVariant="ghost"
                                     />
-                                </span>
-                            </>
-                        )}
-                    </ItemTitle>
-
-                    {!showMetadataEditor && currentDocument.description && (
-                        <p className="text-sm leading-normal break-words text-foreground">
-                            {currentDocument.description}
-                        </p>
+                                )
+                            )}
+                        </>
                     )}
 
                     {fileError && (
-                        <div className="flex items-center justify-between gap-2 pt-1">
-                            <Badge variant="destructive">
-                                <CloudAlertIcon />
-                                {copy.documentsFileError}
-                            </Badge>
-                        </div>
+                        <Badge variant="destructive" className="mt-1 w-fit">
+                            <CloudAlertIcon />
+                            {copy.documentsFileError}
+                        </Badge>
                     )}
 
                     {showSaveButton && (
                         <Button
                             type="button"
                             size="sm"
+                            className="mt-1 w-fit"
                             disabled={form.processing}
                             data-test={`save-document-item-button-${document.id}`}
                             onClick={submitUpdate}
                         >
-                            <SaveIcon />
+                            <SaveIcon data-icon="inline-start" />
                             {copy.saveLabel}
                         </Button>
                     )}
@@ -326,8 +318,21 @@ export function DocumentsPanelItem({
                             fileError,
                         ]}
                     />
-                </ItemContent>
-            </Item>
+                </AttachmentContent>
+
+                <ExistingDocumentActions
+                    document={document}
+                    showDocumentAction={showDocumentAction}
+                    showMetadataEditor={showMetadataEditor}
+                    metadataActionLabel={metadataActionLabel}
+                    rowProcessing={form.processing}
+                    saveState={saveState}
+                    onToggleMetadataEditor={toggleMetadataEditor}
+                    onReplaceFile={() => fileInputRef.current?.click()}
+                    onDiscardChanges={discardChanges}
+                    onDelete={onDelete}
+                />
+            </Attachment>
 
             <input
                 id={`document-file-input-${document.id}`}
@@ -341,7 +346,7 @@ export function DocumentsPanelItem({
     );
 }
 
-interface ExistingDocumentActionsMenuProps {
+interface ExistingDocumentActionsProps {
     document: ExistingDocumentData;
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     showMetadataEditor: boolean;
@@ -352,10 +357,9 @@ interface ExistingDocumentActionsMenuProps {
     onReplaceFile: () => void;
     onDiscardChanges: () => void;
     onDelete?: () => void;
-    buttonVariant: 'ghost' | 'outline';
 }
 
-function ExistingDocumentActionsMenu({
+function ExistingDocumentActions({
     document,
     showDocumentAction,
     showMetadataEditor,
@@ -366,143 +370,74 @@ function ExistingDocumentActionsMenu({
     onReplaceFile,
     onDiscardChanges,
     onDelete,
-    buttonVariant,
-}: ExistingDocumentActionsMenuProps) {
+}: ExistingDocumentActionsProps) {
     const copy: DocumentsCopy & FormCopy = useSharedComponentCopy();
 
     return (
-        <ActionsDropdownMenu
-            align="start"
-            contentClassName="w-fit"
-            trigger={(open) => (
-                <Button
-                    variant={open ? 'secondary' : buttonVariant}
-                    size="icon"
-                    aria-label={copy.documentsActions}
-                    data-test={`document-item-actions-${document.id}`}
-                    disabled={rowProcessing}
-                >
-                    <MoreHorizontalIcon />
-                </Button>
-            )}
-        >
-            <DropdownMenuItem
-                render={
-                    <a
-                        href={showDocumentAction(document.id).url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    />
-                }
+        <AttachmentActions>
+            <ActionsDropdownMenu
+                align="start"
+                contentClassName="w-fit"
+                trigger={(open) => (
+                    <Button
+                        variant={open ? 'secondary' : 'ghost'}
+                        size="icon"
+                        aria-label={copy.documentsActions}
+                        data-test={`document-item-actions-${document.id}`}
+                        disabled={rowProcessing}
+                    >
+                        <MoreHorizontalIcon data-icon="icon" />
+                    </Button>
+                )}
             >
-                <DownloadCloudIcon />
-                {copy.documentsDownloadFile}
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={onToggleMetadataEditor}>
-                <FileTextIcon />
-                {metadataActionLabel}
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={onReplaceFile}>
-                <RefreshCwIcon />
-                {copy.documentsReplaceFile}
-            </DropdownMenuItem>
-
-            {saveState === 'unsaved-changes' && !showMetadataEditor && (
-                <DropdownMenuItem onClick={onDiscardChanges}>
-                    <RotateCcwIcon />
-                    {copy.documentsDiscardChanges}
-                </DropdownMenuItem>
-            )}
-
-            {onDelete && (
-                <>
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem variant="destructive" onClick={onDelete}>
-                        <TrashIcon />
-                        {copy.documentsDeleteTitle}
+                <DropdownMenuGroup>
+                    <DropdownMenuItem
+                        render={
+                            <a
+                                href={showDocumentAction(document.id).url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        }
+                    >
+                        <DownloadCloudIcon />
+                        {copy.documentsDownloadFile}
                     </DropdownMenuItem>
-                </>
-            )}
-        </ActionsDropdownMenu>
-    );
-}
 
-interface DocumentItemMediaProps {
-    displayName: string;
-    processing: boolean;
-    hasPendingFile: boolean;
-    hasFileError: boolean;
-}
+                    <DropdownMenuItem onClick={onToggleMetadataEditor}>
+                        <FileTextIcon />
+                        {metadataActionLabel}
+                    </DropdownMenuItem>
 
-function DocumentItemMedia({
-    displayName,
-    processing,
-    hasPendingFile,
-    hasFileError,
-}: DocumentItemMediaProps) {
-    return (
-        <div
-            className={cn(
-                'flex items-center justify-center rounded-md bg-muted p-1.5 text-muted-foreground',
-                hasFileError && 'bg-destructive/10 text-destructive',
-            )}
-        >
-            {processing && hasPendingFile ? (
-                <LoaderCircle className="size-4 animate-spin" />
-            ) : (
-                <DocumentFileIcon className="size-4" fileName={displayName} />
-            )}
-        </div>
-    );
-}
+                    <DropdownMenuItem onClick={onReplaceFile}>
+                        <RefreshCwIcon />
+                        {copy.documentsReplaceFile}
+                    </DropdownMenuItem>
 
-interface SavedDocumentTimestampProps {
-    formattedUpdatedAt?: string | null;
-    formattedUpdatedAtDiff?: string | null;
-    isSidebarSheet: boolean;
-}
+                    {saveState === 'unsaved-changes' && !showMetadataEditor && (
+                        <DropdownMenuItem onClick={onDiscardChanges}>
+                            <RotateCcwIcon />
+                            {copy.documentsDiscardChanges}
+                        </DropdownMenuItem>
+                    )}
+                </DropdownMenuGroup>
 
-function SavedDocumentTimestamp({
-    formattedUpdatedAt,
-    formattedUpdatedAtDiff,
-    isSidebarSheet,
-}: SavedDocumentTimestampProps) {
-    if (!formattedUpdatedAt || !formattedUpdatedAtDiff) {
-        return null;
-    }
+                {onDelete && (
+                    <>
+                        <DropdownMenuSeparator />
 
-    const diffLabel = (
-        <span className="cursor-pointer text-xs text-muted-foreground underline underline-offset-2">
-            {formattedUpdatedAtDiff}
-        </span>
-    );
-
-    if (isSidebarSheet) {
-        return (
-            <Popover>
-                <PopoverTrigger openOnHover delay={120} closeDelay={80}>
-                    {diffLabel}
-                </PopoverTrigger>
-                <PopoverContent
-                    side="top"
-                    align="start"
-                    className="w-fit max-w-[14rem] p-2 text-xs"
-                >
-                    <p>{formattedUpdatedAt}</p>
-                </PopoverContent>
-            </Popover>
-        );
-    }
-
-    return (
-        <Tooltip>
-            <TooltipTrigger>{diffLabel}</TooltipTrigger>
-            <TooltipContent>
-                <p>{formattedUpdatedAt}</p>
-            </TooltipContent>
-        </Tooltip>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem
+                                variant="destructive"
+                                onClick={onDelete}
+                            >
+                                <TrashIcon />
+                                {copy.documentsDeleteTitle}
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </>
+                )}
+            </ActionsDropdownMenu>
+        </AttachmentActions>
     );
 }

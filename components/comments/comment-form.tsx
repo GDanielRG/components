@@ -26,6 +26,16 @@ interface CommentFormProps {
     initialValue?: string;
     onCancel?: () => void;
     autoFocus?: boolean;
+    /**
+     * Fires on every textarea change with the current draft text. Used by live
+     * typing indicators. The input stays uncontrolled (Inertia `<Form>` owns the
+     * value); this is a passive notification, never a controlled-value setter.
+     */
+    onContentChange?: (content: string) => void;
+    /** Fires when the textarea receives focus. */
+    onContentFocus?: () => void;
+    /** Fires when the textarea loses focus. */
+    onContentBlur?: () => void;
 }
 
 export function CommentForm({
@@ -34,6 +44,9 @@ export function CommentForm({
     initialValue = '',
     onCancel,
     autoFocus = false,
+    onContentChange,
+    onContentFocus,
+    onContentBlur,
 }: CommentFormProps) {
     const copy: CommentsCopy & DialogCopy & FormCopy = useSharedComponentCopy();
     const isEditing = mode === 'edit';
@@ -70,6 +83,11 @@ export function CommentForm({
                                 required
                                 autoFocus={autoFocus}
                                 aria-invalid={!!errors.content}
+                                onChange={(event) =>
+                                    onContentChange?.(event.target.value)
+                                }
+                                onFocus={onContentFocus}
+                                onBlur={onContentBlur}
                             />
 
                             <InputGroupAddon
@@ -155,7 +173,7 @@ export function CommentForm({
                                             {processing ? (
                                                 <LoaderCircle className="animate-spin" />
                                             ) : (
-                                                <ArrowUpIcon className="size-5" />
+                                                <ArrowUpIcon data-icon="icon" />
                                             )}
                                         </TooltipTrigger>
                                         <TooltipContent>

@@ -1,6 +1,6 @@
 # Changelog
 
-The fleet is **pre-production**. Shared waves now ship as immutable, dated **snapshot
+The sibling workspace is **pre-production**. Shared waves now ship as immutable, dated **snapshot
 tags** (`snapshot-YYYYMMDD-<short-sha>`); strict semantic versioning resumes at the
 production cutover. See [docs/MAINTAINING.md](docs/MAINTAINING.md) for the two-phase
 release policy. Pin installs to a snapshot tag, e.g.
@@ -13,6 +13,53 @@ release policy. Pin installs to a snapshot tag, e.g.
 Everything on `main` since the `v1.1.0` entry below, awaiting a `snapshot-*` tag. Cut it
 with `npm run registry:release -- snapshot-YYYYMMDD-<short-sha>` (maintainer tags/pushes).
 
+- **Added** owned Tailwind v4 utilities (`components/styles/ui-utilities.css`, shipped by
+  `core` as a `registry:file` targeting `resources/css/ui-utilities.css`; consumers add a
+  one-line `@import './ui-utilities.css';` after the `shadcn/tailwind.css` import). Hand-authored
+  because our installed `shadcn@4.11.0/tailwind.css` ships only `@utility no-scrollbar`. Provides
+  `scroll-fade`/`scroll-fade-y`/`-x`, logical RTL-safe `scroll-fade-s`/`-e` (+ `-t`/`-b`,
+  `-none`, and `scroll-fade-<n>` size knobs) — a static base `mask-image` (graceful degradation)
+  modulated by `animation-timeline: scroll()` (~14px default fade, smaller than upstream's ~40px
+  so the cue stays subtle); the scroll-aware layer is wrapped in
+  `@media (prefers-reduced-motion: no-preference)` so reduced motion pins to the static
+  base. Also `shimmer` (+ `shimmer-once`/`-reverse`/`-none` and `-duration`/`-spread`/`-angle`/
+  `-color` knobs), a `background-clip: text` highlight that disables under
+  `prefers-reduced-motion: reduce`.
+- **Added** `fadeEdges` to `components/ui/scroll-area.tsx` (`boolean | 'y' | 'x'`, default
+  `false`) — masks the Viewport's edges with `scroll-fade-y`/`-x` as an overflow-more cue.
+  `fadeEdges` defaults off so existing scroll areas stay byte-identical until a surface opts in.
+  Generic `DialogFormLayout` bodies intentionally do **not** fade: form dialogs hold focus rings,
+  validation text, and full-width table controls, so masking the padded scroll body is too broad.
+- **Added** two chat bundles, split along the `@shadcn/react` boundary:
+    - **`chat-display`** (consumer-safe; folded into `foundations`) — the `message`/`bubble`/
+      `attachment`/`marker` primitives (`registry:ui`) and `TimestampWithReveal`
+      (`registry:component`). Depends on `GDanielRG/components/core` (`cn`, `use-sidebar-sheet`)
+      plus `button`/`popover`/`tooltip`; npm deps are only `@base-ui/react` + `class-variance-authority`
+      (already shared across consumers). It imports **no** `@shadcn/react`, so `comments`/`documents` can rebuild
+      on these primitives without leaking the pre-1.0 package into every repo.
+    - **`chat`** — the `MessageScroller` family (`registry:component`) + the `chat/index.ts`
+      barrel. This is the only bundle that pulls `@shadcn/react@0.1.0` (`shadcn add` rewrites the
+      pin to a caret downstream). `activity` now depends on it because the comments sidebar uses the
+      sticky-bottom scroller and scroll-to-latest control; display-only consumers can still install
+      `chat-display` without the pre-1.0 package.
+- **Rebuilt** the comments and documents surfaces on the `chat-display` primitives, behaviour-
+  preserving (every `data-test` id retained): `comment-list` now composes `MessageGroup`/`Message`/
+  `MessageAvatar`/`MessageContent`/`MessageFooter` with `Bubble`/`BubbleContent`,
+  `TimestampWithReveal`, optional avatars, current-user alignment, and render hooks for scroller
+  item/container composition. Document rows (`documents-panel-item`, `document-item`,
+  `pending-document-item`) render on the `Attachment` family with upload `state`
+  (idle/uploading/processing/error/done) driving the visual (the title auto-shimmers while
+  uploading/processing). The old `sidebar-document-upload-card` is replaced by inline pending file
+  rows plus a compact `DocumentUploadStatus` control. `comments` and `documents` now depend on
+  `GDanielRG/components/chat-display` (and dropped the now-unused `item`; `documents` also dropped
+  `card`/`popover` and added `spinner`). The activity sidebar composes `MessageScroller` directly
+  for comments, reverses latest-first server data into chronological display, starts at the latest
+  comment, and exposes a scroll-to-latest button. Live broadcast subscribers remain app-owned and
+  are injected via `renderCommentLiveUpdates`, so generated Wayfinder/Reverb types never enter the
+  registry component. A new jsdom render-level regression test (`tests/render`, run by `npm test`)
+  mounts the real rebuilt components and asserts the data-test ids, the `can_be_managed`
+  edit/delete gating, and the document state mapping — the behavioural gate (smoke proves
+  install-determinism only).
 - **Added** the `archive` bundle and folded it into `foundations`: `ArchivedStatusBadge`,
   `ArchiveConfirmationModal`, and `ArchiveConfirmationForm` — the Form + modal pairing that
   mirrors `DestroyConfirmationForm` (archive reuses the DELETE route).
@@ -45,7 +92,7 @@ with `npm run registry:release -- snapshot-YYYYMMDD-<short-sha>` (maintainer tag
   `documents-form-section`, and `faceted-filters` now use explicit named
   `react` type imports.
 - `scroll-area` is now registry-owned: shipped in `core` as
-  `@ui/scroll-area.tsx` (the fleet's Base UI implementation, without the
+  `@ui/scroll-area.tsx` (the registry's Base UI implementation, without the
   unused `import * as React` that upstream shadcn still carries).
   `comments`/`documents`/`activity` no longer declare the upstream shadcn
   `scroll-area` registryDependency — the file resolves transitively through

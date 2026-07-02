@@ -436,13 +436,29 @@ function SidebarSeparator({
     );
 }
 
-function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
+function SidebarContent({
+    className,
+    fadeEdges = true,
+    ...props
+}: React.ComponentProps<'div'> & {
+    /**
+     * Mask the scrolling nav with the owned `scroll-fade-y` utility as an
+     * overflow-more cue on the block axis. The fade size is pinned to the
+     * matching `py-2` inset so the mask only ever overlaps padding — a focused
+     * top/bottom menu item's ring is never clipped, including the static fade
+     * under `prefers-reduced-motion` / no scroll-timeline support. Set `false`
+     * for the byte-identical unmasked content region.
+     */
+    fadeEdges?: boolean;
+}) {
     return (
         <div
             data-slot="sidebar-content"
             data-sidebar="content"
             className={cn(
                 'no-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-auto [--radius:var(--sidebar-radius,var(--radius-xl))] group-data-[collapsible=icon]:overflow-hidden',
+                fadeEdges &&
+                    'scroll-fade-y scroll-fade-t-2 scroll-fade-b-2 py-2 group-data-[collapsible=icon]:scroll-fade-none',
                 className,
             )}
             {...props}

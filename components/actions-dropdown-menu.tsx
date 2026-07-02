@@ -37,7 +37,7 @@ export function ActionsDropdownMenu({
                       size="icon-lg"
                       data-test="actions-menu-trigger"
                   >
-                      <MoreHorizontalIcon />
+                      <MoreHorizontalIcon data-icon="icon" />
                       <span className="sr-only">{resolvedTriggerLabel}</span>
                   </Button>
               ));

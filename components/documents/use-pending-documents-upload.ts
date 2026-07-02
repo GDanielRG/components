@@ -5,10 +5,14 @@ import type { ChangeEvent } from 'react';
 import type {
     DocumentBatchItemErrors,
     DocumentUploadBatch,
+    DocumentUploadItem,
+    DocumentUploadItemState,
     NewDocumentData,
+    PendingDocumentUpload,
 } from '@/components/documents/types';
 import {
     generateTempId,
+    getDocumentDisplayName,
     getDocumentFileSizeError,
 } from '@/components/documents/utils';
 import type { DocumentsCopy } from '@/components/types/shared-component-copy';
@@ -59,6 +63,48 @@ const buildCreatePayload = (
 
 const getBatchTotalBytes = (documents: NewDocumentData[]): number => {
     return documents.reduce((total, document) => total + document.file.size, 0);
+};
+
+/**
+ * Project the internal batch onto the per-file view the panel renders. Progress
+ * stays honest at the batch level; each item only reports its own state/errors.
+ */
+const buildPendingUpload = (
+    batch: DocumentUploadBatch | null,
+): PendingDocumentUpload | null => {
+    if (!batch) {
+        return null;
+    }
+
+    const isUploading = batch.status === 'uploading';
+
+    const items: DocumentUploadItem[] = batch.items.map((item) => {
+        const errors = batch.itemErrors[item.tempId] ?? {};
+        let state: DocumentUploadItemState = 'uploading';
+
+        if (!isUploading) {
+            state = Object.keys(errors).length > 0 ? 'error' : 'idle';
+        }
+
+        return {
+            tempId: item.tempId,
+            file: item.file,
+            displayName: getDocumentDisplayName(item),
+            size: item.file.size,
+            state,
+            errors,
+        };
+    });
+
+    return {
+        items,
+        isUploading,
+        progress: batch.progress,
+        loadedBytes: batch.loadedBytes,
+        totalBytes: batch.totalBytes,
+        error: batch.error,
+        canRetry: batch.canRetry,
+    };
 };
 
 const createFailedBatch = (
@@ -349,7 +395,7 @@ export function usePendingDocumentsUpload({
     };
 
     return {
-        documentBatch,
+        pendingUpload: buildPendingUpload(documentBatch),
         handleFilesChanged,
         retryDocumentBatch,
         dismissDocumentBatch,

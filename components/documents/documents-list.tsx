@@ -103,21 +103,23 @@ function DocumentsListContent<D extends Document>({
                     <DropdownMenuSeparator />
                 </>
             )}
-            {documents.map((document) => {
-                const deleteAction =
-                    document.can_be_deleted && onDeleteDocument
-                        ? () => onDeleteDocument(document)
-                        : undefined;
+            <DropdownMenuGroup>
+                {documents.map((document) => {
+                    const deleteAction =
+                        document.can_be_deleted && onDeleteDocument
+                            ? () => onDeleteDocument(document)
+                            : undefined;
 
-                return (
-                    <DocumentActionsDropdown
-                        key={document.id}
-                        document={document}
-                        showDocumentAction={showDocumentAction}
-                        onDelete={deleteAction}
-                    />
-                );
-            })}
+                    return (
+                        <DocumentActionsDropdown
+                            key={document.id}
+                            document={document}
+                            showDocumentAction={showDocumentAction}
+                            onDelete={deleteAction}
+                        />
+                    );
+                })}
+            </DropdownMenuGroup>
         </>
     );
 }
@@ -154,7 +156,7 @@ export function DocumentsListDropdown({
 
     const defaultTrigger = (
         <Button size="sm" variant={open ? 'secondary' : 'outline'}>
-            <FilesIcon />
+            <FilesIcon data-icon="inline-start" />
             {compact ? documents.length : `${documents.length}`}
         </Button>
     );
@@ -250,28 +252,32 @@ function DocumentActionsDropdown({
                     <DropdownMenuLabel>{documentDisplayName}</DropdownMenuLabel>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                    render={
-                        <a
-                            href={showDocumentAction(document.id).url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        />
-                    }
-                >
-                    <DownloadCloudIcon />
-                    {copy.documentsDownload}
-                </DropdownMenuItem>
+                <DropdownMenuGroup>
+                    <DropdownMenuItem
+                        render={
+                            <a
+                                href={showDocumentAction(document.id).url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        }
+                    >
+                        <DownloadCloudIcon />
+                        {copy.documentsDownload}
+                    </DropdownMenuItem>
+                </DropdownMenuGroup>
                 {onDelete && (
                     <>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            variant="destructive"
-                            onClick={onDelete}
-                        >
-                            <TrashIcon />
-                            {copy.dialogDelete}
-                        </DropdownMenuItem>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem
+                                variant="destructive"
+                                onClick={onDelete}
+                            >
+                                <TrashIcon />
+                                {copy.dialogDelete}
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
                     </>
                 )}
             </DropdownMenuSubContent>

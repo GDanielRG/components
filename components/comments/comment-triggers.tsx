@@ -81,7 +81,7 @@ export function CommentsListPopover({
             size="sm"
             data-test={dataTest}
         >
-            <MessageCircleIcon />
+            <MessageCircleIcon data-icon="inline-start" />
             {compact ? comments.length : label}
         </Button>
     );

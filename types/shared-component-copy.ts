@@ -37,6 +37,26 @@ export interface ArchiveCopy {
     archiveConfirmLabel: string;
 }
 
+export interface HistoryCopy {
+    historyAriaLabel: string;
+    historyBooleanFalse: string;
+    historyBooleanTrue: string;
+    /** Label shown while a structured field's per-leaf detail is expanded. */
+    historyDetailHide: string;
+    /** Trigger label to expand a structured field's per-leaf detail. */
+    historyDetailShow: (count: number) => string;
+    historyEmptyValue: string;
+    /**
+     * Per-field value overrides, keyed by field then raw value (e.g. enum or
+     * boolean), so a change row can show a human label instead of the raw value.
+     * Domain-specific entries live in the app-owned copy hook; empty is fine.
+     */
+    historyFieldValueLabels: Record<string, Record<string, string>>;
+    historySystem: string;
+    historyTitle: string;
+    historyTooltip: string;
+}
+
 export interface TableCopy {
     columnsLabel: string;
     hideColumnLabel: string;
@@ -62,7 +82,15 @@ export interface ActivityCopy {
     activityAddComment: string;
     activityCommentsTab: string;
     activityDocumentsTab: string;
+    activityScrollToLatest: string;
     activityToggleSidebar: string;
+    /**
+     * Ephemeral "someone is typing" line for the comments panel. Receives the
+     * display names of the users currently typing (already filtered to exclude
+     * the current user); returns one concise localized line. Never receives
+     * email or draft content.
+     */
+    commentsTyping: (names: string[]) => string;
 }
 
 export interface DocumentsCopy {
@@ -127,6 +155,7 @@ export interface SharedComponentCopy
         PaginationCopy,
         ActionsCopy,
         ArchiveCopy,
+        HistoryCopy,
         TableCopy,
         CommentsCopy,
         ActivityCopy,

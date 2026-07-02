@@ -5,11 +5,7 @@ export type SearchNavigationData = {
     [key: string]: SearchNavigationPrimitive | SearchNavigationData;
 };
 export type SearchNavigationPatchValue =
-    | string
-    | string[]
-    | SearchNavigationPatch
-    | null
-    | undefined;
+    string | string[] | SearchNavigationPatch | null | undefined;
 export interface SearchNavigationPatch {
     [key: string]: SearchNavigationPatchValue;
 }

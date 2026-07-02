@@ -17,6 +17,7 @@ export function ActiveTriggerIcon({
     return (
         <span
             data-slot="active-trigger-icon"
+            data-icon="inline-start"
             className={cn('relative inline-grid place-items-center', className)}
             {...props}
         >

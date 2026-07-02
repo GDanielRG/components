@@ -19,6 +19,11 @@
             ],
             "files": [
                 {
+                    "path": "components/styles/ui-utilities.css",
+                    "type": "registry:file",
+                    "target": "resources/css/ui-utilities.css"
+                },
+                {
                     "path": "types/options.ts",
                     "type": "registry:file",
                     "target": "@components/types/options.ts"
@@ -47,6 +52,26 @@
                     "path": "hooks/use-sidebar-sheet.ts",
                     "type": "registry:hook",
                     "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
                 },
                 {
                     "path": "components/ui/active-trigger-icon.tsx",
@@ -159,10 +184,39 @@
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
+            "name": "edit-history",
+            "type": "registry:item",
+            "title": "Edit History",
+            "description": "Discoverable per-model edit-history popover with a locale-aware from→to diff and server-driven structured-field summaries.",
+            "registryDependencies": [
+                "GDanielRG/components/core",
+                "avatar",
+                "badge",
+                "button",
+                "collapsible",
+                "popover",
+                "tooltip"
+            ],
+            "files": [
+                {
+                    "path": "types/edit-history-entry.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/edit-history-entry.ts"
+                },
+                {
+                    "path": "components/edit-history.tsx",
+                    "type": "registry:component",
+                    "target": "@components/edit-history.tsx"
+                }
+            ],
+            "docs": "Requires `HistoryCopy` keys in the app-owned `useSharedComponentCopy` hook (including `historyDetailShow(count)`/`historyDetailHide`). Pass `employeeHref={(id) => showEmployee(id).url}` to link viewable causers to their detail page — registry files never import app Wayfinder routes; omit it to render every causer as plain text. Timestamps and values arrive server-formatted (no client date formatting).",
+            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+        },
+        {
             "name": "sidebar",
             "type": "registry:item",
             "title": "Sidebar",
-            "description": "Fleet sidebar primitives: provider with keyboard-shortcut and mobile overrides, sheet-based mobile rendering, and the menu/rail/inset family.",
+            "description": "Shared sidebar primitives: provider with keyboard-shortcut and mobile overrides, sheet-based mobile rendering, and the menu/rail/inset family.",
             "registryDependencies": [
                 "button",
                 "input",
@@ -314,11 +368,11 @@
             "description": "Polymorphic comment list, form, and inline triggers.",
             "registryDependencies": [
                 "GDanielRG/components/core",
+                "GDanielRG/components/chat-display",
                 "avatar",
                 "button",
                 "dropdown-menu",
                 "input-group",
-                "item",
                 "popover",
                 "tooltip"
             ],
@@ -359,19 +413,21 @@
             "description": "Polymorphic document list, upload panel, and inline triggers.",
             "registryDependencies": [
                 "GDanielRG/components/core",
+                "GDanielRG/components/chat-display",
                 "badge",
                 "button",
-                "card",
                 "dropdown-menu",
                 "field",
                 "input",
-                "item",
-                "popover",
                 "progress",
-                "textarea",
-                "tooltip"
+                "textarea"
             ],
             "files": [
+                {
+                    "path": "components/ui/spinner.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/spinner.tsx"
+                },
                 {
                     "path": "components/documents/types.ts",
                     "type": "registry:file",
@@ -418,9 +474,14 @@
                     "target": "@components/documents/documents-panel-item.tsx"
                 },
                 {
-                    "path": "components/documents/sidebar-document-upload-card.tsx",
+                    "path": "components/documents/document-upload-status.tsx",
                     "type": "registry:component",
-                    "target": "@components/documents/sidebar-document-upload-card.tsx"
+                    "target": "@components/documents/document-upload-status.tsx"
+                },
+                {
+                    "path": "components/documents/pending-document-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/pending-document-item.tsx"
                 },
                 {
                     "path": "components/documents/use-pending-documents-upload.ts",
@@ -455,6 +516,8 @@
                 "GDanielRG/components/documents",
                 "GDanielRG/components/core",
                 "GDanielRG/components/sidebar",
+                "GDanielRG/components/chat",
+                "avatar",
                 "badge",
                 "button",
                 "button-group",
@@ -467,6 +530,11 @@
                     "target": "@components/activity/activity-triggers.tsx"
                 },
                 {
+                    "path": "components/activity/comment-typing-indicator.tsx",
+                    "type": "registry:component",
+                    "target": "@components/activity/comment-typing-indicator.tsx"
+                },
+                {
                     "path": "components/activity/comments-documents-sidebar.tsx",
                     "type": "registry:component",
                     "target": "@components/activity/comments-documents-sidebar.tsx"
@@ -477,8 +545,72 @@
                     "target": "@components/activity/index.ts"
                 }
             ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence).",
+            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`.",
             "dependencies": ["lucide-react@^1.17.0"]
+        },
+        {
+            "name": "chat-display",
+            "type": "registry:item",
+            "title": "Chat Display",
+            "description": "Shared chat display primitives — message, bubble, attachment, marker — plus a timestamp-with-reveal. No @shadcn/react; folded into foundations so comments/documents can build on them.",
+            "registryDependencies": [
+                "GDanielRG/components/core",
+                "button",
+                "popover",
+                "tooltip"
+            ],
+            "files": [
+                {
+                    "path": "components/ui/message.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/message.tsx"
+                },
+                {
+                    "path": "components/ui/bubble.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/bubble.tsx"
+                },
+                {
+                    "path": "components/ui/attachment.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/attachment.tsx"
+                },
+                {
+                    "path": "components/ui/marker.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/marker.tsx"
+                },
+                {
+                    "path": "components/chat/timestamp-with-reveal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/timestamp-with-reveal.tsx"
+                }
+            ],
+            "dependencies": [
+                "@base-ui/react@^1.5.0",
+                "class-variance-authority@^0.7.1"
+            ]
+        },
+        {
+            "name": "chat",
+            "type": "registry:item",
+            "title": "Chat",
+            "description": "The virtualized, stick-to-bottom message scroller. The only bundle that pulls the pre-1.0 @shadcn/react.",
+            "registryDependencies": ["GDanielRG/components/core", "button"],
+            "files": [
+                {
+                    "path": "components/chat/message-scroller.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/message-scroller.tsx"
+                },
+                {
+                    "path": "components/chat/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/chat/index.ts"
+                }
+            ],
+            "docs": "Owns the scroller boundary that pulls pre-1.0 `@shadcn/react`. `activity` depends on it for the comments sidebar; display-only consumers can install `chat-display` without this dependency.",
+            "dependencies": ["@shadcn/react@0.1.0", "lucide-react@^1.17.0"]
         },
         {
             "name": "foundations",
@@ -493,7 +625,9 @@
                 "GDanielRG/components/comments",
                 "GDanielRG/components/documents",
                 "GDanielRG/components/activity",
-                "GDanielRG/components/archive"
+                "GDanielRG/components/archive",
+                "GDanielRG/components/edit-history",
+                "GDanielRG/components/chat-display"
             ],
             "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
         }

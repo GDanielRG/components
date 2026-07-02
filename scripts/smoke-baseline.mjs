@@ -88,6 +88,24 @@ try {
     };
     const installed = snapshot();
 
+    // The documents bundle vendors its own `ui/spinner.tsx` (registry:ui) rather
+    // than leaning on a bare `spinner` shadcn dependency, which would resolve
+    // against a drifting upstream copy. Prove the registry-owned spinner is what
+    // actually lands, so the vendored dep can never silently regress to upstream.
+    const spinnerPath = 'resources/js/components/ui/spinner.tsx';
+    if (!installed[spinnerPath])
+        throw new Error(
+            `documents bundle did not install ${spinnerPath} (spinner dependency regressed)`,
+        );
+    const vendoredSpinner = fs.readFileSync(
+        path.join(ROOT, 'components/ui/spinner.tsx'),
+        'utf8',
+    );
+    if (installed[spinnerPath] !== vendoredSpinner)
+        throw new Error(
+            'installed ui/spinner.tsx does not match the registry-vendored source (resolved from upstream instead of the registry)',
+        );
+
     run(SHADCN, [
         'add',
         path.join(registry, 'foundations.json'),

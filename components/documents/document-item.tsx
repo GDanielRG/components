@@ -2,6 +2,7 @@ import {
     EllipsisVerticalIcon,
     EraserIcon,
     FileTextIcon,
+    FileWarningIcon,
     RefreshCwIcon,
     TrashIcon,
 } from 'lucide-react';
@@ -12,18 +13,30 @@ import { DocumentErrorMessages } from '@/components/documents/document-error-mes
 import { DocumentFileIcon } from '@/components/documents/document-file-icon';
 import type { DocumentData } from '@/components/documents/types';
 import {
+    formatBytes,
     getDocumentDisplayName,
     isExistingDocument,
 } from '@/components/documents/utils';
 import type { DocumentsCopy } from '@/components/types/shared-component-copy';
+import {
+    Attachment,
+    AttachmentActions,
+    AttachmentContent,
+    AttachmentDescription,
+    AttachmentMedia,
+    AttachmentTitle,
+} from '@/components/ui/attachment';
 import { Button } from '@/components/ui/button';
 import {
+    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
+import { cn } from '@/lib/utils';
 
 interface DocumentItemProps {
     document: DocumentData;
@@ -53,7 +66,14 @@ export function DocumentItem({
     );
     const isExisting = isExistingDocument(document);
     const displayName = getDocumentDisplayName(document);
+    const fileSize = document.file ? formatBytes(document.file.size) : null;
+    const documentKey = isExistingDocument(document)
+        ? `existing-${document.id}`
+        : `new-${document.tempId}`;
     const hasExplicitMetadata = Boolean(document.name || document.description);
+    const hasFieldError = Boolean(
+        nameError || descriptionError || fileError || idError,
+    );
     let metadataActionLabel = copy.documentsAddMetadata;
 
     if (isEditingMetadata) {
@@ -112,84 +132,141 @@ export function DocumentItem({
     };
 
     return (
-        <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-                <DocumentFileIcon className="size-4" fileName={displayName} />
-                <p>{displayName}</p>
+        <Attachment
+            state={hasFieldError ? 'error' : isExisting ? 'done' : 'idle'}
+            className={cn(
+                'w-full items-start',
+                isEditingMetadata &&
+                    'border-transparent bg-transparent focus-within:ring-0',
+            )}
+        >
+            <AttachmentMedia>
+                {hasFieldError ? (
+                    <FileWarningIcon />
+                ) : (
+                    <DocumentFileIcon fileName={displayName} />
+                )}
+            </AttachmentMedia>
+
+            <AttachmentContent>
+                <AttachmentTitle>{displayName}</AttachmentTitle>
+
+                {fileSize && !isEditingMetadata && (
+                    <AttachmentDescription>{fileSize}</AttachmentDescription>
+                )}
+
+                {isEditingMetadata && (
+                    <FieldGroup className="gap-2">
+                        <Field data-invalid={Boolean(nameError) || undefined}>
+                            <FieldLabel
+                                htmlFor={`document-name-input-${documentKey}`}
+                                className="sr-only"
+                            >
+                                {copy.documentsNamePlaceholder}
+                            </FieldLabel>
+                            <Input
+                                id={`document-name-input-${documentKey}`}
+                                type="text"
+                                value={document.name || ''}
+                                onChange={handleNameChange}
+                                placeholder={copy.documentsNamePlaceholder}
+                                aria-invalid={Boolean(nameError)}
+                            />
+                        </Field>
+
+                        <Field
+                            data-invalid={
+                                Boolean(descriptionError) || undefined
+                            }
+                        >
+                            <FieldLabel
+                                htmlFor={`document-description-input-${documentKey}`}
+                                className="sr-only"
+                            >
+                                {copy.documentsDescriptionPlaceholder}
+                            </FieldLabel>
+                            <Textarea
+                                id={`document-description-input-${documentKey}`}
+                                value={document.description || ''}
+                                onChange={handleDescriptionChange}
+                                placeholder={
+                                    copy.documentsDescriptionPlaceholder
+                                }
+                                rows={3}
+                                aria-invalid={Boolean(descriptionError)}
+                            />
+                        </Field>
+                    </FieldGroup>
+                )}
+
+                <DocumentErrorMessages
+                    messages={[nameError, descriptionError, fileError, idError]}
+                />
+            </AttachmentContent>
+
+            <AttachmentActions>
                 <ActionsDropdownMenu
                     trigger={
-                        <Button variant="outline" size="icon-sm">
-                            <EllipsisVerticalIcon />
+                        <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            aria-label={copy.documentsActions}
+                        >
+                            <EllipsisVerticalIcon data-icon="icon" />
                         </Button>
                     }
                 >
-                    <DropdownMenuItem
-                        onClick={() => {
-                            if (isEditingMetadata) {
-                                setIsEditingMetadata(false);
-                                onUpdate(clearMetadata());
-
-                                return;
-                            }
-
-                            setIsEditingMetadata(true);
-                        }}
-                    >
-                        <FileTextIcon />
-                        {metadataActionLabel}
-                    </DropdownMenuItem>
-
-                    {hasExplicitMetadata && (
+                    <DropdownMenuGroup>
                         <DropdownMenuItem
                             onClick={() => {
-                                setIsEditingMetadata(false);
-                                onUpdate(clearMetadata());
+                                if (isEditingMetadata) {
+                                    setIsEditingMetadata(false);
+                                    onUpdate(clearMetadata());
+
+                                    return;
+                                }
+
+                                setIsEditingMetadata(true);
                             }}
                         >
-                            <EraserIcon />
-                            {copy.documentsClearMetadata}
+                            <FileTextIcon />
+                            {metadataActionLabel}
                         </DropdownMenuItem>
-                    )}
 
-                    {(isExisting || document.file) && (
-                        <DropdownMenuItem
-                            onClick={() => fileInputRef.current?.click()}
-                        >
-                            <RefreshCwIcon />
-                            {copy.documentsReplaceFile}
-                        </DropdownMenuItem>
-                    )}
+                        {hasExplicitMetadata && (
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    setIsEditingMetadata(false);
+                                    onUpdate(clearMetadata());
+                                }}
+                            >
+                                <EraserIcon />
+                                {copy.documentsClearMetadata}
+                            </DropdownMenuItem>
+                        )}
+
+                        {(isExisting || document.file) && (
+                            <DropdownMenuItem
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <RefreshCwIcon />
+                                {copy.documentsReplaceFile}
+                            </DropdownMenuItem>
+                        )}
+                    </DropdownMenuGroup>
 
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive" onClick={onDelete}>
-                        <TrashIcon />
-                        {copy.documentsDeleteTitle}
-                    </DropdownMenuItem>
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem
+                            variant="destructive"
+                            onClick={onDelete}
+                        >
+                            <TrashIcon />
+                            {copy.documentsDeleteTitle}
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
                 </ActionsDropdownMenu>
-            </div>
-
-            {isEditingMetadata && (
-                <>
-                    <div className="flex items-center gap-2">
-                        <Input
-                            type="text"
-                            value={document.name || ''}
-                            onChange={handleNameChange}
-                            placeholder={copy.documentsNamePlaceholder}
-                        />
-                    </div>
-                    <Textarea
-                        value={document.description || ''}
-                        onChange={handleDescriptionChange}
-                        placeholder={copy.documentsDescriptionPlaceholder}
-                        rows={3}
-                    />
-                </>
-            )}
-
-            <DocumentErrorMessages
-                messages={[nameError, descriptionError, fileError, idError]}
-            />
+            </AttachmentActions>
 
             <input
                 ref={fileInputRef}
@@ -198,6 +275,6 @@ export function DocumentItem({
                 onChange={handleFileReplace}
                 className="hidden"
             />
-        </div>
+        </Attachment>
     );
 }

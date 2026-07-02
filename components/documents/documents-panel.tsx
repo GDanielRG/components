@@ -3,8 +3,9 @@ import { FilePlusIcon } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { DeleteConfirmationModal } from '@/components/delete-confirmation-modal';
+import { DocumentUploadStatus } from '@/components/documents/document-upload-status';
 import { DocumentsPanelItem } from '@/components/documents/documents-panel-item';
-import { SidebarDocumentUploadCard } from '@/components/documents/sidebar-document-upload-card';
+import { PendingDocumentItem } from '@/components/documents/pending-document-item';
 import type {
     Document,
     ExistingDocumentData,
@@ -81,7 +82,7 @@ export function useDocumentsPanel({
     const [deleteIsOpen, setDeleteIsOpen] = useState(false);
     const [deleteProcessing, setDeleteProcessing] = useState(false);
     const {
-        documentBatch,
+        pendingUpload,
         handleFilesChanged,
         retryDocumentBatch,
         dismissDocumentBatch,
@@ -130,7 +131,11 @@ export function useDocumentsPanel({
 
     const content = (
         <>
-            <div className="[&>[data-document-item]:not(:last-child)]:border-b">
+            <div className="flex flex-col gap-2">
+                {pendingUpload?.items.map((item) => (
+                    <PendingDocumentItem key={item.tempId} item={item} />
+                ))}
+
                 {mappedDocuments.map((document) => (
                     <DocumentsPanelItem
                         key={`document-${document.id}-${document.updated_at ?? document.created_at}`}
@@ -163,7 +168,7 @@ export function useDocumentsPanel({
     );
 
     const footer = (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
             <input
                 id="sidebar-documents-input"
                 ref={fileInputRef}
@@ -180,9 +185,9 @@ export function useDocumentsPanel({
                 className="hidden"
             />
 
-            {documentBatch ? (
-                <SidebarDocumentUploadCard
-                    batch={documentBatch}
+            {pendingUpload ? (
+                <DocumentUploadStatus
+                    upload={pendingUpload}
                     onRetry={retryDocumentBatch}
                     onDismiss={dismissDocumentBatch}
                     onCancel={cancelDocumentBatch}
@@ -198,7 +203,7 @@ export function useDocumentsPanel({
                         onClick={() => fileInputRef.current?.click()}
                         disabled={deleteProcessing}
                     >
-                        <FilePlusIcon />
+                        <FilePlusIcon data-icon="inline-start" />
                         {copy.documentsAdd}
                     </Button>
                 </div>
@@ -209,7 +214,9 @@ export function useDocumentsPanel({
     return {
         content,
         footer,
-        hasContent: mappedDocuments.length > 0,
+        hasContent:
+            mappedDocuments.length > 0 ||
+            (pendingUpload?.items.length ?? 0) > 0,
         count: mappedDocuments.length,
     };
 }

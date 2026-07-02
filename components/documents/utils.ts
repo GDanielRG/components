@@ -69,6 +69,22 @@ export const formatDocumentKilobytes = (maxKilobytes: number): string => {
     return `${maxKilobytes} KB`;
 };
 
+export const formatBytes = (bytes: number): string => {
+    if (bytes < 1024) {
+        return `${bytes} B`;
+    }
+
+    const kilobytes = bytes / 1024;
+
+    if (kilobytes < 1024) {
+        return `${kilobytes.toFixed(kilobytes >= 100 ? 0 : 1)} KB`;
+    }
+
+    const megabytes = kilobytes / 1024;
+
+    return `${megabytes.toFixed(megabytes >= 100 ? 0 : 1)} MB`;
+};
+
 export const isDocumentFileTooLarge = (
     file: File,
     maxDocumentKilobytes: number,
