@@ -167,7 +167,7 @@ export function SearchControls({
             )}
 
             {filtersAreDisclosed && (
-                <div className="transition-[opacity,translate] duration-200 ease-out starting:-translate-y-1 starting:opacity-0 motion-reduce:transition-none">
+                <div className="transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none starting:-translate-y-1 starting:opacity-0">
                     <Filters
                         filters={search.filters}
                         filterValues={search.filterValues}
