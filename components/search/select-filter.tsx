@@ -1,4 +1,4 @@
-import { FunnelPlusIcon, FunnelXIcon } from 'lucide-react';
+import { ArchiveIcon, FunnelPlusIcon, FunnelXIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
@@ -52,6 +52,12 @@ export function SelectFilter({
     const selectedOption =
         filter.options.find((option) => option.value === value) ?? null;
 
+    // A named icon (currently only 'archive') stays visible regardless of
+    // selection state; the default FunnelPlus icon only shows while empty.
+    const hasNamedIcon = filter.icon === 'archive';
+    const TriggerIcon = hasNamedIcon ? ArchiveIcon : FunnelPlusIcon;
+    const showTriggerIcon = hasNamedIcon || !selectedOption;
+
     function renderTrigger(props: ComponentProps<typeof Button>) {
         return (
             <Button
@@ -60,14 +66,17 @@ export function SelectFilter({
                     `filter-${filter.key}-trigger`,
                     testIdPrefix,
                 )}
+                aria-label={filter.hideLabel ? filter.label : undefined}
                 variant={open ? 'secondary' : 'outline'}
                 className={cn(
                     'max-w-full justify-start',
                     !selectedOption && 'border-dashed',
                 )}
             >
-                {!selectedOption && <FunnelPlusIcon />}
-                <span className="shrink-0">{filter.label}</span>
+                {showTriggerIcon && <TriggerIcon />}
+                {!filter.hideLabel && (
+                    <span className="shrink-0">{filter.label}</span>
+                )}
                 {selectedOption && (
                     <>
                         <Separator

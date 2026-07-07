@@ -1,1 +1,7 @@
-export { Field, FieldError, FieldLabel, FieldDescription } from '../primitives';
+export {
+    Field,
+    FieldGroup,
+    FieldError,
+    FieldLabel,
+    FieldDescription,
+} from '../primitives';

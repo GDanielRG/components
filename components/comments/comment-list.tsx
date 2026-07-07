@@ -198,7 +198,7 @@ function CommentItem({
     );
 
     return (
-        <div data-comment-item className="bg-background">
+        <div data-comment-item>
             <Message
                 align={isCurrentUser ? 'end' : 'start'}
                 className="items-start px-2 py-1.5 sm:px-3"

@@ -167,14 +167,16 @@ export function SearchControls({
             )}
 
             {filtersAreDisclosed && (
-                <Filters
-                    filters={search.filters}
-                    filterValues={search.filterValues}
-                    selectValues={search.selectValues}
-                    navigation={search}
-                    mode="inactive"
-                    popoverState={search.filterPopoverState}
-                />
+                <div className="transition-[opacity,translate] duration-200 ease-out starting:-translate-y-1 starting:opacity-0 motion-reduce:transition-none">
+                    <Filters
+                        filters={search.filters}
+                        filterValues={search.filterValues}
+                        selectValues={search.selectValues}
+                        navigation={search}
+                        mode="inactive"
+                        popoverState={search.filterPopoverState}
+                    />
+                </div>
             )}
         </form>
     );

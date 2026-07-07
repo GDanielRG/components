@@ -30,6 +30,7 @@ const NON_DOM_PROPS = new Set([
     'triggerLabel',
     'delayDuration',
     'clearable',
+    'onValueChange',
 ]);
 
 function splitProps(props: Record<string, unknown>) {
@@ -46,7 +47,9 @@ function splitProps(props: Record<string, unknown>) {
 // behaviour the trigger components rely on), so the rendered element keeps its
 // own data-test id. Otherwise it renders the requested tag.
 type HostProps = Record<string, unknown> & {
-    render?: React.ReactElement;
+    render?:
+        | React.ReactElement
+        | ((props: Record<string, unknown>) => React.ReactNode);
     children?: React.ReactNode;
 };
 
@@ -54,6 +57,14 @@ function makeHost(tag: keyof React.JSX.IntrinsicElements, slot: string) {
     const Host = React.forwardRef<unknown, HostProps>((props, ref) => {
         const { render, children, ...rest } = props;
         const dom = splitProps(rest);
+
+        // Base UI also accepts a function `render` (e.g.
+        // `<PopoverTrigger render={(props) => <Button {...props} />} />`).
+        // Invoke it with the forwardable props so the produced trigger surfaces
+        // its own data-test id / aria-label in the DOM.
+        if (typeof render === 'function') {
+            return <>{render({ 'data-slot': slot, ...dom })}</>;
+        }
 
         if (React.isValidElement(render)) {
             const child = render as React.ReactElement<Record<string, unknown>>;
@@ -105,9 +116,17 @@ export const Textarea = makeHost('textarea', 'textarea');
 
 // Field
 export const Field = makeHost('div', 'field');
+export const FieldGroup = makeHost('div', 'field-group');
 export const FieldError = makeHost('div', 'field-error');
 export const FieldLabel = makeHost('label', 'field-label');
 export const FieldDescription = makeHost('div', 'field-description');
+
+// Radio group (select-filter)
+export const RadioGroup = makeHost('div', 'radio-group');
+export const RadioGroupItem = makeHost('button', 'radio-group-item');
+
+// Separator (filter triggers)
+export const Separator = makeHost('div', 'separator');
 
 // Progress
 export const Progress = makeHost('div', 'progress');
