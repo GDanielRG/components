@@ -38,6 +38,7 @@ function MessageScrollerViewport({
     return (
         <MessageScrollerPrimitive.Viewport
             data-slot="message-scroller-viewport"
+            data-test="message-scroller-viewport"
             className={cn(
                 'no-scrollbar size-full min-h-0 min-w-0 scroll-fade-b overflow-y-auto overscroll-contain contain-content',
                 className,
@@ -91,6 +92,7 @@ function MessageScrollerButton({
     return (
         <MessageScrollerPrimitive.Button
             data-slot="message-scroller-button"
+            data-test="message-scroller-button"
             data-direction={direction}
             data-variant={variant}
             data-size={size}
