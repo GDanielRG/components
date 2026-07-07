@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
@@ -60,7 +60,11 @@ function resolveAtAlias(): import('vite').Plugin {
 function resolveExisting(base: string): string | null {
     for (const ext of ['', '.tsx', '.ts', '/index.tsx', '/index.ts']) {
         const candidate = `${base}${ext}`;
-        if (existsSync(candidate)) {
+        // A bare directory match (e.g. `components/chat`, no extension) is not
+        // itself loadable — `existsSync` alone can't tell a directory from a
+        // file, so without this check a barrel-imported directory would
+        // resolve to itself instead of falling through to its `/index.ts`.
+        if (existsSync(candidate) && statSync(candidate).isFile()) {
             return candidate;
         }
     }

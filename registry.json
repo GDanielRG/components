@@ -613,6 +613,40 @@
             "dependencies": ["@shadcn/react@0.1.0", "lucide-react@^1.17.0"]
         },
         {
+            "name": "navigation-trail",
+            "type": "registry:item",
+            "title": "Navigation Trail",
+            "description": "Codex-style in-page scrollspy tick rail, overlaid on the content edge with zero layout space, that highlights the section currently in view and jumps to it on click, built on the message-scroller viewport.",
+            "registryDependencies": [
+                "GDanielRG/components/core",
+                "GDanielRG/components/chat",
+                "popover"
+            ],
+            "files": [
+                {
+                    "path": "components/navigation-trail/navigation-trail.tsx",
+                    "type": "registry:component",
+                    "target": "@components/navigation-trail/navigation-trail.tsx"
+                },
+                {
+                    "path": "components/navigation-trail/navigation-trail-rail.tsx",
+                    "type": "registry:component",
+                    "target": "@components/navigation-trail/navigation-trail-rail.tsx"
+                },
+                {
+                    "path": "components/navigation-trail/section-scroller.tsx",
+                    "type": "registry:component",
+                    "target": "@components/navigation-trail/section-scroller.tsx"
+                },
+                {
+                    "path": "components/navigation-trail/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/navigation-trail/index.ts"
+                }
+            ],
+            "docs": "Split in two (stage-1 UI pass, plan 004): `NavigationTrailRail` (`navigation-trail-rail.tsx`) is the purely presentational tick rail — no hook imports, plain props `{ items: { id, label, description? }[], activeId, onSelect, ariaLabel, className?, contentWidthClassName? }` — and `NavigationTrail` (`navigation-trail.tsx`) is a thin connected wrapper that bridges `chat`'s `useMessageScrollerVisibility()`/`useMessageScroller()` into those props. Apps import `NavigationTrail`; a future stage-2 move to IntersectionObserver-driven visibility would replace the wrapper's internals only, not the rail. `NavigationTrail` must still render inside the same `MessageScrollerProvider` tree (from `chat`, typically via `SectionScrollerProvider`) as the content it tracks. Visually: idle = a slim `hidden lg:flex` column of tiny ticks, vertically centered, taking zero layout space; hovering or focusing anywhere on the rail expands every tick, and the specific hovered/focused tick opens a `Popover` (registry `popover` dependency — NOT `tooltip`, dropped this pass) beside it with the section name and, when supplied, its description. A `Popover` (an interactive container) was chosen over a `Tooltip` (a text pill) specifically so a future actions row can be added to the same popup without a redesign — see the documented-but-not-built slot inside `NavigationTrailTick` (the rail's internal per-tick subcomponent). `Popover.Trigger` already exposes Base UI's `openOnHover`/`delay`/`closeDelay` untouched (verified against the installed `@base-ui/react` types — the registry did NOT need to fork or extend `ui/popover.tsx`), and its popup shares the trigger's hover interaction, so the pointer can travel from a tick into its open popup without closing it. Base UI's `Popover` does not open on mere keyboard focus by design (unlike `Tooltip`/`PreviewCard` — a popover can hold interactive content), so `NavigationTrailTick` runs the popover CONTROLLED (`open`/`onOpenChange` state) and layers `onFocus`/`onBlur`/`onKeyDown` (Escape) on top of the built-in hover/click triggers, using a `data-navigation-trail-tick={id}` marker (not refs) to tell focus moving between a tick's own trigger and its portal-rendered popup apart from focus leaving both. The active tick renders darker and longer. Each tick is a focusable `<button>` with a visually-hidden (`sr-only`) label, `aria-current`, and `data-test=\"navigation-trail-item-{id}\"`. `count` was dropped from `NavigationTrailItem` — ticks carry no visible text, so a count has nothing to attach to. **Rail positioning**: the rail anchors to the TRACKED CONTENT'S own max-width, not the full row — `NavigationTrail`'s `contentWidthClassName` prop (e.g. `\"max-w-4xl\"`) sizes an inner `pointer-events-none` wrapper that mirrors the `SectionScroller` content's own max-width class, with the rail itself (`pointer-events-auto`) pinned to that wrapper's right edge; omit the prop to anchor against the full row instead. The app is responsible for keeping this value in sync with whatever max-width it passes to `SectionScroller`'s own `contentClassName` — the two are declared independently (by design; see the app-side docs/comments) and will drift silently if only one is updated. Pair it with `SectionScrollerProvider`/`SectionScroller`/`SectionScrollerItem` (also in this bundle): the primitive tracks visibility and jump targets from the content element's DIRECT children only (no recursive descent) and only assigns `currentAnchorId` from rows with `data-scroll-anchor=\"true\"`. `SectionScrollerItem` defaults `scrollAnchor` to `true` (the opposite of `chat`'s own `MessageScrollerItem`, which must stay `false` for the comments sidebar) so every row is trackable by default; `SectionScroller` (Scroller/Viewport/Content) applies the document-style preset (no `autoScroll`) and exposes `contentClassName` for container/spacing classes so the app never has to smuggle a wrapping `<div>` between the content element and its `SectionScrollerItem` rows — any such wrapper breaks both visibility tracking and click-to-scroll silently (no error, `currentAnchorId` just never updates). `SectionScrollerProvider` (`defaultScrollPosition=\"start\"`) is deliberately a SEPARATE, thin wrapper rather than folded into `SectionScroller`: `NavigationTrail` reads the same provider context and is typically laid out overlaying the scroller box (absolutely positioned, not a flex sibling taking width), so the app wraps BOTH `SectionScroller` and `NavigationTrail` in one shared `SectionScrollerProvider` and gives their common ancestor `relative` positioning — nesting a provider inside `SectionScroller` itself would leave a sibling `NavigationTrail` outside the context (`useMessageScroller must be used within a MessageScroller`). Intentionally excluded from `foundations`: this is a per-page opt-in scrollspy surface, not baseline shell — do not flag the omission as drift."
+        },
+        {
             "name": "foundations",
             "type": "registry:item",
             "title": "Foundations",
