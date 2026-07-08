@@ -13,6 +13,13 @@ release policy. Pin installs to a snapshot tag, e.g.
 Everything on `main` since the `v1.1.0` entry below, awaiting a `snapshot-*` tag. Cut it
 with `npm run registry:release -- snapshot-YYYYMMDD-<short-sha>` (maintainer tags/pushes).
 
+- **Changed** `SearchControls` filter disclosure to the unset-count rule: the "Filters"
+  latch renders only while **more than one unset (inactive) filter** exists; with exactly
+  one unset filter it renders inline immediately (no slide-in on initial render — the
+  `starting:` transition is now conditioned on a latch-triggered reveal). Disclosure stays
+  sticky per pageview. No data-test hook changes, but single-filter surfaces stop
+  rendering `@search-filters-disclosure-trigger` entirely — Browser tests that clicked the
+  latch on a lone filter must assert the inline filter (and the trigger's absence) instead.
 - **Added** owned Tailwind v4 utilities (`components/styles/ui-utilities.css`, shipped by
   `core` as a `registry:file` targeting `resources/css/ui-utilities.css`; consumers add a
   one-line `@import './ui-utilities.css';` after the `shadcn/tailwind.css` import). Hand-authored

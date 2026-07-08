@@ -102,6 +102,13 @@ export function useSearch(
     };
 }
 
+/**
+ * Search input plus the inactive-filter disclosure. The "Filters" latch only
+ * earns its click when it hides at least two controls: with more than one
+ * unset (inactive) filter the latch renders and reveals them on demand
+ * (sticky per pageview); with exactly one unset filter that filter renders
+ * inline immediately, the slide-in reserved for latch-triggered reveals.
+ */
 export function SearchControls({
     search,
     placeholder,
@@ -113,7 +120,7 @@ export function SearchControls({
 }) {
     const copy: SearchCopy = useSharedComponentCopy();
     const [filtersAreDisclosed, setFiltersAreDisclosed] = useState(false);
-    const hasInactiveFilters = search.filters.some(
+    const unsetFilters = search.filters.filter(
         (filter) => (search.filterValues[filter.key] ?? []).length === 0,
     );
     const handleSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
@@ -154,7 +161,7 @@ export function SearchControls({
                 </Button>
             </ButtonGroup>
 
-            {hasInactiveFilters && !filtersAreDisclosed && (
+            {unsetFilters.length > 1 && !filtersAreDisclosed && (
                 <Button
                     data-test="search-filters-disclosure-trigger"
                     type="button"
@@ -166,8 +173,14 @@ export function SearchControls({
                 </Button>
             )}
 
-            {filtersAreDisclosed && (
-                <div className="transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none starting:-translate-y-1 starting:opacity-0">
+            {(filtersAreDisclosed || unsetFilters.length === 1) && (
+                <div
+                    className={cn(
+                        'transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none',
+                        filtersAreDisclosed &&
+                            'starting:-translate-y-1 starting:opacity-0',
+                    )}
+                >
                     <Filters
                         filters={search.filters}
                         filterValues={search.filterValues}
