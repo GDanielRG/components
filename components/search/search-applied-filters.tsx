@@ -69,6 +69,7 @@ function SearchClearFiltersAction({
                     )}
                     variant={open ? 'secondary' : 'destructive'}
                     size="icon"
+                    aria-label={copy.searchClearFilters}
                 >
                     <FunnelXIcon />
                 </Button>
