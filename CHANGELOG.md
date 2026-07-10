@@ -13,6 +13,14 @@ release policy. Pin installs to a snapshot tag, e.g.
 Everything on `main` since the `v1.1.0` entry below, awaiting a `snapshot-*` tag. Cut it
 with `npm run registry:release -- snapshot-YYYYMMDD-<short-sha>` (maintainer tags/pushes).
 
+- **BREAKING** `SearchCopy` gains a REQUIRED `searchSubmit: string` key (the icon-only
+  search-submit button's accessible name). Every consumer's `useSharedComponentCopy`
+  implementation must add the key when installing the next snapshot, or `tsc` fails.
+- **Added** accessible names to icon-only registry controls: `search.tsx` submit button
+  (`aria-label={copy.searchSubmit}`) and `table/row-actions-cell.tsx` trigger (moved
+  from an `sr-only` span outlier to `aria-label={resolvedTriggerLabel}`, matching the
+  registry idiom).
+
 - **Changed** `SearchControls` filter disclosure to the unset-count rule: the "Filters"
   latch renders only while **more than one unset (inactive) filter** exists; with exactly
   one unset filter it renders inline immediately (no slide-in on initial render — the
