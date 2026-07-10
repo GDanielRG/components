@@ -10,16 +10,33 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Pending — next snapshot
 
-Everything on `main` since the `v1.1.0` entry below, awaiting a `snapshot-*` tag. Cut it
-with `npm run registry:release -- snapshot-YYYYMMDD-<short-sha>` (maintainer tags/pushes).
+Nothing queued.
+
+### snapshot-20260710 — 2026-07-10
 
 - **BREAKING** `SearchCopy` gains a REQUIRED `searchSubmit: string` key (the icon-only
   search-submit button's accessible name). Every consumer's `useSharedComponentCopy`
-  implementation must add the key when installing the next snapshot, or `tsc` fails.
+  implementation must add the key when installing this snapshot, or `tsc` fails.
 - **Added** accessible names to icon-only registry controls: `search.tsx` submit button
   (`aria-label={copy.searchSubmit}`) and `table/row-actions-cell.tsx` trigger (moved
   from an `sr-only` span outlier to `aria-label={resolvedTriggerLabel}`, matching the
   registry idiom).
+
+### snapshot-20260709-8de8ea9 — 2026-07-09
+
+Backfilled — this content shipped in this snapshot but was never split out of the
+"Pending" catch-all at the time; recorded now so history reflects the actual tagged ref.
+
+- **Fixed** the icon-only clear-filters trigger (`search-applied-filters.tsx`) carried
+  no accessible name; added `aria-label={copy.searchClearFilters}`, matching the other
+  icon-only search triggers.
+- Otherwise a dependency refresh only (`package-lock.json`); no registry contract
+  changes.
+
+### snapshot-20260707-34e6ed7 — 2026-07-07
+
+Backfilled — same drift as above: this content was already cut into this snapshot tag
+but stayed listed under "Pending" past its own release.
 
 - **Changed** `SearchControls` filter disclosure to the unset-count rule: the "Filters"
   latch renders only while **more than one unset (inactive) filter** exists; with exactly
