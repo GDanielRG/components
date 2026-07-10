@@ -38,11 +38,9 @@ export function RowActions({
                                     ? `${dataTestPrefix}-actions`
                                     : undefined
                             }
+                            aria-label={resolvedTriggerLabel}
                         >
                             <MoreHorizontalIcon />
-                            <span className="sr-only">
-                                {resolvedTriggerLabel}
-                            </span>
                         </Button>
                     ))
                 }

@@ -156,6 +156,7 @@ export function SearchControls({
                     data-test="search-button"
                     type="submit"
                     variant="outline"
+                    aria-label={copy.searchSubmit}
                 >
                     <SearchIcon />
                 </Button>

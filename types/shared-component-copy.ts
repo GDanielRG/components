@@ -146,6 +146,7 @@ export interface SearchCopy {
     searchNoResults: string;
     searchPlaceholder: string;
     searchSelectedCount: (count: number) => string;
+    searchSubmit: string;
 }
 
 export interface SharedComponentCopy
