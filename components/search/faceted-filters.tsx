@@ -1,8 +1,10 @@
 import {
+    ArchiveIcon,
     CheckIcon,
     FunnelPlusIcon,
     FunnelXIcon,
     SearchIcon,
+    StarIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import type { ComponentProps, ReactElement } from 'react';
@@ -32,6 +34,13 @@ interface FacetedFiltersProps {
 function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;
 }
+
+// A named icon stays visible regardless of selection state; the default
+// FunnelPlus icon only shows while the filter is empty.
+const namedTriggerIcons = {
+    archive: ArchiveIcon,
+    featured: StarIcon,
+} as const;
 
 export function FacetedFilters({
     filters,
@@ -91,6 +100,14 @@ export function FacetedFilters({
                     props: ComponentProps<typeof Button>,
                     open: boolean,
                 ): ReactElement {
+                    const NamedTriggerIcon = filter.icon
+                        ? namedTriggerIcons[filter.icon]
+                        : undefined;
+                    const TriggerIcon = NamedTriggerIcon ?? FunnelPlusIcon;
+                    const showTriggerIcon =
+                        Boolean(NamedTriggerIcon) ||
+                        selectedValues.length === 0;
+
                     return (
                         <Button
                             {...props}
@@ -98,14 +115,19 @@ export function FacetedFilters({
                                 `filter-${filter.key}-trigger`,
                                 testIdPrefix,
                             )}
+                            aria-label={
+                                filter.hideLabel ? filter.label : undefined
+                            }
                             variant={open ? 'secondary' : 'outline'}
                             className={cn(
                                 'max-w-full justify-start',
                                 selectedValues.length === 0 && 'border-dashed',
                             )}
                         >
-                            {selectedValues.length === 0 && <FunnelPlusIcon />}
-                            <span className="shrink-0">{filter.label}</span>
+                            {showTriggerIcon && <TriggerIcon />}
+                            {!filter.hideLabel && (
+                                <span className="shrink-0">{filter.label}</span>
+                            )}
                             {selectedValues.length > 0 && (
                                 <>
                                     <Separator

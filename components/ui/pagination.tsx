@@ -37,6 +37,11 @@ function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
     return <li data-slot="pagination-item" {...props} />;
 }
 
+// Customization carried by the components registry: links render through
+// Inertia's <Link> (SPA visits, not full page loads) and support a `disabled`
+// state for boundary pages. <Link as="button"> renders a native <button>, so
+// Base UI's default nativeButton (true) must stay — do not pass
+// nativeButton={false} here (upstream shadcn pairs it with an <a>).
 type PaginationLinkProps = {
     isActive?: boolean;
     disabled?: boolean;
@@ -77,10 +82,7 @@ function PaginationPrevious({
     text = 'Previous',
     disabled,
     ...props
-}: React.ComponentProps<typeof PaginationLink> & {
-    text?: string;
-    disabled?: boolean;
-}) {
+}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
     return (
         <PaginationLink
             aria-label={text}
@@ -100,10 +102,7 @@ function PaginationNext({
     text = 'Next',
     disabled,
     ...props
-}: React.ComponentProps<typeof PaginationLink> & {
-    text?: string;
-    disabled?: boolean;
-}) {
+}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
     return (
         <PaginationLink
             aria-label={text}
@@ -133,6 +132,7 @@ function PaginationEllipsis({
             {...props}
         >
             <MoreHorizontalIcon />
+            <span className="sr-only">More pages</span>
         </span>
     );
 }
