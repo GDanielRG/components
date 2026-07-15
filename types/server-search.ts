@@ -11,8 +11,8 @@ export interface ServerSearchFilter {
     label: string;
     /** Defaults to 'multiselect' when omitted (backward compatible). */
     type?: ServerSearchFilterType;
-    /** Optional named icon for the trigger. Currently only 'archive'. */
-    icon?: 'archive';
+    /** Optional named icon for the trigger. */
+    icon?: 'archive' | 'featured';
     /** Render the trigger without visible label text (label becomes aria-label). */
     hideLabel?: boolean;
     options: ServerSearchFilterOption[];

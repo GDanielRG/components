@@ -10,7 +10,12 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Pending — next snapshot
 
-Nothing queued.
+- **Added** a `'featured'` named trigger icon (`StarIcon`) to `ServerSearchFilter.icon`
+  alongside `'archive'`, and taught `faceted-filters.tsx` (multiselect chips) the same
+  named-icon + `hideLabel` trigger treatment `select-filter.tsx` already had: a named
+  icon stays visible regardless of selection state, and `hideLabel` renders an icon-only
+  trigger with the label as `aria-label`. Non-breaking — filters without `icon`/`hideLabel`
+  render exactly as before.
 
 ### snapshot-20260710 — 2026-07-10
 

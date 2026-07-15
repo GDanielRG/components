@@ -1,4 +1,9 @@
-import { ArchiveIcon, FunnelPlusIcon, FunnelXIcon } from 'lucide-react';
+import {
+    ArchiveIcon,
+    FunnelPlusIcon,
+    FunnelXIcon,
+    StarIcon,
+} from 'lucide-react';
 import type { ComponentProps } from 'react';
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
@@ -18,6 +23,13 @@ import { cn } from '@/lib/utils';
 function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;
 }
+
+// A named icon stays visible regardless of selection state; the default
+// FunnelPlus icon only shows while the filter is empty.
+const namedTriggerIcons = {
+    archive: ArchiveIcon,
+    featured: StarIcon,
+} as const;
 
 type SelectFilterProps = {
     filter: ServerSearchFilter;
@@ -52,11 +64,11 @@ export function SelectFilter({
     const selectedOption =
         filter.options.find((option) => option.value === value) ?? null;
 
-    // A named icon (currently only 'archive') stays visible regardless of
-    // selection state; the default FunnelPlus icon only shows while empty.
-    const hasNamedIcon = filter.icon === 'archive';
-    const TriggerIcon = hasNamedIcon ? ArchiveIcon : FunnelPlusIcon;
-    const showTriggerIcon = hasNamedIcon || !selectedOption;
+    const NamedTriggerIcon = filter.icon
+        ? namedTriggerIcons[filter.icon]
+        : undefined;
+    const TriggerIcon = NamedTriggerIcon ?? FunnelPlusIcon;
+    const showTriggerIcon = Boolean(NamedTriggerIcon) || !selectedOption;
 
     function renderTrigger(props: ComponentProps<typeof Button>) {
         return (

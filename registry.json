@@ -613,6 +613,50 @@
             "dependencies": ["@shadcn/react@0.1.0", "lucide-react@^1.17.0"]
         },
         {
+            "name": "notifications",
+            "type": "registry:item",
+            "title": "Notifications",
+            "description": "Backend-agnostic notification bell, unseen badge, and paginated popover inbox.",
+            "registryDependencies": [
+                "badge",
+                "button",
+                "empty",
+                "item",
+                "popover",
+                "scroll-area",
+                "separator",
+                "spinner"
+            ],
+            "files": [
+                {
+                    "path": "components/notifications/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/notifications/types.ts"
+                },
+                {
+                    "path": "components/notifications/notification-bell.tsx",
+                    "type": "registry:component",
+                    "target": "@components/notifications/notification-bell.tsx"
+                },
+                {
+                    "path": "components/notifications/notification-popover-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/notifications/notification-popover-content.tsx"
+                },
+                {
+                    "path": "components/notifications/notification-center.tsx",
+                    "type": "registry:component",
+                    "target": "@components/notifications/notification-center.tsx"
+                },
+                {
+                    "path": "components/notifications/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/notifications/index.ts"
+                }
+            ],
+            "dependencies": ["lucide-react@^1.17.0"]
+        },
+        {
             "name": "foundations",
             "type": "registry:item",
             "title": "Foundations",
@@ -627,7 +671,8 @@
                 "GDanielRG/components/activity",
                 "GDanielRG/components/archive",
                 "GDanielRG/components/edit-history",
-                "GDanielRG/components/chat-display"
+                "GDanielRG/components/chat-display",
+                "GDanielRG/components/notifications"
             ],
             "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
         }

@@ -1,17 +1,23 @@
 /*
- * Shared Tailwind v4 utilities (scroll-fade + shimmer).
+ * Shared Tailwind v4 utilities (no-scrollbar + scroll-fade + shimmer).
  *
  * Registry-owned: shipped by the components registry and copied verbatim into
  * each consuming app, imported once from `resources/css/app.css`
- * (`@import './ui-utilities.css';`). Based on the official shadcn scroll-fade and
- * shimmer docs (https://ui.shadcn.com/docs/utils/scroll-fade and
- * https://ui.shadcn.com/docs/utils/shimmer). Use them as class names on the
- * scroll or text element that needs the effect.
+ * (`@import './ui-utilities.css';`). Vendored verbatim from the official shadcn
+ * utilities (https://ui.shadcn.com/docs/utils/scroll-fade and
+ * https://ui.shadcn.com/docs/utils/shimmer; packages/shadcn/src/tailwind.css,
+ * refreshed 2026-07). Use them as class names on the scroll or text element
+ * that needs the effect.
  */
 
-/* ------------------------------------------------------------------ */
-/* scroll-fade                                                         */
-/* ------------------------------------------------------------------ */
+@utility no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
 
 @property --scroll-fade-t {
     syntax: '<length-percentage>';
@@ -46,7 +52,7 @@
         to {
             --scroll-fade-t: var(
                 --_scroll-fade-size-t,
-                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
             );
         }
     }
@@ -54,7 +60,7 @@
         from {
             --scroll-fade-b: var(
                 --_scroll-fade-size-b,
-                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
             );
         }
         to {
@@ -68,7 +74,7 @@
         to {
             --scroll-fade-s: var(
                 --_scroll-fade-size-s,
-                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
             );
         }
     }
@@ -76,7 +82,7 @@
         from {
             --scroll-fade-e: var(
                 --_scroll-fade-size-e,
-                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+                var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
             );
         }
         to {
@@ -88,11 +94,11 @@
 @utility scroll-fade {
     --_scroll-fade-size-t: var(
         --scroll-fade-t-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --_scroll-fade-size-b: var(
         --scroll-fade-b-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-block: linear-gradient(
         to bottom,
@@ -108,21 +114,16 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation:
-                scroll-fade-reveal-t 1ms ease-in-out,
-                scroll-fade-reveal-b 1ms ease-in-out;
-            animation-timeline: scroll(self y), scroll(self y);
-            animation-range:
-                0 var(--scroll-fade-reveal, calc(var(--spacing) * 24)),
-                calc(
-                        100% -
-                            var(--scroll-fade-reveal, calc(var(--spacing) * 24))
-                    )
-                    100%;
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation:
+            scroll-fade-reveal-t 1ms ease-in-out,
+            scroll-fade-reveal-b 1ms ease-in-out;
+        animation-timeline: scroll(self y), scroll(self y);
+        animation-range:
+            0 var(--scroll-fade-reveal, calc(var(--spacing) * 24)),
+            calc(100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24)))
+                100%;
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -134,11 +135,11 @@
 @utility scroll-fade-y {
     --_scroll-fade-size-t: var(
         --scroll-fade-t-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --_scroll-fade-size-b: var(
         --scroll-fade-b-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-block: linear-gradient(
         to bottom,
@@ -154,21 +155,16 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation:
-                scroll-fade-reveal-t 1ms ease-in-out,
-                scroll-fade-reveal-b 1ms ease-in-out;
-            animation-timeline: scroll(self y), scroll(self y);
-            animation-range:
-                0 var(--scroll-fade-reveal, calc(var(--spacing) * 24)),
-                calc(
-                        100% -
-                            var(--scroll-fade-reveal, calc(var(--spacing) * 24))
-                    )
-                    100%;
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation:
+            scroll-fade-reveal-t 1ms ease-in-out,
+            scroll-fade-reveal-b 1ms ease-in-out;
+        animation-timeline: scroll(self y), scroll(self y);
+        animation-range:
+            0 var(--scroll-fade-reveal, calc(var(--spacing) * 24)),
+            calc(100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24)))
+                100%;
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -180,11 +176,11 @@
 @utility scroll-fade-x {
     --_scroll-fade-size-s: var(
         --scroll-fade-s-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --_scroll-fade-size-e: var(
         --scroll-fade-e-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-inline: linear-gradient(
         to right,
@@ -209,21 +205,16 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation:
-                scroll-fade-reveal-s 1ms ease-in-out,
-                scroll-fade-reveal-e 1ms ease-in-out;
-            animation-timeline: scroll(self inline), scroll(self inline);
-            animation-range:
-                0 var(--scroll-fade-reveal, calc(var(--spacing) * 24)),
-                calc(
-                        100% -
-                            var(--scroll-fade-reveal, calc(var(--spacing) * 24))
-                    )
-                    100%;
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation:
+            scroll-fade-reveal-s 1ms ease-in-out,
+            scroll-fade-reveal-e 1ms ease-in-out;
+        animation-timeline: scroll(self inline), scroll(self inline);
+        animation-range:
+            0 var(--scroll-fade-reveal, calc(var(--spacing) * 24)),
+            calc(100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24)))
+                100%;
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -235,7 +226,7 @@
 @utility scroll-fade-t {
     --_scroll-fade-size-t: var(
         --scroll-fade-t-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-mask: linear-gradient(
         to bottom,
@@ -250,14 +241,11 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation: scroll-fade-reveal-t 1ms ease-in-out;
-            animation-timeline: scroll(self y);
-            animation-range: 0
-                var(--scroll-fade-reveal, calc(var(--spacing) * 24));
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation: scroll-fade-reveal-t 1ms ease-in-out;
+        animation-timeline: scroll(self y);
+        animation-range: 0 var(--scroll-fade-reveal, calc(var(--spacing) * 24));
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -268,7 +256,7 @@
 @utility scroll-fade-b {
     --_scroll-fade-size-b: var(
         --scroll-fade-b-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-mask: linear-gradient(
         to bottom,
@@ -283,16 +271,14 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation: scroll-fade-reveal-b 1ms ease-in-out;
-            animation-timeline: scroll(self y);
-            animation-range: calc(
-                    100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24))
-                )
-                100%;
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation: scroll-fade-reveal-b 1ms ease-in-out;
+        animation-timeline: scroll(self y);
+        animation-range: calc(
+                100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24))
+            )
+            100%;
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -300,10 +286,73 @@
     }
 }
 
+@utility scroll-fade-l {
+    --_scroll-fade-size-s: var(
+        --scroll-fade-s-size,
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+        to right,
+        transparent 0,
+        #000 var(--scroll-fade-s, 0px),
+        #000 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+        animation: scroll-fade-reveal-s 1ms ease-in-out;
+        animation-timeline: scroll(self x);
+        animation-range: 0 var(--scroll-fade-reveal, calc(var(--spacing) * 24));
+        animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+        --scroll-fade-s: var(--_scroll-fade-size-s);
+    }
+}
+
+@utility scroll-fade-r {
+    --_scroll-fade-size-e: var(
+        --scroll-fade-e-size,
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
+    );
+    --scroll-fade-mask: linear-gradient(
+        to right,
+        #000 0,
+        #000 calc(100% - var(--scroll-fade-e, 0px)),
+        transparent 100%
+    );
+    -webkit-mask-image: var(--scroll-fade-mask);
+    mask-image: var(--scroll-fade-mask);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    @supports (animation-timeline: scroll()) {
+        animation: scroll-fade-reveal-e 1ms ease-in-out;
+        animation-timeline: scroll(self x);
+        animation-range: calc(
+                100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24))
+            )
+            100%;
+        animation-fill-mode: both;
+    }
+
+    @supports not (animation-timeline: scroll()) {
+        --scroll-fade-e: var(--_scroll-fade-size-e);
+    }
+}
+
 @utility scroll-fade-s {
     --_scroll-fade-size-s: var(
         --scroll-fade-s-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-mask: linear-gradient(
         to right,
@@ -326,14 +375,11 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation: scroll-fade-reveal-s 1ms ease-in-out;
-            animation-timeline: scroll(self inline);
-            animation-range: 0
-                var(--scroll-fade-reveal, calc(var(--spacing) * 24));
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation: scroll-fade-reveal-s 1ms ease-in-out;
+        animation-timeline: scroll(self inline);
+        animation-range: 0 var(--scroll-fade-reveal, calc(var(--spacing) * 24));
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -344,7 +390,7 @@
 @utility scroll-fade-e {
     --_scroll-fade-size-e: var(
         --scroll-fade-e-size,
-        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 3.5)))
+        var(--scroll-fade-size, min(12%, calc(var(--spacing) * 10)))
     );
     --scroll-fade-mask: linear-gradient(
         to right,
@@ -367,16 +413,14 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    @media (prefers-reduced-motion: no-preference) {
-        @supports (animation-timeline: scroll()) {
-            animation: scroll-fade-reveal-e 1ms ease-in-out;
-            animation-timeline: scroll(self inline);
-            animation-range: calc(
-                    100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24))
-                )
-                100%;
-            animation-fill-mode: both;
-        }
+    @supports (animation-timeline: scroll()) {
+        animation: scroll-fade-reveal-e 1ms ease-in-out;
+        animation-timeline: scroll(self inline);
+        animation-range: calc(
+                100% - var(--scroll-fade-reveal, calc(var(--spacing) * 24))
+            )
+            100%;
+        animation-fill-mode: both;
     }
 
     @supports not (animation-timeline: scroll()) {
@@ -413,10 +457,7 @@
     --scroll-fade-mask: none;
 }
 
-/* ------------------------------------------------------------------ */
-/* shimmer                                                             */
-/* ------------------------------------------------------------------ */
-
+/* shimmer */
 @property --shimmer-angle {
     syntax: '<angle>';
     inherits: true;
