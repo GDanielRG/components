@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Pending — next snapshot
+### snapshot-20260716 — 2026-07-16
 
 - **Added** a `'featured'` named trigger icon (`StarIcon`) to `ServerSearchFilter.icon`
   alongside `'archive'`, and taught `faceted-filters.tsx` (multiselect chips) the same
@@ -16,6 +16,23 @@ release policy. Pin installs to a snapshot tag, e.g.
   icon stays visible regardless of selection state, and `hideLabel` renders an icon-only
   trigger with the label as `aria-label`. Non-breaking — filters without `icon`/`hideLabel`
   render exactly as before.
+
+- **Added** a shared `notifications` bundle (`notification-bell.tsx`,
+  `notification-center.tsx`, `notification-popover-content.tsx`, `types.ts`): bell
+  trigger + popover-list notification-center primitives, staged ahead of their first
+  consumer — the notification-center product feature itself remains parked post-v1.
+  Non-breaking (a new bundle; nothing installs it implicitly).
+- **Changed** `ui/pagination.tsx`: deduplicated the `disabled`/`text` prop
+  declarations on `PaginationPrevious`/`PaginationNext` (both already carried by
+  `PaginationLink`'s props) and added the carried-customization note (links render
+  through Inertia's `<Link>`; keep Base UI's default `nativeButton`). Type-level
+  cleanup only; non-breaking.
+- **Added** `data-slot="spinner"` to `ui/spinner.tsx`, matching the registry's
+  slot-attribute idiom. Non-breaking.
+- **Changed** `styles/ui-utilities.css`: re-vendored verbatim from upstream shadcn
+  `packages/shadcn/src/tailwind.css` (2026-07 refresh), now including `no-scrollbar`
+  alongside `scroll-fade`/shimmer. Existing class names unchanged; consumers pick up
+  the refresh on their next install. Non-breaking.
 
 ### snapshot-20260710 — 2026-07-10
 
