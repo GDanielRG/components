@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+    buildClearAllPatch,
     buildPathPatch,
     clearedFilterValues,
     getQueryValue,
@@ -102,6 +103,61 @@ describe('clearedFilterValues', () => {
     it('nulls a filter key', () => {
         expect(clearedFilterValues({ key: 'role' } as never)).toEqual({
             role: null,
+        });
+    });
+
+    it('nulls both query keys for a paired range', () => {
+        expect(
+            clearedFilterValues({
+                key: 'price',
+                label: 'Price',
+                type: 'range',
+                fromKey: 'price_min',
+                toKey: 'price_max',
+                fromLabel: 'Minimum price',
+                toLabel: 'Maximum price',
+                inputType: 'number',
+                applyLabel: 'Apply',
+                clearLabel: 'Clear',
+            }),
+        ).toEqual({
+            price_min: null,
+            price_max: null,
+        });
+    });
+});
+
+describe('buildClearAllPatch', () => {
+    it('clears filter-scoped ranges and top-level controls together', () => {
+        expect(
+            buildClearAllPatch([
+                {
+                    key: 'price',
+                    label: 'Price',
+                    type: 'range',
+                    fromKey: 'price_min',
+                    toKey: 'price_max',
+                    fromLabel: 'Minimum price',
+                    toLabel: 'Maximum price',
+                    inputType: 'number',
+                    applyLabel: 'Apply',
+                    clearLabel: 'Clear',
+                },
+                {
+                    key: 'sort',
+                    label: 'Sort',
+                    type: 'select',
+                    scope: 'query',
+                    options: [{ label: 'Recommended', value: 'recommended' }],
+                },
+            ]),
+        ).toEqual({
+            sort: null,
+            filter: {
+                search: null,
+                price_min: null,
+                price_max: null,
+            },
         });
     });
 });

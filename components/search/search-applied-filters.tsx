@@ -110,8 +110,14 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
         filtersClassName,
         testIdPrefix,
     } = props;
-    const { filters, filterValues, selectValues, navigation, searchValue } =
-        appliedFilters;
+    const {
+        filters,
+        filterValues,
+        selectValues,
+        rangeValues,
+        navigation,
+        searchValue,
+    } = appliedFilters;
 
     const appliedFilterCount = getAppliedFilterCount(appliedFilters);
     const hasSearch = !!searchValue.trim();
@@ -183,6 +189,7 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
                 filters={filters}
                 filterValues={filterValues}
                 selectValues={selectValues}
+                rangeValues={rangeValues}
                 navigation={navigation}
                 mode="active"
                 className={filtersClassName}

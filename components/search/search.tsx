@@ -16,6 +16,7 @@ import { SearchAppliedFiltersDisclosure } from '@/components/search/search-appli
 import type {
     SearchAppliedFiltersState,
     SearchFilterPopoverState,
+    SearchRangeValue,
 } from '@/components/search/types';
 import { useSearchNavigation } from '@/components/search/use-search-navigation';
 import type { SearchNavigationController } from '@/components/search/use-search-navigation';
@@ -34,6 +35,7 @@ export interface UseSearchReturn extends SearchNavigationController {
     initialSearch: string;
     filterValues: Record<string, string[]>;
     selectValues: Record<string, string | null>;
+    rangeValues: Record<string, SearchRangeValue>;
     hasActiveFilters: boolean;
     appliedFilters: SearchAppliedFiltersState;
     filterPopoverState: SearchFilterPopoverState;
@@ -55,16 +57,32 @@ export function useSearch(
 
     const filterValues: Record<string, string[]> = {};
     const selectValues: Record<string, string | null> = {};
+    const rangeValues: Record<string, SearchRangeValue> = {};
 
     for (const filter of filters) {
-        // Multiselect and select both populate filterValues (a scalar parses
-        // to a 1-element array).
-        const values = getQueryValues(currentQuery, ['filter', filter.key]);
+        if (filter.type === 'range') {
+            const from = getQueryValue(currentQuery, [
+                'filter',
+                filter.fromKey,
+            ]);
+            const to = getQueryValue(currentQuery, ['filter', filter.toKey]);
+
+            rangeValues[filter.key] = { from, to };
+            filterValues[filter.key] = [from, to].filter(
+                (value): value is string => value !== null,
+            );
+
+            continue;
+        }
+
+        const path =
+            filter.scope === 'query' ? [filter.key] : ['filter', filter.key];
+        const values = getQueryValues(currentQuery, path);
 
         filterValues[filter.key] = values;
 
         if (filter.type === 'select') {
-            selectValues[filter.key] = values[0] ?? null;
+            selectValues[filter.key] = values[0] ?? filter.defaultValue ?? null;
         }
     }
 
@@ -89,11 +107,13 @@ export function useSearch(
         initialSearch,
         filterValues,
         selectValues,
+        rangeValues,
         hasActiveFilters: hasActiveFilterValues || initialSearch.length > 0,
         appliedFilters: {
             filters,
             filterValues,
             selectValues,
+            rangeValues,
             navigation,
             searchValue: initialSearch,
             clearAllPatch: buildClearAllPatch(filters, options.viewControls),
@@ -186,6 +206,7 @@ export function SearchControls({
                         filters={search.filters}
                         filterValues={search.filterValues}
                         selectValues={search.selectValues}
+                        rangeValues={search.rangeValues}
                         navigation={search}
                         mode="inactive"
                         popoverState={search.filterPopoverState}
@@ -193,6 +214,36 @@ export function SearchControls({
                 </div>
             )}
         </form>
+    );
+}
+
+/**
+ * Definition-driven controls without the free-text input. Public discovery
+ * surfaces use this when search already lives in an editorial hero.
+ */
+export function SearchFilterControls({
+    search,
+    className,
+    testIdPrefix,
+    mode = 'all',
+}: {
+    search: UseSearchReturn;
+    className?: string;
+    testIdPrefix?: string;
+    mode?: 'all' | 'active' | 'inactive';
+}) {
+    return (
+        <Filters
+            filters={search.filters}
+            filterValues={search.filterValues}
+            selectValues={search.selectValues}
+            rangeValues={search.rangeValues}
+            navigation={search}
+            className={className}
+            testIdPrefix={testIdPrefix}
+            popoverState={search.filterPopoverState}
+            mode={mode}
+        />
     );
 }
 

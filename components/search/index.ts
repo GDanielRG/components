@@ -1,4 +1,9 @@
-export { SearchControls, SearchResults, useSearch } from './search';
+export {
+    SearchControls,
+    SearchFilterControls,
+    SearchResults,
+    useSearch,
+} from './search';
 export {
     SearchAppliedFilters,
     SearchAppliedFiltersDisclosure,
