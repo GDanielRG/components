@@ -4,8 +4,13 @@ export type SearchNavigationPrimitive = string | string[];
 export type SearchNavigationData = {
     [key: string]: SearchNavigationPrimitive | SearchNavigationData;
 };
+// prettier-ignore
 export type SearchNavigationPatchValue =
-    string | string[] | SearchNavigationPatch | null | undefined;
+    | string
+    | string[]
+    | SearchNavigationPatch
+    | null
+    | undefined;
 export interface SearchNavigationPatch {
     [key: string]: SearchNavigationPatchValue;
 }
@@ -337,6 +342,13 @@ export function resolveCurrentSearch(pageUrl: string): string {
 export function clearedFilterValues(
     filter: ServerSearchFilter,
 ): SearchNavigationPatch {
+    if (filter.type === 'range') {
+        return {
+            [filter.fromKey]: null,
+            [filter.toKey]: null,
+        };
+    }
+
     return { [filter.key]: null };
 }
 
@@ -350,13 +362,15 @@ export function buildClearAllPatch(
     controls: SearchClearControl[] = [],
 ): SearchNavigationPatch {
     const topLevelReset: SearchNavigationPatch = {};
-    const filterReset: SearchNavigationPatch = {
-        search: null,
-        ...filters.reduce<SearchNavigationPatch>(
-            (patch, filter) => ({ ...patch, ...clearedFilterValues(filter) }),
-            {},
-        ),
-    };
+    const filterReset: SearchNavigationPatch = { search: null };
+
+    for (const filter of filters) {
+        if (filter.scope === 'query') {
+            topLevelReset[filter.key] = null;
+        } else {
+            Object.assign(filterReset, clearedFilterValues(filter));
+        }
+    }
 
     for (const control of controls) {
         if ((control.scope ?? 'filter') === 'query') {

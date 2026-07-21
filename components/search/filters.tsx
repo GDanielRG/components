@@ -1,8 +1,16 @@
 import { useState } from 'react';
 import { FacetedFilters } from '@/components/search/faceted-filters';
+import { RangeFilter } from '@/components/search/range-filter';
 import { SelectFilter } from '@/components/search/select-filter';
-import type { SearchFilterPopoverState } from '@/components/search/types';
-import type { ServerSearchFilter } from '@/components/types/server-search';
+import type {
+    SearchFilterPopoverState,
+    SearchRangeValue,
+} from '@/components/search/types';
+import type {
+    ServerSearchChoiceFilter,
+    ServerSearchFilter,
+    ServerSearchRangeFilter,
+} from '@/components/types/server-search';
 import { cn } from '@/lib/utils';
 import { buildPathPatch } from './query-utils';
 import type { SearchNavigationController } from './use-search-navigation';
@@ -11,6 +19,7 @@ interface FiltersProps {
     filters: ServerSearchFilter[];
     filterValues: Record<string, string[]>;
     selectValues?: Record<string, string | null>;
+    rangeValues?: Record<string, SearchRangeValue>;
     navigation: SearchNavigationController;
     className?: string;
     mode?: 'all' | 'active' | 'inactive';
@@ -23,6 +32,7 @@ export function Filters(props: FiltersProps) {
         filters,
         filterValues,
         selectValues = {},
+        rangeValues = {},
         navigation,
         className,
         mode = 'all',
@@ -55,10 +65,15 @@ export function Filters(props: FiltersProps) {
     }
 
     const multiselectFilters = scopedFilters.filter(
-        (filter) => (filter.type ?? 'multiselect') === 'multiselect',
+        (filter): filter is ServerSearchChoiceFilter =>
+            (filter.type ?? 'multiselect') === 'multiselect',
     );
     const selectFilters = scopedFilters.filter(
-        (filter) => filter.type === 'select',
+        (filter): filter is ServerSearchChoiceFilter =>
+            filter.type === 'select',
+    );
+    const rangeFilters = scopedFilters.filter(
+        (filter): filter is ServerSearchRangeFilter => filter.type === 'range',
     );
 
     function handleFilterValueChange(
@@ -74,11 +89,34 @@ export function Filters(props: FiltersProps) {
         );
     }
 
-    function handleSelectChange(filterKey: string, value: string | null): void {
+    function filterPath(filter: ServerSearchFilter): string[] {
+        return filter.scope === 'query' ? [filter.key] : ['filter', filter.key];
+    }
+
+    function handleSelectChange(
+        filter: ServerSearchChoiceFilter,
+        value: string | null,
+    ): void {
         setOpenFilterKey(null);
         navigation.visit(
-            buildPathPatch(['filter', filterKey], value ? value : null),
+            buildPathPatch(
+                filterPath(filter),
+                value && value !== filter.defaultValue ? value : null,
+            ),
         );
+    }
+
+    function handleRangeChange(
+        filter: ServerSearchRangeFilter,
+        value: SearchRangeValue,
+    ): void {
+        setOpenFilterKey(null);
+        navigation.visit({
+            filter: {
+                [filter.fromKey]: value.from,
+                [filter.toKey]: value.to,
+            },
+        });
     }
 
     function handleFilterOpenChange(filterKey: string, open: boolean): void {
@@ -91,9 +129,8 @@ export function Filters(props: FiltersProps) {
         setOpenFilterKey(nextOpenFilterKey);
     }
 
-    // Multiselect-only (every index page): render FacetedFilters directly so the
-    // markup is byte-identical to before the select-filter addition.
-    if (selectFilters.length === 0) {
+    // Multiselect-only (most index pages): preserve the historical markup.
+    if (selectFilters.length === 0 && rangeFilters.length === 0) {
         return (
             <FacetedFilters
                 filters={multiselectFilters}
@@ -128,9 +165,21 @@ export function Filters(props: FiltersProps) {
                     onOpenChange={(open) =>
                         handleFilterOpenChange(filter.key, open)
                     }
-                    onValueChange={(value) =>
-                        handleSelectChange(filter.key, value)
+                    onValueChange={(value) => handleSelectChange(filter, value)}
+                    testIdPrefix={testIdPrefix}
+                    clearable={filter.defaultValue === undefined}
+                />
+            ))}
+            {rangeFilters.map((filter) => (
+                <RangeFilter
+                    key={filter.key}
+                    filter={filter}
+                    value={rangeValues[filter.key] ?? { from: null, to: null }}
+                    open={openFilterKey === filter.key}
+                    onOpenChange={(open) =>
+                        handleFilterOpenChange(filter.key, open)
                     }
+                    onValueChange={(value) => handleRangeChange(filter, value)}
                     testIdPrefix={testIdPrefix}
                 />
             ))}

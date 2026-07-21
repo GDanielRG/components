@@ -2,10 +2,11 @@ import {
     ArchiveIcon,
     FunnelPlusIcon,
     FunnelXIcon,
+    SlidersHorizontalIcon,
     StarIcon,
 } from 'lucide-react';
 import type { ComponentProps } from 'react';
-import type { ServerSearchFilter } from '@/components/types/server-search';
+import type { ServerSearchChoiceFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,10 +30,11 @@ function resolveTestId(base: string, prefix?: string): string {
 const namedTriggerIcons = {
     archive: ArchiveIcon,
     featured: StarIcon,
+    sort: SlidersHorizontalIcon,
 } as const;
 
 type SelectFilterProps = {
-    filter: ServerSearchFilter;
+    filter: ServerSearchChoiceFilter;
     value: string | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;

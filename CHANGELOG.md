@@ -8,6 +8,14 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Pending
+
+- **Added** definition-driven paired range controls (`date`/`number`) and
+  top-level query-scoped selects with defaults to the shared search system.
+  `SearchFilterControls` lets public discovery pages reuse the same controls
+  when free-text search already lives elsewhere. Existing multiselect/select
+  definitions keep their previous defaults and markup.
+
 ### snapshot-20260716 — 2026-07-16
 
 - **Added** a `'featured'` named trigger icon (`StarIcon`) to `ServerSearchFilter.icon`

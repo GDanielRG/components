@@ -4,11 +4,12 @@ import {
     FunnelPlusIcon,
     FunnelXIcon,
     SearchIcon,
+    SlidersHorizontalIcon,
     StarIcon,
 } from 'lucide-react';
 import { useState } from 'react';
 import type { ComponentProps, ReactElement } from 'react';
-import type { ServerSearchFilter } from '@/components/types/server-search';
+import type { ServerSearchChoiceFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,7 @@ import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
 
 interface FacetedFiltersProps {
-    filters: ServerSearchFilter[];
+    filters: ServerSearchChoiceFilter[];
     filterValues: Record<string, string[]>;
     openFilterKey: string | null;
     onFilterOpenChange: (filterKey: string, open: boolean) => void;
@@ -40,6 +41,7 @@ function resolveTestId(base: string, prefix?: string): string {
 const namedTriggerIcons = {
     archive: ArchiveIcon,
     featured: StarIcon,
+    sort: SlidersHorizontalIcon,
 } as const;
 
 export function FacetedFilters({
