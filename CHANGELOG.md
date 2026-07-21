@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Pending
+### snapshot-20260720 — 2026-07-20
 
 - **Added** definition-driven paired range controls (`date`/`number`) and
   top-level query-scoped selects with defaults to the shared search system.
