@@ -15,11 +15,40 @@ const priceFilter: ServerSearchRangeFilter = {
     fromLabel: 'Minimum price',
     toLabel: 'Maximum price',
     inputType: 'number',
+    inputMode: 'decimal',
+    step: '0.01',
+    min: '0',
+    max: '99999999.99',
     applyLabel: 'Apply',
     clearLabel: 'Clear',
 };
 
 describe('RangeFilter', () => {
+    it('applies the server-owned numeric input contract to both bounds', () => {
+        render(
+            <RangeFilter
+                filter={priceFilter}
+                value={{ from: null, to: null }}
+                open
+                onOpenChange={() => {}}
+                onValueChange={() => {}}
+            />,
+        );
+
+        for (const testId of ['filter-price-from', 'filter-price-to']) {
+            expect(screen.getByTestId(testId)).toHaveAttribute(
+                'inputmode',
+                'decimal',
+            );
+            expect(screen.getByTestId(testId)).toHaveAttribute('step', '0.01');
+            expect(screen.getByTestId(testId)).toHaveAttribute('min', '0');
+            expect(screen.getByTestId(testId)).toHaveAttribute(
+                'max',
+                '99999999.99',
+            );
+        }
+    });
+
     it('commits both bounds together', () => {
         const onValueChange = vi.fn();
 

@@ -82,7 +82,13 @@ export function RangeFilter({
                         <Input
                             id={`${filter.key}-from`}
                             type={filter.inputType}
-                            min={filter.inputType === 'number' ? 0 : undefined}
+                            inputMode={filter.inputMode}
+                            step={filter.step}
+                            min={
+                                filter.min ??
+                                (filter.inputType === 'number' ? 0 : undefined)
+                            }
+                            max={filter.max}
                             value={from}
                             onChange={(event) => setFrom(event.target.value)}
                             data-test={resolveTestId(
@@ -98,7 +104,13 @@ export function RangeFilter({
                         <Input
                             id={`${filter.key}-to`}
                             type={filter.inputType}
-                            min={filter.inputType === 'number' ? 0 : undefined}
+                            inputMode={filter.inputMode}
+                            step={filter.step}
+                            min={
+                                filter.min ??
+                                (filter.inputType === 'number' ? 0 : undefined)
+                            }
+                            max={filter.max}
                             value={to}
                             onChange={(event) => setTo(event.target.value)}
                             data-test={resolveTestId(

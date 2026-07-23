@@ -35,6 +35,10 @@ export interface ServerSearchRangeFilter extends ServerSearchFilterBase {
     fromLabel: string;
     toLabel: string;
     inputType: 'date' | 'number';
+    inputMode?: 'decimal' | 'numeric';
+    step?: string | number;
+    min?: string | number;
+    max?: string | number;
     applyLabel: string;
     clearLabel: string;
 }
