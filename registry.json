@@ -255,12 +255,14 @@
                 "badge",
                 "button",
                 "button-group",
+                "calendar",
                 "dropdown-menu",
                 "field",
                 "input",
                 "popover",
                 "radio-group",
-                "separator"
+                "separator",
+                "slider"
             ],
             "files": [
                 {
@@ -322,7 +324,9 @@
             "dependencies": [
                 "@inertiajs/core@^3.3.1",
                 "@inertiajs/react@^3.3.1",
-                "lucide-react@^1.17.0"
+                "date-fns@^4.4.0",
+                "lucide-react@^1.17.0",
+                "react-day-picker@^10.0.1"
             ]
         },
         {

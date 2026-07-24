@@ -8,6 +8,16 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### snapshot-20260724 — 2026-07-24
+
+- **Added** optional two-thumb slider and calendar-range presentations to the
+  shared range filter. Existing paired inputs remain the default. Slider
+  definitions opt in with `control: 'slider'`, can prefix displayed values
+  through `valuePrefix`, and expose a shared accessible label to both thumbs.
+  Date definitions (`inputType: 'date'`) render the calendar range picker.
+- **Changed** the search bundle dependencies to include its new stock shadcn
+  `slider`/`calendar` primitives plus `date-fns` and `react-day-picker`.
+
 ### snapshot-20260720 — 2026-07-20
 
 - **Added** definition-driven paired range controls (`date`/`number`) and
