@@ -23,6 +23,28 @@ const priceFilter: ServerSearchRangeFilter = {
     clearLabel: 'Clear',
 };
 
+const sliderFilter: ServerSearchRangeFilter = {
+    ...priceFilter,
+    control: 'slider',
+    step: 50,
+    min: 0,
+    max: 5000,
+    valuePrefix: '$',
+};
+
+const dateFilter: ServerSearchRangeFilter = {
+    key: 'dates',
+    label: 'Sailing dates',
+    type: 'range',
+    fromKey: 'start_date',
+    toKey: 'end_date',
+    fromLabel: 'Departure after',
+    toLabel: 'Return before',
+    inputType: 'date',
+    applyLabel: 'Apply',
+    clearLabel: 'Clear',
+};
+
 describe('RangeFilter', () => {
     it('applies the server-owned numeric input contract to both bounds', () => {
         render(
@@ -98,5 +120,54 @@ describe('RangeFilter', () => {
             from: null,
             to: null,
         });
+    });
+
+    it('renders a labelled two-thumb slider and prefixes displayed values', () => {
+        render(
+            <RangeFilter
+                filter={sliderFilter}
+                value={{ from: '1000', to: '5000' }}
+                open
+                onOpenChange={() => {}}
+                onValueChange={() => {}}
+            />,
+        );
+
+        expect(screen.getByTestId('filter-price-trigger')).toHaveTextContent(
+            '$1000 – $5000',
+        );
+        expect(screen.getByTestId('filter-price-from-value')).toHaveTextContent(
+            '$1000',
+        );
+        expect(screen.getByTestId('filter-price-to-value')).toHaveTextContent(
+            '$5000',
+        );
+
+        const thumbs = screen.getAllByRole('slider', { name: 'Price' });
+
+        expect(thumbs).toHaveLength(2);
+        for (const thumb of thumbs) {
+            expect(thumb).toHaveAttribute('min', '0');
+            expect(thumb).toHaveAttribute('max', '5000');
+            expect(thumb).toHaveAttribute('step', '50');
+        }
+    });
+
+    it('renders date ranges as a calendar instead of paired inputs', () => {
+        render(
+            <RangeFilter
+                filter={dateFilter}
+                value={{ from: '2026-07-20', to: '2026-07-24' }}
+                open
+                onOpenChange={() => {}}
+                onValueChange={() => {}}
+            />,
+        );
+
+        expect(screen.getByTestId('filter-dates-calendar')).toBeVisible();
+        expect(
+            screen.queryByTestId('filter-dates-from'),
+        ).not.toBeInTheDocument();
+        expect(screen.queryByTestId('filter-dates-to')).not.toBeInTheDocument();
     });
 });

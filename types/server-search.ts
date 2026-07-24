@@ -39,6 +39,15 @@ export interface ServerSearchRangeFilter extends ServerSearchFilterBase {
     step?: string | number;
     min?: string | number;
     max?: string | number;
+    /**
+     * How the range is edited. Omitted (default) keeps the paired from/to
+     * inputs. `'slider'` renders a two-thumb range slider and requires numeric
+     * `min` and `max`. Date ranges (`inputType: 'date'`) render a calendar
+     * range picker regardless of this field.
+     */
+    control?: 'slider';
+    /** Optional prefix for slider value labels (e.g. `'$'`). */
+    valuePrefix?: string;
     applyLabel: string;
     clearLabel: string;
 }
