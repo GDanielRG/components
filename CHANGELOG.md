@@ -8,7 +8,50 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### snapshot-20260724 — 2026-07-24
+### Unreleased
+
+Not yet cut. When this wave is tagged, rename this heading to
+`### <tag> — <date>` on `main` (see [docs/MAINTAINING.md](docs/MAINTAINING.md)) —
+the short SHA a snapshot tag carries is not knowable until the commit these notes
+describe exists, so the heading is backfilled rather than guessed.
+
+- **BREAKING** `useSort` takes a `navigation: SearchNavigationController` instead
+  of `routeFn`. Call sites change from `useSort({ routeFn: search.routeFn })` to
+  `useSort({ navigation: search })`; a nested table with no `useSearch` of its own
+  builds one with `useSearchNavigation(routeFn)` and passes that. `sortPath` and
+  `pageParam` are unchanged. The old shape rebuilt its query from
+  `usePage().url` and called `router.visit` directly, so a sort issued while a
+  filter's non-blocking `replace: true` visit was still in flight superseded that
+  visit and silently dropped the filter. Sharing the controller instance is the
+  fix — a second controller cannot see the first one's pending visit — so this is
+  deliberately a compile error at every call site rather than a silent fallback.
+- **Fixed** `dialog-form-layout.tsx` header/footer padding collapsing to zero.
+  It composes `CardHeader`/`CardContent`/`CardFooter` with no `Card` root, and the
+  refreshed `ui/card.tsx` declares `[--card-spacing:--spacing(6)]` only on the
+  `Card` root, so `[.border-b]:pb-(--card-spacing)` was invalid at computed-value
+  time. Each card part now declares the variable itself.
+- **Changed** `dialog-form-layout.tsx` to render the title and description
+  through Base UI's `DialogTitle`/`DialogDescription` in their default `h2`/`p`
+  elements instead of `CardTitle`/`CardDescription` divs, restoring the dialog's
+  heading semantics and its `aria-labelledby`/`aria-describedby` wiring. Styled to
+  match the previous output; no visual change.
+- **Fixed** the `notifications` bundle clobbering two registry-owned primitives.
+  Its `registryDependencies` listed bare `"scroll-area"` and `"spinner"`, which
+  resolve to upstream shadcn and overwrote this registry's `ui/scroll-area.tsx`
+  (shipped by `core`) and `ui/spinner.tsx` (shipped by `documents`) on any
+  `notifications` or `foundations` install. Both now point at the owning bundles.
+- **Fixed** `search-applied-filters.tsx` treating the optional `popoverState`
+  prop as an open filter (`undefined !== null`), which left the applied-filters
+  row permanently expanded and its collapse control dead whenever the prop was
+  omitted.
+- **Added** `triggerDataTest` / `itemDataTestPrefix` to `ColumnHeaderMenu`,
+  matching `ColumnVisibilityMenu`'s existing seam, so browser tests can select the
+  fleet's canonical sort control and its asc/desc/hide items.
+- **Removed** the unused `useDocumentsSidebar` hook from
+  `activity/comments-documents-sidebar.tsx` and the `activity` barrel. It had zero
+  consumers across all seven siblings; `useCommentsDocumentsSidebar` is untouched.
+
+### snapshot-20260724-ee60d86 — 2026-07-24
 
 - **Added** optional two-thumb slider and calendar-range presentations to the
   shared range filter. Existing paired inputs remain the default. Slider
@@ -39,7 +82,10 @@ release policy. Pin installs to a snapshot tag, e.g.
   `notification-center.tsx`, `notification-popover-content.tsx`, `types.ts`): bell
   trigger + popover-list notification-center primitives, staged ahead of their first
   consumer — the notification-center product feature itself remains parked post-v1.
-  Non-breaking (a new bundle; nothing installs it implicitly).
+  No sibling declares it directly, but it was also added to `foundations`'
+  `registryDependencies` in this same wave, so an install-everything `foundations`
+  install did pull it — and, until the 20260724 fix below, clobbered this registry's
+  `ui/scroll-area.tsx` and `ui/spinner.tsx` with upstream shadcn copies.
 - **Changed** `ui/pagination.tsx`: deduplicated the `disabled`/`text` prop
   declarations on `PaginationPrevious`/`PaginationNext` (both already carried by
   `PaginationLink`'s props) and added the carried-customization note (links render

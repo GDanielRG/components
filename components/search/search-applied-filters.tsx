@@ -224,7 +224,7 @@ export function SearchAppliedFiltersDisclosure({
     if (
         appliedFilterCount < APPLIED_FILTERS_DISCLOSURE_THRESHOLD ||
         isRevealed ||
-        popoverState?.openFilterKey !== null
+        (popoverState?.openFilterKey ?? null) !== null
     ) {
         return (
             <div className="transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none starting:-translate-y-1 starting:opacity-0">

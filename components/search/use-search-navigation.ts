@@ -10,7 +10,10 @@ import type {
     SearchNavigationData,
     SearchNavigationPatch,
 } from '@/components/search/query-utils';
-import type { RouteDefinition, RouteFn } from '@/components/types/wayfinder';
+import type {
+    RouteDefinition,
+    RouteResolver,
+} from '@/components/types/wayfinder';
 
 export type SearchVisitOptions = VisitHelperOptions;
 
@@ -53,7 +56,7 @@ function resolveBaseQuery(
 }
 
 export function useSearchNavigation(
-    routeFn: RouteFn,
+    routeFn: RouteResolver<'get'>,
 ): SearchNavigationController {
     const { url } = usePage();
     const currentQuery = useMemo(

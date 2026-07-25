@@ -31,6 +31,8 @@ export function ColumnHeaderMenu({
     currentSort,
     currentOrder,
     onSort,
+    triggerDataTest,
+    itemDataTestPrefix,
     ascendingLabel,
     descendingLabel,
     hideColumnLabel,
@@ -43,6 +45,8 @@ export function ColumnHeaderMenu({
     currentSort?: string | null;
     currentOrder?: SortOrder | null;
     onSort?: (key: string, order: SortOrder) => void;
+    triggerDataTest?: string;
+    itemDataTestPrefix?: string;
     ascendingLabel?: string;
     descendingLabel?: string;
     hideColumnLabel?: string;
@@ -73,6 +77,7 @@ export function ColumnHeaderMenu({
             <DropdownMenuTrigger
                 render={
                     <Button
+                        data-test={triggerDataTest}
                         variant={open || isActiveSorted ? 'secondary' : 'ghost'}
                         size="sm"
                         className="h-8 px-2"
@@ -86,6 +91,11 @@ export function ColumnHeaderMenu({
                 {isSortable && (
                     <>
                         <DropdownMenuItem
+                            data-test={
+                                itemDataTestPrefix
+                                    ? `${itemDataTestPrefix}-asc`
+                                    : undefined
+                            }
                             onClick={() => onSort(sortKey, 'asc')}
                         >
                             <AscIcon />
@@ -93,6 +103,11 @@ export function ColumnHeaderMenu({
                             {isActiveAsc && <CheckIcon className="ml-auto" />}
                         </DropdownMenuItem>
                         <DropdownMenuItem
+                            data-test={
+                                itemDataTestPrefix
+                                    ? `${itemDataTestPrefix}-desc`
+                                    : undefined
+                            }
                             onClick={() => onSort(sortKey, 'desc')}
                         >
                             <DescIcon />
@@ -103,6 +118,11 @@ export function ColumnHeaderMenu({
                     </>
                 )}
                 <DropdownMenuItem
+                    data-test={
+                        itemDataTestPrefix
+                            ? `${itemDataTestPrefix}-hide`
+                            : undefined
+                    }
                     variant="destructive"
                     disabled={!canHide}
                     onClick={onHide}

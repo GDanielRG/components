@@ -37,16 +37,27 @@ export type RouteQueryOptions = {
     mergeQuery?: QueryParams;
 };
 
+/**
+ * A route narrowed to the only thing most consumers do with it: CALL it.
+ *
+ * Wayfinder's generated route objects satisfy this structurally, and so does a
+ * bare arrow that pre-binds arguments — which is what lets a caller pass
+ * `(options) => CompanyController.show({ company: slug }, options)` instead of
+ * building an `Object.assign` carrier whose only job is to supply `.url` and
+ * `.form` members nothing ever reads.
+ *
+ * Prefer this everywhere. Reach for {@link RouteMutationFn} only when a consumer
+ * genuinely reads `.form()` — spreading it onto an Inertia `<Form>`, as
+ * grupo-3t's VIN validation form does.
+ */
+export type RouteResolver<TMethod extends Method> = (
+    options?: RouteQueryOptions,
+) => RouteDefinition<TMethod>;
+
 export type RouteByMethodFn<TMethod extends Method> = {
     (options?: RouteQueryOptions): RouteDefinition<TMethod>;
     url: (options?: RouteQueryOptions) => string;
     form: (options?: RouteQueryOptions) => RouteFormDefinition<TMethod>;
-};
-
-export type RouteFn = {
-    (options?: RouteQueryOptions): RouteDefinition<'get'>;
-    url: (options?: RouteQueryOptions) => string;
-    form: (options?: RouteQueryOptions) => RouteFormDefinition<'get'>;
 };
 
 export type RouteMutationFn = RouteByMethodFn<'post'>;

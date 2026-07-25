@@ -104,3 +104,12 @@ console.log(`  git switch -c release/${tag}`);
 console.log(`  git add registry.json && git commit -m "release ${tag}"`);
 console.log(`  git tag ${tag} && git push origin ${tag}`);
 console.log('  git switch main');
+console.log(
+    `\nThen, back on main: rename CHANGELOG.md's "### Unreleased" heading to "### ${tag}".`,
+);
+console.log(
+    "The tag's short SHA is only knowable now, so the heading is backfilled — leaving it",
+);
+console.log(
+    'as "Unreleased" is how past waves drifted past their own release.',
+);

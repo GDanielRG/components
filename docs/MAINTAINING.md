@@ -2,10 +2,11 @@
 
 ## Source
 
-The root `registry.json` is the only registry manifest. It defines nine items — eight consumption
-bundles (`core`, `archive`, `sidebar`, `search`, `table`, `comments`, `documents`, `activity`) plus
-`foundations` (installs them all) — and references source files under `components/`, `hooks/`, and
-`types/`.
+The root `registry.json` is the only registry manifest. It currently defines 13 items: 12
+consumption bundles (`core`, `archive`, `edit-history`, `sidebar`, `search`, `table`, `comments`,
+`documents`, `activity`, `chat-display`, `chat`, `notifications`) plus `foundations` (installs the
+full shared foundation). Treat the manifest as the live inventory rather than maintaining a second
+authoritative list in prose.
 
 Keep shared-type imports under `@/components/*`. ShadCN rewrites unregistered `@/types/*` imports and
 some relative type imports incorrectly during installation.
@@ -28,6 +29,7 @@ Keep app-owned imports limited to:
 npm run registry:check  # format, official schema validation, build
 npm test                # pure utility tests
 npm run smoke           # real aligned-baseline install, type-check, reinstall
+npm run parity:report   # which consumer is pinned where (advisory, always exits 0)
 ```
 
 The smoke test installs the working tree, retains stock ShadCN and npm dependencies, verifies the
@@ -58,11 +60,44 @@ SemVer's MAJOR signal is inert while no consumer upgrades independently):
 npm run registry:release -- snapshot-20260623-1a2b3c4
 ```
 
-Use the format `snapshot-YYYYMMDD-<short-source-sha>`. Record the synced ref in the sibling's sync
-commit message (e.g. `chore(registry): sync foundations @ snapshot-20260623-1a2b3c4`), **not** in
-`components.json` — its `registries` block configures namespaced URL templates, not an install lock.
-Keep a `## Snapshots` note in `CHANGELOG.md` describing each wave (and flag breaking changes loudly,
-since a snapshot tag carries no SemVer signal).
+Use the format `snapshot-YYYYMMDD-<short-source-sha>`. Two waves can land on the same date, so the
+date alone does not identify a release — the SHA is what makes the tag unique, and it is also what
+the heading in `CHANGELOG.md` needs.
+
+That SHA cannot be known while the notes are being written (it is the SHA of the commit those notes
+describe), so pending notes accumulate under `### Unreleased` and the heading is **backfilled** on
+`main` in the next commit after the tag is pushed. Never append to a heading that names an
+already-published tag: those notes are frozen with the ref. This file's own history shows both
+failure modes — a "Pending" catch-all that drifted past two releases, and date-only headings that
+cannot tell two same-day waves apart.
+
+Record the synced ref in each sibling's
+`registry.lock.json` (below), **not** in `components.json` — its `registries` block configures
+namespaced URL templates, not an install lock. Keep a `## Snapshots` note in `CHANGELOG.md`
+describing each wave (and flag breaking changes loudly, since a snapshot tag carries no SemVer
+signal).
+
+### Consumer parity locks
+
+Installed registry files are never hand-edited, so the invariant is byte identity. After a wave,
+write each consumer's receipt from the snapshot you just cut:
+
+```sh
+npm run parity:lock -- ../amnsa ../grupo-3t --ref snapshot-20260623-1a2b3c4
+```
+
+Hashes always come from the registry, never from the consumer's own files — hashing what a consumer
+already has would bless its fork into the receipt. Omitting `--ref` hashes the working tree instead
+and records `worktree@<sha>` (plus `+dirty` when this tree is dirty), which is what an agent
+propagating an unreleased change uses; the `worktree@` prefix is what each consumer's CI gate
+rejects, so it can never masquerade as a snapshot. A consumer's first lock needs `--bundles`; after
+that the declared bundles and any exceptions carry forward.
+
+Each consumer enforces its own lock in its own suite (`tests/Unit/RegistryParityTest.php`), so no
+consumer's CI needs this checkout. `npm run parity:report` is the workspace-level counterpart: which
+consumer sits on which ref, how many releases behind, and which declared divergences are due for
+review. It is advisory and always exits 0 — a fresh release must not redden every consumer before
+its wave reaches them.
 
 ### Production (later): semantic versioning
 

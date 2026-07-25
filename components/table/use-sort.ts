@@ -1,21 +1,14 @@
-import { router, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 import {
     buildPathPatch,
-    buildQueryDataFromCurrent,
     getQueryValue,
     parseCurrentQuery,
     resolveCurrentSearch,
 } from '@/components/search/query-utils';
-import type {
-    RouteDefinition,
-    RouteQueryOptions,
-} from '@/components/types/wayfinder';
+import type { SearchNavigationController } from '@/components/search/use-search-navigation';
 
 type SortOrder = 'asc' | 'desc';
-type SortRouteResolver = (
-    options?: RouteQueryOptions,
-) => RouteDefinition<'get'>;
 
 interface UseSortReturn {
     sort: string | null;
@@ -26,13 +19,21 @@ interface UseSortReturn {
 interface UseSortOptions {
     sortPath?: string | string[];
     pageParam?: string;
-    routeFn: SortRouteResolver;
+    /**
+     * The navigation controller this surface already owns — the page's
+     * `useSearch(...)` return value, or a `useSearchNavigation(routeFn)` for a
+     * nested table that has no search of its own. It must be that SAME
+     * instance: only it knows about an in-flight `replace: true` filter visit,
+     * so a second controller would rebuild the sort URL from the pre-filter
+     * page url and silently drop the filter the user just picked.
+     */
+    navigation: SearchNavigationController;
 }
 
 export function useSort({
     sortPath = 'sort',
     pageParam = 'page',
-    routeFn,
+    navigation,
 }: UseSortOptions): UseSortReturn {
     const { url } = usePage();
     const currentData = useMemo(
@@ -63,15 +64,7 @@ export function useSort({
                       [pageParam]: null,
                   };
 
-        const query = buildQueryDataFromCurrent(currentData, patch);
-        const destination = routeFn({ query });
-
-        router.visit(destination.url, {
-            method: destination.method,
-            preserveState: true,
-            preserveScroll: true,
-            replace: true,
-        });
+        navigation.visit(patch);
     }
 
     return { sort, order, handleSort };

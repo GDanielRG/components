@@ -22,7 +22,7 @@ import { useSearchNavigation } from '@/components/search/use-search-navigation';
 import type { SearchNavigationController } from '@/components/search/use-search-navigation';
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
-import type { RouteFn, RouteMutationFn } from '@/components/types/wayfinder';
+import type { RouteResolver } from '@/components/types/wayfinder';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Input } from '@/components/ui/input';
@@ -30,7 +30,6 @@ import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
 
 export interface UseSearchReturn extends SearchNavigationController {
-    routeFn: RouteFn;
     filters: ServerSearchFilter[];
     initialSearch: string;
     filterValues: Record<string, string[]>;
@@ -46,7 +45,7 @@ export interface UseSearchOptions {
 }
 
 export function useSearch(
-    routeFn: RouteFn,
+    routeFn: RouteResolver<'get'>,
     filters: ServerSearchFilter[] = [],
     options: UseSearchOptions = {},
 ): UseSearchReturn {
@@ -102,7 +101,6 @@ export function useSearch(
 
     return {
         ...navigation,
-        routeFn,
         filters,
         initialSearch,
         filterValues,
@@ -258,7 +256,7 @@ export function SearchResults({
 }: {
     search: UseSearchReturn;
     resultsMessage: string;
-    exportAction?: RouteMutationFn;
+    exportAction?: RouteResolver<'post'>;
     exportTitle?: string;
     toolbar?: ReactNode;
     testIdPrefix?: string;

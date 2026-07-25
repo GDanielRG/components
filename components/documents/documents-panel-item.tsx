@@ -10,7 +10,7 @@ import {
     TrashIcon,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, ComponentProps } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { TimestampWithReveal } from '@/components/chat/timestamp-with-reveal';
 import { DocumentErrorMessages } from '@/components/documents/document-error-messages';
@@ -172,8 +172,7 @@ export function DocumentsPanelItem({
         saveState === 'unsaved-changes' &&
         (showMetadataEditor || hasPendingFile);
 
-    let attachmentState:
-        'idle' | 'uploading' | 'processing' | 'error' | 'done' = 'done';
+    let attachmentState: ComponentProps<typeof Attachment>['state'] = 'done';
 
     if (hasFileError) {
         attachmentState = 'error';

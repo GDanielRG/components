@@ -84,19 +84,6 @@ interface UseCommentsDocumentsSidebarProps {
     defaultOpen?: boolean;
 }
 
-interface UseDocumentsSidebarProps {
-    documents: Document[];
-    allowedDocumentMimes: string[];
-    maxDocumentKilobytes: number;
-    storeDocumentAction: RouteDefinition<'post'>;
-    updateDocumentAction: (
-        documentId: number,
-    ) => RouteDefinition<'put' | 'patch' | 'post'>;
-    destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
-    showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
-    defaultOpen?: boolean;
-}
-
 function useCommentsDocumentsSidebarState({
     defaultOpen = false,
     defaultTab = 'comments',
@@ -322,77 +309,6 @@ export function useCommentsDocumentsSidebar({
                     }}
                 />
             </>
-        ),
-    };
-}
-
-export function useDocumentsSidebar({
-    documents,
-    allowedDocumentMimes,
-    maxDocumentKilobytes,
-    storeDocumentAction,
-    updateDocumentAction,
-    destroyDocumentAction,
-    showDocumentAction,
-    defaultOpen,
-}: UseDocumentsSidebarProps) {
-    const resolvedDefaultOpen = defaultOpen ?? documents.length > 0;
-    const {
-        activeTab,
-        closeSidebar,
-        open,
-        openDocumentsTab,
-        setActiveTab,
-        setOpen,
-    } = useCommentsDocumentsSidebarState({
-        defaultOpen: resolvedDefaultOpen,
-        defaultTab: 'documents',
-    });
-    const documentsPanel = useDocumentsPanel({
-        documents,
-        allowedDocumentMimes,
-        maxDocumentKilobytes,
-        storeAction: storeDocumentAction,
-        updateDocumentAction,
-        destroyDocumentAction,
-        showDocumentAction,
-    });
-
-    const handleOpenChange = (nextOpen: boolean) => {
-        setOpen(nextOpen);
-    };
-
-    const toggleSidebar = () => {
-        if (open) {
-            closeSidebar();
-
-            return;
-        }
-
-        setOpen(true);
-    };
-
-    return {
-        documentCount: documentsPanel.count,
-        activePanel: open ? activeTab : null,
-        openDocumentsTab,
-        toolbar: !open ? (
-            <SidebarToggleButton open={false} onToggle={toggleSidebar} />
-        ) : null,
-        rightSidebar: (
-            <CommentsDocumentsSidebar
-                open={open}
-                onOpenChange={handleOpenChange}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                onToggle={toggleSidebar}
-                documents={{
-                    count: documentsPanel.count,
-                    hasContent: documentsPanel.hasContent,
-                    content: documentsPanel.content,
-                    footer: documentsPanel.footer,
-                }}
-            />
         ),
     };
 }

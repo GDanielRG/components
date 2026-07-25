@@ -627,14 +627,14 @@
             "title": "Notifications",
             "description": "Backend-agnostic notification bell, unseen badge, and paginated popover inbox.",
             "registryDependencies": [
+                "GDanielRG/components/core",
+                "GDanielRG/components/documents",
                 "badge",
                 "button",
                 "empty",
                 "item",
                 "popover",
-                "scroll-area",
-                "separator",
-                "spinner"
+                "separator"
             ],
             "files": [
                 {

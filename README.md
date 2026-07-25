@@ -38,13 +38,21 @@ route contracts.
 
 - `core` — shared types, hooks, pagination, and generic components
 - `archive` — archive status badge, confirmation modal, and form for soft-delete archive flows
+- `edit-history` — edit-history entries and their popover
 - `sidebar` — fleet sidebar provider, rail, and menu primitives
 - `search` — server-driven search controls and export dialog
 - `table` — sorting, visibility, and row-action helpers
 - `comments` — polymorphic comment UI
 - `documents` — polymorphic document and upload UI
 - `activity` — combined comments/documents activity UI
-- `foundations` — installs all bundles
+- `chat-display` — chat message rendering primitives
+- `chat` — chat input and conversation shell (held out of `foundations`: it
+  depends on the pre-1.0 `@shadcn/react` package)
+- `notifications` — notification bell, center, and popover list
+- `foundations` — installs every bundle except `chat`
+
+`registry.json` is the live inventory; this list is a reading aid, so check it
+there rather than trusting the prose if the two ever disagree.
 
 Inspect before installing or updating:
 

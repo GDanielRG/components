@@ -30,9 +30,6 @@ type ExistingDocumentModelFields =
     | 'formatted_updated_at'
     | 'formatted_updated_at_diff';
 
-type NonNullableDocumentFields =
-    'created_at' | 'formatted_created_at' | 'formatted_created_at_diff';
-
 type WithNonNullableFields<T, K extends keyof T> = Omit<T, K> & {
     [P in K]-?: NonNullable<T[P]>;
 };
@@ -46,7 +43,7 @@ export interface NewDocumentData {
 
 export type ExistingDocumentData = WithNonNullableFields<
     Pick<Document, ExistingDocumentModelFields>,
-    NonNullableDocumentFields
+    'created_at' | 'formatted_created_at' | 'formatted_created_at_diff'
 > & {
     can_be_deleted?: boolean;
     file?: File;

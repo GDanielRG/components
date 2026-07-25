@@ -12,7 +12,7 @@ import type {
     DialogCopy,
     ExportCopy,
 } from '@/components/types/shared-component-copy';
-import type { RouteMutationFn } from '@/components/types/wayfinder';
+import type { RouteResolver } from '@/components/types/wayfinder';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -36,7 +36,7 @@ export function ExportDialog({
     open: controlledOpen,
     onOpenChange: controlledOnOpenChange,
 }: {
-    exportAction: RouteMutationFn;
+    exportAction: RouteResolver<'post'>;
     search?: UseSearchReturn;
     title?: string;
     showTrigger?: boolean;
