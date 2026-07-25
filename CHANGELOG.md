@@ -8,12 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
-
-Not yet cut. When this wave is tagged, rename this heading to
-`### <tag> — <date>` on `main` (see [docs/MAINTAINING.md](docs/MAINTAINING.md)) —
-the short SHA a snapshot tag carries is not knowable until the commit these notes
-describe exists, so the heading is backfilled rather than guessed.
+### snapshot-20260725-1c359ef — 2026-07-25
 
 - **BREAKING** `useSort` takes a `navigation: SearchNavigationController` instead
   of `routeFn`. Call sites change from `useSort({ routeFn: search.routeFn })` to
