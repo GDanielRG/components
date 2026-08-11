@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260810-d993d38 — 2026-08-10
 
 - **Added** a registry-owned source-integrity Pest test to `core`. Every consumer
   now verifies its local installed bytes and declared exception pins against its
