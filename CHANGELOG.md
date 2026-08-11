@@ -8,6 +8,13 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### snapshot-20260811-e7750a5 — 2026-08-11
+
+- **Updated** stable registry fixture and test dependencies, including Inertia 3.6,
+  Lucide 1.31, React 19.2.8, Sonner 2.0.8, and Vitest 4.1.10.
+- **Simplified** the registry-owned source-integrity test's diagnostic string
+  construction while preserving its missing-file and incomplete-exception output.
+
 ### snapshot-20260810-d993d38 — 2026-08-10
 
 - **Added** a registry-owned source-integrity Pest test to `core`. Every consumer
