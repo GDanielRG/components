@@ -69,7 +69,7 @@ if (capture('git', ['status', '--porcelain']) !== '') {
 }
 
 try {
-    capture('git', ['show-ref', '--verify', `refs/tags/${tag}`]);
+    capture('git', ['show-ref', '--verify', '--quiet', `refs/tags/${tag}`]);
     console.error(
         `release ref "${tag}" already exists locally. Published refs are immutable; choose a new ref.`,
     );
