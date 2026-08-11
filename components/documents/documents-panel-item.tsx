@@ -55,6 +55,7 @@ interface ExistingDocumentFormData {
 
 interface DocumentsPanelItemProps {
     document: ExistingDocumentData;
+    readOnly?: boolean;
     updateDocumentAction: (
         documentId: number,
     ) => RouteDefinition<'put' | 'patch' | 'post'>;
@@ -65,6 +66,7 @@ interface DocumentsPanelItemProps {
 
 export function DocumentsPanelItem({
     document,
+    readOnly = false,
     updateDocumentAction,
     showDocumentAction,
     onDelete,
@@ -98,6 +100,7 @@ export function DocumentsPanelItem({
     const hasSavedDate =
         !form.isDirty && Boolean(document.formatted_updated_at_diff);
     const showMetadataEditor =
+        !readOnly &&
         !form.processing &&
         (isEditingMetadata || (form.isDirty && !hasPendingFile));
     const saveState = form.isDirty ? 'unsaved-changes' : 'saved';
@@ -169,6 +172,7 @@ export function DocumentsPanelItem({
     const fileError = form.errors.file;
     const hasFileError = Boolean(fileError);
     const showSaveButton =
+        !readOnly &&
         saveState === 'unsaved-changes' &&
         (showMetadataEditor || hasPendingFile);
 
@@ -330,23 +334,27 @@ export function DocumentsPanelItem({
                     onReplaceFile={() => fileInputRef.current?.click()}
                     onDiscardChanges={discardChanges}
                     onDelete={onDelete}
+                    readOnly={readOnly}
                 />
             </Attachment>
 
-            <input
-                id={`document-file-input-${document.id}`}
-                ref={fileInputRef}
-                type="file"
-                accept={acceptedMimes}
-                onChange={handleFileReplace}
-                className="hidden"
-            />
+            {!readOnly && (
+                <input
+                    id={`document-file-input-${document.id}`}
+                    ref={fileInputRef}
+                    type="file"
+                    accept={acceptedMimes}
+                    onChange={handleFileReplace}
+                    className="hidden"
+                />
+            )}
         </div>
     );
 }
 
 interface ExistingDocumentActionsProps {
     document: ExistingDocumentData;
+    readOnly: boolean;
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     showMetadataEditor: boolean;
     metadataActionLabel: string;
@@ -360,6 +368,7 @@ interface ExistingDocumentActionsProps {
 
 function ExistingDocumentActions({
     document,
+    readOnly,
     showDocumentAction,
     showMetadataEditor,
     metadataActionLabel,
@@ -385,7 +394,7 @@ function ExistingDocumentActions({
                         data-test={`document-item-actions-${document.id}`}
                         disabled={rowProcessing}
                     >
-                        <MoreHorizontalIcon data-icon="icon" />
+                        <MoreHorizontalIcon />
                     </Button>
                 )}
             >
@@ -403,25 +412,31 @@ function ExistingDocumentActions({
                         {copy.documentsDownloadFile}
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem onClick={onToggleMetadataEditor}>
-                        <FileTextIcon />
-                        {metadataActionLabel}
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem onClick={onReplaceFile}>
-                        <RefreshCwIcon />
-                        {copy.documentsReplaceFile}
-                    </DropdownMenuItem>
-
-                    {saveState === 'unsaved-changes' && !showMetadataEditor && (
-                        <DropdownMenuItem onClick={onDiscardChanges}>
-                            <RotateCcwIcon />
-                            {copy.documentsDiscardChanges}
+                    {!readOnly && (
+                        <DropdownMenuItem onClick={onToggleMetadataEditor}>
+                            <FileTextIcon />
+                            {metadataActionLabel}
                         </DropdownMenuItem>
                     )}
+
+                    {!readOnly && (
+                        <DropdownMenuItem onClick={onReplaceFile}>
+                            <RefreshCwIcon />
+                            {copy.documentsReplaceFile}
+                        </DropdownMenuItem>
+                    )}
+
+                    {!readOnly &&
+                        saveState === 'unsaved-changes' &&
+                        !showMetadataEditor && (
+                            <DropdownMenuItem onClick={onDiscardChanges}>
+                                <RotateCcwIcon />
+                                {copy.documentsDiscardChanges}
+                            </DropdownMenuItem>
+                        )}
                 </DropdownMenuGroup>
 
-                {onDelete && (
+                {!readOnly && onDelete && (
                     <>
                         <DropdownMenuSeparator />
 

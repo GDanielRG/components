@@ -9,7 +9,7 @@ Use this registry in a Laravel/Inertia React app that has been migrated to Base 
 the [frontend baseline](docs/CONSUMER_CONTRACT.md):
 
 ```sh
-npx shadcn add GDanielRG/components/foundations#v1.0.0
+bunx --bun shadcn@latest add GDanielRG/components/foundations#v1.0.0
 ```
 
 Always pin to a **release ref** — a published tag (or that tag's commit SHA), never a branch and
@@ -23,7 +23,7 @@ tag** rather than a semantic version (see [the maintenance guide](docs/MAINTAINI
 two-phase release policy). Install the most recent one — for example:
 
 ```sh
-npx shadcn add GDanielRG/components/foundations#snapshot-20260623-<short-sha>
+bunx --bun shadcn@latest add GDanielRG/components/foundations#snapshot-20260623-<short-sha>
 ```
 
 The consumer also provides two intentionally app-owned files:
@@ -57,16 +57,16 @@ there rather than trusting the prose if the two ever disagree.
 Inspect before installing or updating:
 
 ```sh
-npx shadcn view GDanielRG/components/foundations#v1.0.0
-npx shadcn add GDanielRG/components/foundations#v1.0.0 --dry-run
+bunx --bun shadcn@latest view GDanielRG/components/foundations#v1.0.0
+bunx --bun shadcn@latest add GDanielRG/components/foundations#v1.0.0 --dry-run
 ```
 
 ## Maintain
 
 ```sh
-npm run registry:check
-npm test
-npm run smoke
+bun run registry:check
+bun run test
+bun run smoke
 ```
 
 The source files and root [`registry.json`](registry.json) are the complete registry. See

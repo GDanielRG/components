@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ChevronDownIcon, HistoryIcon } from 'lucide-react';
 import { useState } from 'react';
+import { DEFAULT_PREFETCH_CACHE_FOR } from '@/components/inertia-prefetch-policy';
 import type { EditHistoryEntry } from '@/components/types/edit-history-entry';
 import type { HistoryCopy } from '@/components/types/shared-component-copy';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -44,12 +45,19 @@ type EditHistoryPopoverProps = {
     history: EditHistoryEntry[];
     dataTestPrefix?: string;
     employeeHref?: EmployeeHref;
+    /**
+     * Cache tags for the prefetched causer page, so the surface that edits an
+     * employee can drop those entries with `invalidateCacheTags`. Without them
+     * a prefetched causer page outlives the write that changed it.
+     */
+    employeeCacheTags?: string | string[];
 };
 
 export function EditHistoryPopover({
     history,
     dataTestPrefix,
     employeeHref,
+    employeeCacheTags,
 }: EditHistoryPopoverProps) {
     const copy: HistoryCopy = useSharedComponentCopy();
 
@@ -95,6 +103,7 @@ export function EditHistoryPopover({
                             key={entry.id}
                             entry={entry}
                             employeeHref={employeeHref}
+                            employeeCacheTags={employeeCacheTags}
                         />
                     ))}
                 </div>
@@ -106,9 +115,11 @@ export function EditHistoryPopover({
 function EditHistoryItem({
     entry,
     employeeHref,
+    employeeCacheTags,
 }: {
     entry: EditHistoryEntry;
     employeeHref?: EmployeeHref;
+    employeeCacheTags?: string | string[];
 }) {
     const copy: HistoryCopy = useSharedComponentCopy();
     const firstName = entry.causer?.name.split(' ')[0] ?? copy.historySystem;
@@ -126,6 +137,7 @@ function EditHistoryItem({
                         causer={entry.causer}
                         firstName={firstName}
                         employeeHref={employeeHref}
+                        employeeCacheTags={employeeCacheTags}
                     />
                     <span className="text-[10px] text-muted-foreground">
                         {entry.formatted_at}
@@ -150,10 +162,12 @@ function EditHistoryCauserName({
     causer,
     firstName,
     employeeHref,
+    employeeCacheTags,
 }: {
     causer: EditHistoryEntry['causer'];
     firstName: string;
     employeeHref?: EmployeeHref;
+    employeeCacheTags?: string | string[];
 }) {
     const copy: HistoryCopy = useSharedComponentCopy();
 
@@ -170,6 +184,8 @@ function EditHistoryCauserName({
             <Link
                 href={employeeHref(causer.id)}
                 prefetch
+                cacheFor={DEFAULT_PREFETCH_CACHE_FOR}
+                cacheTags={employeeCacheTags}
                 className="font-semibold hover:underline"
             >
                 {firstName}

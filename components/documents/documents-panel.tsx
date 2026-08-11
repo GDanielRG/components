@@ -22,6 +22,7 @@ import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 interface DocumentsPanelProps {
     documents: Document[];
+    readOnly?: boolean;
     allowedDocumentMimes: string[];
     maxDocumentKilobytes: number;
     storeAction: RouteDefinition<'post'>;
@@ -60,6 +61,7 @@ const mapExistingDocument = (document: Document): ExistingDocumentData => {
 
 export function useDocumentsPanel({
     documents,
+    readOnly = false,
     allowedDocumentMimes,
     maxDocumentKilobytes,
     storeAction,
@@ -143,10 +145,11 @@ export function useDocumentsPanel({
                         updateDocumentAction={updateDocumentAction}
                         showDocumentAction={showDocumentAction}
                         onDelete={
-                            document.can_be_deleted
+                            !readOnly && document.can_be_deleted
                                 ? () => confirmDeleteDocument(document)
                                 : undefined
                         }
+                        readOnly={readOnly}
                         acceptedMimes={acceptedMimes}
                     />
                 ))}
@@ -167,7 +170,7 @@ export function useDocumentsPanel({
         </>
     );
 
-    const footer = (
+    const footer = readOnly ? null : (
         <div className="flex flex-col gap-3">
             <input
                 id="sidebar-documents-input"

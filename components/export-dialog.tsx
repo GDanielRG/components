@@ -50,8 +50,23 @@ export function ExportDialog({
     const dialogTitle = title ?? copy.exportTitle;
     const appliedFilters = search?.appliedFilters;
     const searchFilters = appliedFilters?.filters ?? [];
-    const filterValues = appliedFilters?.filterValues ?? {};
     const searchValue = appliedFilters?.searchValue;
+    const filterValues: Record<string, string[]> = {
+        ...appliedFilters?.filterValues,
+    };
+
+    // A select default is part of the effective server query even when the
+    // URL omits it. Keep the scope described in the dialog and the submitted
+    // export payload aligned with that effective query.
+    for (const searchFilter of searchFilters) {
+        if (
+            searchFilter.type === 'select' &&
+            searchFilter.defaultValue != null &&
+            (filterValues[searchFilter.key] ?? []).length === 0
+        ) {
+            filterValues[searchFilter.key] = [searchFilter.defaultValue];
+        }
+    }
     const hasAppliedFilters =
         searchFilters.some(
             (filter) => (filterValues[filter.key] ?? []).length > 0,
@@ -86,9 +101,17 @@ export function ExportDialog({
                         for (const [key, values] of Object.entries(
                             filterValues,
                         )) {
-                            if (values.length > 0) {
-                                filter[key] = values;
+                            if (values.length === 0) {
+                                continue;
                             }
+
+                            const isSelect = searchFilters.some(
+                                (searchFilter) =>
+                                    searchFilter.key === key &&
+                                    searchFilter.type === 'select',
+                            );
+
+                            filter[key] = isSelect ? values[0] : values;
                         }
 
                         if (Object.keys(filter).length > 0) {
@@ -117,9 +140,10 @@ export function ExportDialog({
                                 {search && hasAppliedFilters && (
                                     <div className="mt-3 flex justify-center">
                                         <SearchAppliedFilters
-                                            appliedFilters={
-                                                search.appliedFilters
-                                            }
+                                            appliedFilters={{
+                                                ...search.appliedFilters,
+                                                filterValues,
+                                            }}
                                             className="w-fit justify-center"
                                             filtersClassName="w-fit justify-center"
                                             testIdPrefix="export"

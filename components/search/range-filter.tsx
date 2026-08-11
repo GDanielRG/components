@@ -131,6 +131,17 @@ export function RangeFilter({
                         step={sliderStep}
                         value={[currentFrom, currentTo]}
                         aria-labelledby={sliderLabelId}
+                        thumbLabels={[filter.fromLabel, filter.toLabel]}
+                        thumbTestIds={[
+                            resolveTestId(
+                                `filter-${filter.key}-from-thumb`,
+                                testIdPrefix,
+                            ),
+                            resolveTestId(
+                                `filter-${filter.key}-to-thumb`,
+                                testIdPrefix,
+                            ),
+                        ]}
                         onValueChange={(next) => {
                             const values = Array.isArray(next)
                                 ? next

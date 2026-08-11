@@ -156,7 +156,7 @@ function CommentItem({
                         data-test="comment-actions"
                         aria-label={copy.commentsActions}
                     >
-                        <MoreHorizontalIcon data-icon="icon" />
+                        <MoreHorizontalIcon />
                     </Button>
                 )}
             >

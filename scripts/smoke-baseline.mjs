@@ -1,7 +1,7 @@
 // Dependency-resolving install smoke test.
 //
 // Installs the working-tree registry into the supported baseline,
-// retaining stock shadcn dependencies and versioned npm dependencies, then
+// retaining stock shadcn dependencies and versioned package dependencies, then
 // type-checks the complete installed result.
 import fs from 'node:fs';
 import os from 'node:os';
@@ -53,11 +53,7 @@ try {
         fs.readFileSync(path.join(consumer, file), 'utf8'),
     );
 
-    run(
-        'npm',
-        ['install', '--ignore-scripts', '--no-audit', '--no-fund'],
-        consumer,
-    );
+    run('bun', ['install', '--ignore-scripts'], consumer);
     run(SHADCN, [
         'add',
         path.join(registry, 'foundations.json'),
@@ -66,7 +62,7 @@ try {
         '--cwd',
         consumer,
     ]);
-    run('npm', ['run', 'types:check'], consumer);
+    run('bun', ['run', 'types:check'], consumer);
 
     const snapshot = () => {
         const files = {};
@@ -84,9 +80,23 @@ try {
             }
         };
         walk(path.join(consumer, 'resources/js'));
+        if (fs.existsSync(path.join(consumer, 'tests')))
+            walk(path.join(consumer, 'tests'));
         return files;
     };
     const installed = snapshot();
+
+    const integrityTestPath = 'tests/Unit/RegistrySourceIntegrityTest.php';
+    if (
+        installed[integrityTestPath] !==
+        fs.readFileSync(
+            path.join(ROOT, 'consumer/RegistrySourceIntegrityTest.php'),
+            'utf8',
+        )
+    )
+        throw new Error(
+            `core bundle did not install ${integrityTestPath} byte-identically`,
+        );
 
     // The documents bundle vendors its own `ui/spinner.tsx` (registry:ui) rather
     // than leaning on a bare `spinner` shadcn dependency, which would resolve
@@ -114,7 +124,7 @@ try {
         '--cwd',
         consumer,
     ]);
-    run('npm', ['run', 'types:check'], consumer);
+    run('bun', ['run', 'types:check'], consumer);
     const reinstalled = snapshot();
     const changed = [
         ...new Set([...Object.keys(installed), ...Object.keys(reinstalled)]),

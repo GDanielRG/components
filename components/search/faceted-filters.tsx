@@ -1,23 +1,28 @@
 import {
     ArchiveIcon,
-    CheckIcon,
     FunnelPlusIcon,
     FunnelXIcon,
-    SearchIcon,
     SlidersHorizontalIcon,
     StarIcon,
 } from 'lucide-react';
-import { useState } from 'react';
 import type { ComponentProps, ReactElement } from 'react';
-import type { ServerSearchChoiceFilter } from '@/components/types/server-search';
+import type {
+    ServerSearchChoiceFilter,
+    ServerSearchFilterOption,
+} from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList,
+    ComboboxSeparator,
+    ComboboxTrigger,
+} from '@/components/ui/combobox';
 import { Separator } from '@/components/ui/separator';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
@@ -54,49 +59,20 @@ export function FacetedFilters({
     testIdPrefix,
 }: FacetedFiltersProps) {
     const copy: SearchCopy = useSharedComponentCopy();
-    const [filterQueries, setFilterQueries] = useState<Record<string, string>>(
-        {},
-    );
 
     return (
         <div className={cn('flex flex-wrap items-center gap-3', className)}>
             {filters.map((filter) => {
                 const isOpen = openFilterKey === filter.key;
                 const selectedValues = filterValues[filter.key] ?? [];
-                const selectedOptions = filter.options.filter((option) =>
+                // An empty value is the catalogue's "any" placeholder: absence
+                // of the filter already expresses it, so it is never selectable.
+                const options = filter.options.filter(
+                    (option) => option.value !== '',
+                );
+                const selectedOptions = options.filter((option) =>
                     selectedValues.includes(option.value),
                 );
-                const filterQuery = filterQueries[filter.key] ?? '';
-                const normalizedFilterQuery = filterQuery
-                    .trim()
-                    .toLocaleLowerCase();
-                const visibleOptions = filter.options.filter((option) => {
-                    if (!option.value) {
-                        return false;
-                    }
-
-                    if (normalizedFilterQuery === '') {
-                        return true;
-                    }
-
-                    return option.label
-                        .toLocaleLowerCase()
-                        .includes(normalizedFilterQuery);
-                });
-
-                function toggleOption(optionValue: string): void {
-                    const nextValues = selectedValues.includes(optionValue)
-                        ? selectedValues.filter(
-                              (value) => value !== optionValue,
-                          )
-                        : [...selectedValues, optionValue];
-
-                    onFilterValueChange(filter.key, nextValues);
-                }
-
-                function resetFilter(): void {
-                    onFilterValueChange(filter.key, []);
-                }
 
                 function renderTrigger(
                     props: ComponentProps<typeof Button>,
@@ -170,107 +146,76 @@ export function FacetedFilters({
                 }
 
                 return (
-                    <Popover
+                    <Combobox
                         key={filter.key}
+                        items={options}
+                        multiple
+                        value={selectedOptions}
+                        onValueChange={(
+                            nextOptions: ServerSearchFilterOption[],
+                        ) =>
+                            onFilterValueChange(
+                                filter.key,
+                                nextOptions.map((option) => option.value),
+                            )
+                        }
                         open={isOpen}
                         onOpenChange={(open) =>
                             onFilterOpenChange(filter.key, open)
                         }
                     >
-                        <PopoverTrigger
+                        <ComboboxTrigger
                             render={(props) => renderTrigger(props, isOpen)}
                         />
-                        <PopoverContent className="w-fit p-0" align="start">
-                            <div className="flex size-full flex-col overflow-hidden rounded-4xl bg-popover p-1 text-popover-foreground">
-                                <div className="p-1 pb-0">
-                                    <div className="flex h-9 items-center gap-2 rounded-md border border-input bg-input/50 px-3">
-                                        <input
-                                            aria-label={filter.label}
-                                            className="w-full bg-transparent text-sm outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-                                            placeholder={filter.label}
-                                            value={filterQuery}
-                                            onChange={(event) =>
-                                                setFilterQueries((queries) => ({
-                                                    ...queries,
-                                                    [filter.key]:
-                                                        event.target.value,
-                                                }))
-                                            }
-                                        />
-                                        <SearchIcon className="size-4 shrink-0 opacity-50" />
-                                    </div>
-                                </div>
-                                <div className="no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none">
-                                    {visibleOptions.length === 0 ? (
-                                        <div className="py-6 text-center text-sm">
-                                            {copy.searchNoResults}
-                                        </div>
-                                    ) : (
-                                        <div className="overflow-hidden p-1.5 text-foreground">
-                                            {visibleOptions.map((option) => {
-                                                const isSelected =
-                                                    selectedValues.includes(
-                                                        option.value,
-                                                    );
-
-                                                return (
-                                                    <button
-                                                        key={option.value}
-                                                        type="button"
-                                                        data-test={resolveTestId(
-                                                            `filter-${filter.key}-option-${option.value || 'all'}`,
-                                                            testIdPrefix,
-                                                        )}
-                                                        className="relative flex w-full cursor-default items-center gap-2 rounded-2xl px-3 py-2 text-left text-sm font-medium outline-hidden select-none hover:bg-muted hover:text-foreground focus:bg-muted focus:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
-                                                        onClick={() =>
-                                                            toggleOption(
-                                                                option.value,
-                                                            )
-                                                        }
-                                                    >
-                                                        <span
-                                                            aria-hidden="true"
-                                                            className={cn(
-                                                                'flex size-4 items-center justify-center rounded border bg-background',
-                                                                isSelected
-                                                                    ? 'border-muted bg-muted text-primary'
-                                                                    : 'border-primary text-transparent',
-                                                            )}
-                                                        >
-                                                            <CheckIcon className="size-3.5" />
-                                                        </span>
-                                                        <span className="flex-1">
-                                                            {option.label}
-                                                        </span>
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
-                                {selectedValues.length > 0 && (
-                                    <>
-                                        <div className="my-1.5 h-px bg-border/50" />
-
-                                        <div className="p-1">
-                                            <Button
-                                                data-test={resolveTestId(
-                                                    `filter-${filter.key}-clear`,
-                                                    testIdPrefix,
-                                                )}
-                                                className="w-full hover:bg-destructive/20 hover:text-destructive dark:hover:bg-destructive/30"
-                                                variant="ghost"
-                                                onClick={resetFilter}
-                                            >
-                                                <FunnelXIcon />
-                                                {copy.searchClearFilter}
-                                            </Button>
-                                        </div>
-                                    </>
+                        <ComboboxContent align="start">
+                            <ComboboxInput
+                                showTrigger={false}
+                                aria-label={filter.label}
+                                placeholder={filter.label}
+                            />
+                            <ComboboxEmpty>
+                                {copy.searchNoResults}
+                            </ComboboxEmpty>
+                            <ComboboxList>
+                                {(option: ServerSearchFilterOption) => (
+                                    <ComboboxItem
+                                        key={option.value}
+                                        value={option}
+                                        data-test={resolveTestId(
+                                            `filter-${filter.key}-option-${option.value}`,
+                                            testIdPrefix,
+                                        )}
+                                    >
+                                        {option.label}
+                                    </ComboboxItem>
                                 )}
-                            </div>
-                        </PopoverContent>
-                    </Popover>
+                            </ComboboxList>
+                            {selectedValues.length > 0 && (
+                                <>
+                                    <ComboboxSeparator />
+                                    <div className="p-1">
+                                        <Button
+                                            data-test={resolveTestId(
+                                                `filter-${filter.key}-clear`,
+                                                testIdPrefix,
+                                            )}
+                                            className="w-full hover:bg-destructive/20 hover:text-destructive dark:hover:bg-destructive/30"
+                                            variant="ghost"
+                                            onClick={() =>
+                                                onFilterValueChange(
+                                                    filter.key,
+                                                    [],
+                                                )
+                                            }
+                                        >
+                                            <FunnelXIcon />
+                                            {copy.searchClearFilter}
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </ComboboxContent>
+                    </Combobox>
                 );
             })}
         </div>

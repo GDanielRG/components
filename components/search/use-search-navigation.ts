@@ -1,6 +1,6 @@
 import type { VisitHelperOptions } from '@inertiajs/core';
 import { router, usePage } from '@inertiajs/react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     buildQueryDataFromCurrent,
     parseCurrentQuery,
@@ -17,9 +17,27 @@ import type {
 
 export type SearchVisitOptions = VisitHelperOptions;
 
-export interface SearchNavigationController {
+export interface SearchNavigationOptions {
+    /**
+     * The page props a search, sort or pagination visit has to refresh — the
+     * collection, its filter catalogue, and any counter rendered from the same
+     * query. Everything else (the permission-derived sidebar, translation
+     * catalogues, shared props) is left alone, so a keystroke no longer re-runs
+     * the whole controller.
+     *
+     * Only the page knows its own prop names, so there is no default. Pass `[]`
+     * to keep the full reload deliberately.
+     */
+    only: string[];
+}
+
+export interface SearchNavigationController extends SearchNavigationOptions {
     buildRoute: (patch: SearchNavigationPatch) => RouteDefinition<'get'>;
     visit: (patch: SearchNavigationPatch, options?: SearchVisitOptions) => void;
+}
+
+export interface SearchNavigationState extends SearchNavigationController {
+    readonly effectiveQuery: SearchNavigationData;
 }
 
 interface PendingVisit {
@@ -57,7 +75,8 @@ function resolveBaseQuery(
 
 export function useSearchNavigation(
     routeFn: RouteResolver<'get'>,
-): SearchNavigationController {
+    { only }: SearchNavigationOptions,
+): SearchNavigationState {
     const { url } = usePage();
     const currentQuery = useMemo(
         () => parseCurrentQuery(resolveCurrentSearch(url)),
@@ -69,6 +88,22 @@ export function useSearchNavigation(
         () => resolveBaseQuery(url, currentQuery, pendingVisit),
         [currentQuery, pendingVisit, url],
     );
+
+    useEffect(() => {
+        setPendingVisit((currentPendingVisit) => {
+            if (currentPendingVisit === null) {
+                return null;
+            }
+
+            const currentPage = toPageUrl(url);
+            const pendingPage = toPageUrl(currentPendingVisit.url);
+
+            return currentPage.pathname === pendingPage.pathname &&
+                currentPage.search === pendingPage.search
+                ? null
+                : currentPendingVisit;
+        });
+    }, [url]);
 
     function buildNextQuery(
         patch: SearchNavigationPatch,
@@ -97,8 +132,10 @@ export function useSearchNavigation(
             url: nextRoute.url,
         });
 
-        router.visit(nextRoute.url, {
-            method: nextRoute.method,
+        // The whole route object goes through, not just its url: it carries the
+        // real verb and the `component` Inertia needs to swap a cached page.
+        router.visit(nextRoute, {
+            only,
             ...defaultVisitOptions,
             ...visitOptions,
             onFinish: (visit) => {
@@ -113,5 +150,5 @@ export function useSearchNavigation(
         });
     }
 
-    return { buildRoute, visit };
+    return { only, effectiveQuery: baseQuery, buildRoute, visit };
 }

@@ -21,11 +21,12 @@ interface UseSortOptions {
     pageParam?: string;
     /**
      * The navigation controller this surface already owns — the page's
-     * `useSearch(...)` return value, or a `useSearchNavigation(routeFn)` for a
-     * nested table that has no search of its own. It must be that SAME
-     * instance: only it knows about an in-flight `replace: true` filter visit,
-     * so a second controller would rebuild the sort URL from the pre-filter
-     * page url and silently drop the filter the user just picked.
+     * `useSearch(...)` return value, or a
+     * `useSearchNavigation(routeFn, { only })` for a nested table that has no
+     * search of its own. It must be that SAME instance: only it knows about an
+     * in-flight `replace: true` filter visit, so a second controller would
+     * rebuild the sort URL from the pre-filter page url and silently drop the
+     * filter the user just picked.
      */
     navigation: SearchNavigationController;
 }

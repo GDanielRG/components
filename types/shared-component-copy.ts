@@ -1,8 +1,9 @@
 /**
  * Shared default copy consumed by the foundation components. The values are
- * app-owned (each repo's `@/hooks/use-shared-component-copy` provides them in
- * Spanish, English, or via i18n); the registry only ships these contracts so the
- * components can read the keys type-safely without baking in a default locale.
+ * app-owned (the consuming app's `@/hooks/use-shared-component-copy` provides
+ * them in its own locale, or via i18n); the registry only ships these contracts
+ * so the components can read the keys type-safely without baking in a default
+ * locale.
  *
  * The contract is split into small slices so a component depends only on the
  * keys it actually uses — a dialog needs `DialogCopy`, not the whole surface.

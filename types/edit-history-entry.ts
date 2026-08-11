@@ -1,7 +1,7 @@
 // Edit-history contract shared by the registry `EditHistoryPopover`.
 //
 // The server emits a labeled, pre-formatted timeline: every timestamp arrives as
-// `formatted_at` (no client date formatting — see the fleet datetime canon), and
+// `formatted_at` (dates are formatted server-side, never on the client), and
 // enum-like values may carry a `*_label` twin. Structured fields (repeaters /
 // matrices) additionally emit a `summary` headline plus expandable `details`;
 // scalar fields omit both and render as a from→to diff.

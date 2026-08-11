@@ -11,7 +11,6 @@
             "registryDependencies": [
                 "alert-dialog",
                 "button",
-                "card",
                 "collapsible",
                 "dialog",
                 "dropdown-menu",
@@ -19,9 +18,9 @@
             ],
             "files": [
                 {
-                    "path": "components/styles/ui-utilities.css",
+                    "path": "consumer/RegistrySourceIntegrityTest.php",
                     "type": "registry:file",
-                    "target": "resources/css/ui-utilities.css"
+                    "target": "tests/Unit/RegistrySourceIntegrityTest.php"
                 },
                 {
                     "path": "types/options.ts",
@@ -89,6 +88,11 @@
                     "target": "@ui/scroll-area.tsx"
                 },
                 {
+                    "path": "components/inertia-prefetch-policy.ts",
+                    "type": "registry:lib",
+                    "target": "@components/inertia-prefetch-policy.ts"
+                },
+                {
                     "path": "components/actions-dropdown-menu.tsx",
                     "type": "registry:component",
                     "target": "@components/actions-dropdown-menu.tsx"
@@ -149,7 +153,7 @@
                     "target": "@components/form-actions.tsx"
                 }
             ],
-            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`. Installs a local Pest source-integrity test at `tests/Unit/RegistrySourceIntegrityTest.php`.",
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
@@ -180,8 +184,12 @@
                     "target": "@components/archived-status-badge.tsx"
                 }
             ],
-            "docs": "Requires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.",
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+            "docs": "Requires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Archive validation errors surface through Sonner because the fieldless confirmation modal has no inline error anchor. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.",
+            "dependencies": [
+                "@inertiajs/react@^3.3.1",
+                "lucide-react@^1.17.0",
+                "sonner@^2.0.7"
+            ]
         },
         {
             "name": "edit-history",
@@ -239,7 +247,7 @@
             ],
             "docs": "Visible/sr-only copy is prop-overridable (SidebarTrigger/SidebarRail `label`, Sidebar `sheetTitle`/`sheetDescription`; English defaults). Radius is themeable via the `--sidebar-radius` and `--sidebar-surface-radius` CSS hooks (default `--radius-xl`/`--radius-2xl`).",
             "dependencies": [
-                "@base-ui/react@^1.5.0",
+                "@base-ui/react@^1.7.0",
                 "class-variance-authority@^0.7.1",
                 "lucide-react@^1.17.0"
             ]
@@ -256,15 +264,20 @@
                 "button",
                 "button-group",
                 "calendar",
+                "combobox",
                 "dropdown-menu",
                 "field",
                 "input",
                 "popover",
                 "radio-group",
-                "separator",
-                "slider"
+                "separator"
             ],
             "files": [
+                {
+                    "path": "components/ui/slider.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/slider.tsx"
+                },
                 {
                     "path": "components/search/query-utils.ts",
                     "type": "registry:lib",
@@ -322,6 +335,7 @@
                 }
             ],
             "dependencies": [
+                "@base-ui/react@^1.7.0",
                 "@inertiajs/core@^3.3.1",
                 "@inertiajs/react@^3.3.1",
                 "date-fns@^4.4.0",
@@ -554,31 +568,23 @@
                     "target": "@components/activity/index.ts"
                 }
             ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`.",
+            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
             "dependencies": ["lucide-react@^1.17.0"]
         },
         {
             "name": "chat-display",
             "type": "registry:item",
             "title": "Chat Display",
-            "description": "Shared chat display primitives — message, bubble, attachment, marker — plus a timestamp-with-reveal. No @shadcn/react; folded into foundations so comments/documents can build on them.",
+            "description": "Shared chat display primitives — attachment and marker — plus a timestamp-with-reveal, composed on stock shadcn message/bubble. No @shadcn/react; folded into foundations so comments/documents can build on them.",
             "registryDependencies": [
                 "GDanielRG/components/core",
+                "bubble",
                 "button",
+                "message",
                 "popover",
                 "tooltip"
             ],
             "files": [
-                {
-                    "path": "components/ui/message.tsx",
-                    "type": "registry:ui",
-                    "target": "@ui/message.tsx"
-                },
-                {
-                    "path": "components/ui/bubble.tsx",
-                    "type": "registry:ui",
-                    "target": "@ui/bubble.tsx"
-                },
                 {
                     "path": "components/ui/attachment.tsx",
                     "type": "registry:ui",
@@ -596,7 +602,7 @@
                 }
             ],
             "dependencies": [
-                "@base-ui/react@^1.5.0",
+                "@base-ui/react@^1.7.0",
                 "class-variance-authority@^0.7.1"
             ]
         },

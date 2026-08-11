@@ -60,7 +60,7 @@ export function DocumentUploadStatus({
                             aria-label={copy.documentsCancelBatch}
                             data-test="sidebar-document-batch-dismiss-button"
                         >
-                            <XIcon data-icon="icon" />
+                            <XIcon />
                         </Button>
                     </div>
 

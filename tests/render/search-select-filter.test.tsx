@@ -12,9 +12,12 @@
 //      selected-option Badge;
 //   4. a plain select filter keeps the FunnelPlus icon + visible label.
 import { cleanup, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { Filters } from '@/components/search/filters';
 import { SelectFilter } from '@/components/search/select-filter';
 import type { ServerSearchFilter } from '@/components/types/server-search';
+import type { RouteDefinition } from '@/components/types/wayfinder';
+import type { SearchNavigationController } from '@/components/search/use-search-navigation';
 
 afterEach(cleanup);
 
@@ -89,5 +92,46 @@ describe('SelectFilter — archive-badge trigger (plan 023 WS3)', () => {
         expect(within(trigger).getByText('Estado')).toBeInTheDocument();
         expect(trigger.querySelector('svg.lucide-funnel-plus')).not.toBeNull();
         expect(trigger.querySelector('svg.lucide-archive')).toBeNull();
+    });
+});
+
+describe('Filters — nullable select defaults', () => {
+    const navigation: SearchNavigationController = {
+        only: [],
+        buildRoute: (): RouteDefinition<'get'> => ({
+            url: '/things',
+            method: 'get',
+        }),
+        visit: vi.fn(),
+    };
+
+    function renderSelectedFilter(defaultValue: string | null) {
+        render(
+            <Filters
+                filters={[
+                    {
+                        ...plainSelectFilter,
+                        defaultValue,
+                    },
+                ]}
+                filterValues={{ estado: ['active'] }}
+                selectValues={{ estado: 'active' }}
+                navigation={navigation}
+            />,
+        );
+    }
+
+    it('treats a serialized null as no default and keeps the clear action', () => {
+        renderSelectedFilter(null);
+
+        expect(screen.getByTestId('filter-estado-clear')).toBeInTheDocument();
+    });
+
+    it('omits the clear action when the select has an effective default', () => {
+        renderSelectedFilter('active');
+
+        expect(
+            screen.queryByTestId('filter-estado-clear'),
+        ).not.toBeInTheDocument();
     });
 });

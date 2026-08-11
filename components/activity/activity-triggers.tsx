@@ -8,8 +8,10 @@ import {
     DocumentsToggleButton,
 } from '@/components/documents';
 import type { Document } from '@/components/documents/types';
+import type { ActivityCopy } from '@/components/types/shared-component-copy';
 import type { RouteDefinition } from '@/components/types/wayfinder';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 interface ActivityTriggersProps {
     comments: Comment[];
@@ -61,6 +63,7 @@ interface ActivitySidebarTriggersProps {
     activePanel?: 'comments' | 'documents' | null;
     onCommentsClick: () => void;
     onDocumentsClick: () => void;
+    readOnly?: boolean;
     className?: string;
 }
 
@@ -75,19 +78,24 @@ export function ActivitySidebarTriggers({
     activePanel = null,
     onCommentsClick,
     onDocumentsClick,
+    readOnly = false,
     className,
 }: ActivitySidebarTriggersProps) {
+    const copy: ActivityCopy = useSharedComponentCopy();
+
     return (
         <ButtonGroup className={className}>
             <DocumentsToggleButton
                 documentCount={documentCount ?? documents.length}
                 isActive={activePanel === 'documents'}
                 onClick={onDocumentsClick}
+                emptyLabel={readOnly ? copy.activityDocumentsTab : undefined}
             />
             <CommentsToggleButton
                 commentCount={comments.length}
                 isActive={activePanel === 'comments'}
                 onClick={onCommentsClick}
+                emptyLabel={readOnly ? copy.activityCommentsTab : undefined}
             />
         </ButtonGroup>
     );

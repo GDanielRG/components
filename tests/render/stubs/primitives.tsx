@@ -88,6 +88,7 @@ function makeHost(tag: keyof React.JSX.IntrinsicElements, slot: string) {
 
 // Generic exports reused across the per-module stub files.
 export const Button = makeHost('button', 'button');
+export const ButtonGroup = makeHost('div', 'button-group');
 export const Span = makeHost('span', 'span');
 export const Div = makeHost('div', 'div');
 
@@ -100,15 +101,6 @@ export const AvatarGroupCount = makeHost('div', 'avatar-group-count');
 
 // Badge
 export const Badge = makeHost('span', 'badge');
-
-// Card
-export const Card = makeHost('div', 'card');
-export const CardHeader = makeHost('div', 'card-header');
-export const CardTitle = makeHost('div', 'card-title');
-export const CardDescription = makeHost('div', 'card-description');
-export const CardContent = makeHost('div', 'card-content');
-export const CardFooter = makeHost('div', 'card-footer');
-export const CardAction = makeHost('div', 'card-action');
 
 // Input / Textarea
 export const Input = makeHost('input', 'input');

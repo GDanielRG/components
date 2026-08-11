@@ -24,8 +24,11 @@ export interface ServerSearchChoiceFilter extends ServerSearchFilterBase {
     /** Defaults to 'multiselect' when omitted (backward compatible). */
     type?: 'multiselect' | 'select';
     options: ServerSearchFilterOption[];
-    /** Effective value while the URL omits this control. */
-    defaultValue?: string;
+    /**
+     * Effective value while the URL omits this control. Server catalogues may
+     * serialize an absent default as `null`.
+     */
+    defaultValue?: string | null;
 }
 
 export interface ServerSearchRangeFilter extends ServerSearchFilterBase {

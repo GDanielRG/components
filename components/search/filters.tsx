@@ -167,7 +167,7 @@ export function Filters(props: FiltersProps) {
                     }
                     onValueChange={(value) => handleSelectChange(filter, value)}
                     testIdPrefix={testIdPrefix}
-                    clearable={filter.defaultValue === undefined}
+                    clearable={filter.defaultValue == null}
                 />
             ))}
             {rangeFilters.map((filter) => (

@@ -10,6 +10,7 @@ interface DocumentsToggleButtonProps {
     size?: 'default' | 'sm';
     documentCount?: number;
     isActive?: boolean;
+    emptyLabel?: string;
 }
 
 export function DocumentsToggleButton({
@@ -17,13 +18,14 @@ export function DocumentsToggleButton({
     size = 'default',
     documentCount = 0,
     isActive = false,
+    emptyLabel,
 }: DocumentsToggleButtonProps) {
     const copy: DocumentsCopy = useSharedComponentCopy();
     const hasDocuments = documentCount > 0;
-    const Icon = hasDocuments ? FilesIcon : FilePlusIcon;
+    const Icon = hasDocuments || emptyLabel ? FilesIcon : FilePlusIcon;
     const label = hasDocuments
         ? copy.documentsCount(documentCount)
-        : copy.documentsAddOne;
+        : (emptyLabel ?? copy.documentsAddOne);
 
     return (
         <Button

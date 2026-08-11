@@ -48,6 +48,7 @@ interface UseCommentsDocumentsSidebarStateProps {
 interface UseCommentsDocumentsSidebarProps {
     comments: Comment[];
     documents: Document[];
+    readOnly?: boolean;
     allowedDocumentMimes: string[];
     maxDocumentKilobytes: number;
     storeCommentForm: RouteDefinition<'post'>;
@@ -123,6 +124,7 @@ function useCommentsDocumentsSidebarState({
 export function useCommentsDocumentsSidebar({
     comments,
     documents,
+    readOnly = false,
     allowedDocumentMimes,
     maxDocumentKilobytes,
     storeCommentForm,
@@ -166,6 +168,7 @@ export function useCommentsDocumentsSidebar({
     });
     const documentsPanel = useDocumentsPanel({
         documents,
+        readOnly,
         allowedDocumentMimes,
         maxDocumentKilobytes,
         storeAction: storeDocumentAction,
@@ -234,9 +237,11 @@ export function useCommentsDocumentsSidebar({
         ) : null,
         rightSidebar: (
             <>
-                {renderCommentLiveUpdates?.({
-                    enabled: !isCreatingComment && editingCommentId === null,
-                })}
+                {!readOnly &&
+                    renderCommentLiveUpdates?.({
+                        enabled:
+                            !isCreatingComment && editingCommentId === null,
+                    })}
                 <CommentsDocumentsSidebar
                     open={open}
                     onOpenChange={handleOpenChange}
@@ -250,11 +255,19 @@ export function useCommentsDocumentsSidebar({
                             <>
                                 <CommentList
                                     comments={chronologicalComments}
-                                    updateFormAction={updateCommentForm}
+                                    updateFormAction={
+                                        readOnly ? undefined : updateCommentForm
+                                    }
                                     editingCommentId={editingCommentId}
-                                    onEdit={handleEditComment}
+                                    onEdit={
+                                        readOnly ? undefined : handleEditComment
+                                    }
                                     onCancelEdit={clearEditingComment}
-                                    destroyFormAction={destroyCommentForm}
+                                    destroyFormAction={
+                                        readOnly
+                                            ? undefined
+                                            : destroyCommentForm
+                                    }
                                     renderContainer={(items) => items}
                                     renderItem={(item, comment) => (
                                         <MessageScrollerItem
@@ -265,7 +278,7 @@ export function useCommentsDocumentsSidebar({
                                         </MessageScrollerItem>
                                     )}
                                 />
-                                {commentTypingIndicator ? (
+                                {!readOnly && commentTypingIndicator ? (
                                     <MessageScrollerItem
                                         messageId="comment-typing-indicator"
                                         className="empty:hidden"
@@ -275,7 +288,7 @@ export function useCommentsDocumentsSidebar({
                                 ) : null}
                             </>
                         ),
-                        footer: isCreatingComment ? (
+                        footer: readOnly ? undefined : isCreatingComment ? (
                             <CommentForm
                                 formAction={storeCommentForm}
                                 mode="create"
@@ -340,11 +353,7 @@ function SidebarToggleButton({
             onClick={onToggle}
             className="aria-expanded:bg-transparent aria-expanded:hover:bg-muted"
         >
-            {open ? (
-                <PanelRightCloseIcon data-icon="icon" />
-            ) : (
-                <PanelRightOpenIcon data-icon="icon" />
-            )}
+            {open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
         </Button>
     );
 }
@@ -489,7 +498,7 @@ function CommentsDocumentsSidebar({
                                     </MessageScrollerContent>
                                 </MessageScrollerViewport>
                                 <MessageScrollerButton>
-                                    <ArrowDownIcon data-icon="icon" />
+                                    <ArrowDownIcon />
                                     <span className="sr-only">
                                         {copy.activityScrollToLatest}
                                     </span>

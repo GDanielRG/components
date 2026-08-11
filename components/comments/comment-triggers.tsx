@@ -21,6 +21,7 @@ interface CommentsToggleButtonProps {
     size?: 'default' | 'sm';
     commentCount?: number;
     isActive?: boolean;
+    emptyLabel?: string;
 }
 
 export function CommentsToggleButton({
@@ -28,13 +29,15 @@ export function CommentsToggleButton({
     size = 'default',
     commentCount = 0,
     isActive = false,
+    emptyLabel,
 }: CommentsToggleButtonProps) {
     const copy: CommentsCopy = useSharedComponentCopy();
     const hasComments = commentCount > 0;
-    const Icon = hasComments ? MessageCircleIcon : MessageCirclePlusIcon;
+    const Icon =
+        hasComments || emptyLabel ? MessageCircleIcon : MessageCirclePlusIcon;
     const label = hasComments
         ? copy.commentsCount(commentCount)
-        : copy.commentsSubmit;
+        : (emptyLabel ?? copy.commentsSubmit);
 
     return (
         <Button

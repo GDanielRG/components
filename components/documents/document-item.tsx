@@ -212,7 +212,7 @@ export function DocumentItem({
                             size="icon-sm"
                             aria-label={copy.documentsActions}
                         >
-                            <EllipsisVerticalIcon data-icon="icon" />
+                            <EllipsisVerticalIcon />
                         </Button>
                     }
                 >

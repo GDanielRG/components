@@ -81,6 +81,7 @@ function SearchClearFiltersAction({
                 render={
                     <Link
                         href={clearAllRoute}
+                        only={appliedFilters.navigation.only}
                         replace
                         preserveState
                         preserveScroll
@@ -167,6 +168,7 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
                         render={
                             <Link
                                 href={clearSearchRoute}
+                                only={navigation.only}
                                 replace
                                 preserveState
                                 preserveScroll

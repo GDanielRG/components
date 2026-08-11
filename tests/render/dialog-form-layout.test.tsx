@@ -21,11 +21,17 @@ afterEach(cleanup);
 const title = 'Editar empleado';
 const description = 'Actualiza los datos del empleado.';
 
-function renderDialogForm(props: { description?: string } = {}) {
+function renderDialogForm(
+    props: { description?: string; footer?: React.ReactNode } = {},
+) {
     render(
         <Dialog open={true}>
             <DialogContent data-test="dialog-popup">
-                <DialogFormLayout title={title} description={props.description}>
+                <DialogFormLayout
+                    title={title}
+                    description={props.description}
+                    footer={props.footer}
+                >
                     <input aria-label="Nombre" />
                 </DialogFormLayout>
             </DialogContent>
@@ -69,5 +75,11 @@ describe('DialogFormLayout — header semantics', () => {
         const popup = renderDialogForm();
 
         expect(popup).not.toHaveAttribute('aria-describedby');
+    });
+
+    it('exposes the footer cancel action through the shared browser-test seam', () => {
+        renderDialogForm({ footer: <button type="submit">Guardar</button> });
+
+        expect(screen.getByTestId('dialog-cancel')).toBeVisible();
     });
 });

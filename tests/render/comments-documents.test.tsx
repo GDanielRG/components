@@ -17,6 +17,7 @@ import {
     screen,
 } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ActivitySidebarTriggers } from '@/components/activity/activity-triggers';
 import { CommentTypingIndicator } from '@/components/activity/comment-typing-indicator';
 import { CommentForm } from '@/components/comments/comment-form';
 import { CommentList } from '@/components/comments/comment-list';
@@ -195,6 +196,58 @@ describe('DocumentsPanelItem — rebuilt document row', () => {
         expect(
             screen.getByTestId(`document-item-actions-${doc.id}`),
         ).toBeInTheDocument();
+    });
+
+    it('keeps download access but removes every mutation seam in read-only mode', () => {
+        const doc = makeExistingDocument();
+        const { container } = render(
+            <DocumentsPanelItem
+                document={doc}
+                readOnly
+                updateDocumentAction={route('put') as never}
+                showDocumentAction={route('get') as never}
+                onDelete={() => {}}
+            />,
+        );
+
+        const actions = screen
+            .getByTestId(`document-item-actions-${doc.id}`)
+            .closest('[data-slot="dropdown-menu"]');
+
+        expect(actions).not.toBeNull();
+        expect(container.querySelector('a[href="/x/7"]')).not.toBeNull();
+        expect(actions?.querySelector('svg.lucide-file-text')).toBeNull();
+        expect(actions?.querySelector('svg.lucide-refresh-cw')).toBeNull();
+        expect(actions?.querySelector('svg.lucide-trash')).toBeNull();
+        expect(container.querySelector('input[type="file"]')).toBeNull();
+    });
+});
+
+describe('ActivitySidebarTriggers — read-only affordances', () => {
+    it('uses neutral empty labels and icons instead of add affordances', () => {
+        render(
+            <ActivitySidebarTriggers
+                comments={[]}
+                documents={[]}
+                readOnly
+                onCommentsClick={() => {}}
+                onDocumentsClick={() => {}}
+            />,
+        );
+
+        const comments = screen.getByTestId('toggle-comments');
+        const documents = screen.getByTestId('toggle-documents');
+
+        expect(comments).toHaveAccessibleName('activityCommentsTab');
+        expect(documents).toHaveAccessibleName('activityDocumentsTab');
+        expect(
+            comments.querySelector('svg.lucide-message-circle'),
+        ).not.toBeNull();
+        expect(
+            comments.querySelector('svg.lucide-message-circle-plus'),
+        ).toBeNull();
+        expect(documents.querySelector('svg.lucide-files')).not.toBeNull();
+        expect(documents.querySelector('svg.lucide-file-plus')).toBeNull();
     });
 });
 

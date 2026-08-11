@@ -1,5 +1,6 @@
 import { Form } from '@inertiajs/react';
 import type { ComponentProps, ReactNode } from 'react';
+import { toast } from 'sonner';
 import { ArchiveConfirmationModal } from '@/components/archive-confirmation-modal';
 
 type ArchiveConfirmationFormProps = Omit<
@@ -19,6 +20,8 @@ type ArchiveConfirmationFormProps = Omit<
  * Archive analog of {@link DestroyConfirmationForm}: pairs an Inertia `<Form>`
  * with the registry {@link ArchiveConfirmationModal}. Archive reuses the DELETE
  * route, so callers pass the resource's `destroy` action as `action`.
+ * Validation errors surface as a toast because this confirmation surface has
+ * no input to anchor an inline message to.
  */
 export function ArchiveConfirmationForm({
     open,
@@ -30,6 +33,7 @@ export function ArchiveConfirmationForm({
     confirmLabel,
     options,
     onSuccess,
+    onError,
     ...formProps
 }: ArchiveConfirmationFormProps) {
     return (
@@ -41,6 +45,16 @@ export function ArchiveConfirmationForm({
             onSuccess={(...args) => {
                 onOpenChange(false);
                 onSuccess?.(...args);
+            }}
+            onError={(errors, ...rest) => {
+                const message = Object.values(errors)[0];
+
+                if (message) {
+                    toast.error(message);
+                }
+
+                onOpenChange(false);
+                onError?.(errors, ...rest);
             }}
         >
             {({ processing, submit }) => (

@@ -143,13 +143,21 @@ describe('RangeFilter', () => {
             '$5000',
         );
 
-        const thumbs = screen.getAllByRole('slider', { name: 'Price' });
+        const thumbs = [
+            screen.getByTestId('filter-price-from-thumb'),
+            screen.getByTestId('filter-price-to-thumb'),
+        ];
 
-        expect(thumbs).toHaveLength(2);
-        for (const thumb of thumbs) {
-            expect(thumb).toHaveAttribute('min', '0');
-            expect(thumb).toHaveAttribute('max', '5000');
-            expect(thumb).toHaveAttribute('step', '50');
+        const inputs = thumbs.map((thumb) =>
+            thumb.querySelector('input[type="range"]'),
+        );
+
+        expect(inputs[0]).toHaveAttribute('aria-label', 'Minimum price');
+        expect(inputs[1]).toHaveAttribute('aria-label', 'Maximum price');
+        for (const input of inputs) {
+            expect(input).toHaveAttribute('min', '0');
+            expect(input).toHaveAttribute('max', '5000');
+            expect(input).toHaveAttribute('step', '50');
         }
     });
 

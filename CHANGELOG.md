@@ -8,6 +8,62 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Added** a registry-owned source-integrity Pest test to `core`. Every consumer
+  now verifies its local installed bytes and declared exception pins against its
+  own `registry.lock.json`, without a sibling checkout or network dependency.
+- **Changed** `parity:report` to hash actual consumer files and report missing or
+  changed registry-owned/exception-pinned bytes instead of reporting lock counts
+  alone.
+- **Added** `parity:lock --install` for narrowly scoped upgrade waves. It copies
+  only registry-owned source, preserves explicit exceptions and app-owned/stock
+  ShadCN files, then writes and verifies the receipt.
+- **Fixed** nullable select defaults and export scope handling: a serialized
+  `null` remains clearable, effective non-null defaults are displayed and submitted,
+  select filters submit scalars, and multiselect filters keep array payloads.
+- **Added** read-only comments/documents activity surfaces for archived resources.
+  Mutation controls, uploads, typing presence, and live-update subscriptions are
+  withheld while document downloads remain available.
+- **Added** distinct accessible labels and stable test IDs to both range-slider
+  thumbs. The search bundle now owns its slider wrapper so that contract cannot
+  drift outside registry provenance.
+- **Fixed** archive validation errors disappearing inside a fieldless confirmation
+  modal; the first error is shown as a toast and the modal closes.
+- **Added** the shared `dialog-cancel` browser-test seam to `DialogFormLayout`.
+- **Changed** the `types/` contract comments to read standalone: dates-are-server-
+  formatted stated in place, the `.form()` guidance no longer cites a consuming
+  app, and the copy contract describes "the consuming app" generically. No type
+  changes.
+- **BREAKING** `useSearch` is now
+  `useSearch(routeFn, { filters, only, viewControls })`, and
+  `useSearchNavigation(routeFn, { only })` requires `only`. Search, sort, filter,
+  and clear visits reload those props; use `only: []` for a full reload.
+- **Fixed** rapid same-filter selections and filter-then-sort actions composing
+  from a stale page URL while the first Inertia visit was pending. Controlled
+  filter state now reads the navigation controller's effective query.
+- **Changed** search visits preserve the complete Wayfinder route object, and
+  applied-filter links carry `only`.
+- **Changed** multi-value filters use the stock ShadCN `combobox` dependency.
+  Existing props and `data-test` IDs are unchanged.
+- **BREAKING** `chat-display` installs stock `message` and `bubble` primitives
+  instead of shipping preset-specific copies. Reinstall the bundle and remove
+  the corresponding parity exceptions.
+- **Changed** `DialogFormLayout` owns its header/body/footer markup and no longer
+  depends on `card`. Its title and description retain Base UI dialog semantics.
+- **Added** opt-in `AppPagination` prefetch props and
+  `EditHistoryPopover.employeeCacheTags`. Both use one default cache policy with
+  a revalidation window.
+- **Removed** unused `data-icon="icon"` attributes.
+- **Added** smoke-fixture type checks for the registry's Wayfinder route
+  contracts.
+- **Changed** parity receipts to record the full resolved commit beside their
+  human release or worktree ref.
+- **Removed** `components/styles/ui-utilities.css`; ShadCN 4.15 supplies those
+  utilities. Consumers remove the installed file and its CSS import.
+- **Updated** stable runtime and tooling dependencies, including Base UI 1.7,
+  ShadCN 4.15, `@testing-library/jest-dom` 7, Lucide 1.27, and Prettier 3.9.6.
+
 ### snapshot-20260725-1c359ef — 2026-07-25
 
 - **BREAKING** `useSort` takes a `navigation: SearchNavigationController` instead

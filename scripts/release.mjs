@@ -6,17 +6,15 @@
 //   - pre-production immutable snapshot:  snapshot-YYYYMMDD-<short-source-sha>
 //   - production semantic version:        v1.2.3  /  v1.2.3-rc.1
 //
-//   node scripts/release.mjs snapshot-20260623-1a2b3c4
-//   node scripts/release.mjs v1.0.0-rc.1
-//
-// Then, on a throwaway release branch (so `main` keeps bare deps):
 //   git switch -c release/<ref>
+//   bun scripts/release.mjs snapshot-20260623-1a2b3c4
 //   git add registry.json && git commit -m "release <ref>"
-//   git tag <ref> && git push origin <ref>   # push the TAG, not the branch
+//   git tag -a <ref> -m "<ref>"
+//   git push origin <ref>                    # push the TAG, not the branch
 //   git switch main                          # main keeps bare dependencies
 //
 // Consumers then install reproducibly with:
-//   npx shadcn@latest add GDanielRG/components/foundations#<ref>
+//   bunx --bun shadcn@latest add GDanielRG/components/foundations#<ref>
 // ShadCN does not inherit a ref across registryDependencies, so pinning the whole
 // graph to one immutable ref here is what makes a nested install reproducible — a
 // bare `main` commit SHA does not (its internal deps carry no ref).
@@ -39,7 +37,7 @@ const snapshotMatch = tag?.match(SNAPSHOT);
 
 if (!tag || !(snapshotMatch || SEMVER.test(tag))) {
     console.error(
-        'usage: node scripts/release.mjs <ref>\n' +
+        'usage: bun scripts/release.mjs <ref>\n' +
             '  pre-production snapshot:  snapshot-YYYYMMDD-<short-source-sha>  e.g. snapshot-20260623-1a2b3c4\n' +
             '  production semver:        v1.2.3  /  v1.2.3-rc.1',
     );
@@ -52,21 +50,61 @@ const run = (cmd, args) =>
 const capture = (cmd, args) =>
     execFileSync(cmd, args, { cwd: ROOT }).toString().trim();
 
+let head;
+try {
+    head = capture('git', ['rev-parse', 'HEAD']);
+} catch {
+    console.error(
+        'cannot verify release provenance: `git rev-parse HEAD` failed — ' +
+            'run this inside the components git checkout.',
+    );
+    process.exit(1);
+}
+
+if (capture('git', ['status', '--porcelain']) !== '') {
+    console.error(
+        'release preparation requires a clean source checkout. Commit the generic source on main, then create a release branch before running this command.',
+    );
+    process.exit(1);
+}
+
+try {
+    capture('git', ['show-ref', '--verify', `refs/tags/${tag}`]);
+    console.error(
+        `release ref "${tag}" already exists locally. Published refs are immutable; choose a new ref.`,
+    );
+    process.exit(1);
+} catch (error) {
+    if (error?.status !== 1) throw error;
+}
+
+const registryPath = path.join(ROOT, 'registry.json');
+const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+const pinnedInternalDependencies = registry.items.flatMap((item) =>
+    (item.registryDependencies ?? []).filter(
+        (dependency) =>
+            dependency.startsWith('GDanielRG/components/') &&
+            dependency.includes('#'),
+    ),
+);
+
+if (pinnedInternalDependencies.length > 0) {
+    console.error(
+        'release preparation must start from the generic source registry. Remove existing internal #refs before cutting a new release:\n' +
+            [...new Set(pinnedInternalDependencies)]
+                .sort()
+                .map((dependency) => `  ${dependency}`)
+                .join('\n'),
+    );
+    process.exit(1);
+}
+
 // Snapshot provenance: the <short-source-sha> suffix must be a real prefix of the
-// commit being released, so a snapshot tag can never claim a commit it isn't built
-// from. (SemVer tags carry no SHA, so this is snapshot-only.)
+// clean source commit, so a snapshot tag can never claim bytes from another commit.
+// SemVer refs carry no SHA, so this is snapshot-only.
 if (snapshotMatch) {
     const suffix = snapshotMatch[1];
-    let head;
-    try {
-        head = capture('git', ['rev-parse', 'HEAD']);
-    } catch {
-        console.error(
-            'cannot verify snapshot provenance: `git rev-parse HEAD` failed — ' +
-                'run this inside the components git checkout.',
-        );
-        process.exit(1);
-    }
+
     if (!head.startsWith(suffix)) {
         console.error(
             `snapshot suffix "${suffix}" is not a prefix of HEAD (${head}).\n` +
@@ -77,8 +115,6 @@ if (snapshotMatch) {
     }
 }
 
-const registryPath = path.join(ROOT, 'registry.json');
-const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 for (const item of registry.items)
     if (item.registryDependencies)
         item.registryDependencies = item.registryDependencies.map(
@@ -92,17 +128,18 @@ fs.writeFileSync(
     await prettier.format(JSON.stringify(registry), { parser: 'json' }),
 );
 
-run('npm', ['run', 'registry:validate']);
-run('npm', ['run', 'registry:build']);
-run('npm', ['run', 'smoke']);
+run('bun', ['run', 'registry:validate']);
+run('bun', ['run', 'registry:build']);
+run('bun', ['run', 'smoke']);
 
 console.log(
     `\n✓ registry.json pinned to ${tag} (internal deps carry #${tag}), smoke-tested.`,
 );
-console.log('Next, on a release branch (do not merge it — keep main bare):');
-console.log(`  git switch -c release/${tag}`);
+console.log(
+    'Next, commit and tag this pinned registry on the current release branch:',
+);
 console.log(`  git add registry.json && git commit -m "release ${tag}"`);
-console.log(`  git tag ${tag} && git push origin ${tag}`);
+console.log(`  git tag -a ${tag} -m "${tag}" && git push origin ${tag}`);
 console.log('  git switch main');
 console.log(
     `\nThen, back on main: rename CHANGELOG.md's "### Unreleased" heading to "### ${tag}".`,

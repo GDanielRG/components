@@ -173,7 +173,7 @@ export function CommentForm({
                                             {processing ? (
                                                 <LoaderCircle className="animate-spin" />
                                             ) : (
-                                                <ArrowUpIcon data-icon="icon" />
+                                                <ArrowUpIcon />
                                             )}
                                         </TooltipTrigger>
                                         <TooltipContent>

@@ -47,8 +47,7 @@ export type RouteQueryOptions = {
  * `.form` members nothing ever reads.
  *
  * Prefer this everywhere. Reach for {@link RouteMutationFn} only when a consumer
- * genuinely reads `.form()` — spreading it onto an Inertia `<Form>`, as
- * grupo-3t's VIN validation form does.
+ * genuinely reads `.form()` — spreading it onto an Inertia `<Form>`.
  */
 export type RouteResolver<TMethod extends Method> = (
     options?: RouteQueryOptions,

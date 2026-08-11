@@ -1,12 +1,13 @@
 {
     "name": "fixture-consumer",
     "private": true,
+    "packageManager": "bun@1.3.14",
     "type": "module",
     "scripts": {
         "types:check": "tsc --noEmit"
     },
     "dependencies": {
-        "@base-ui/react": "^1.5.0",
+        "@base-ui/react": "^1.7.0",
         "@inertiajs/core": "^3.3.1",
         "@inertiajs/react": "^3.3.1",
         "class-variance-authority": "^0.7.1",

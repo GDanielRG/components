@@ -1,4 +1,3 @@
-import { usePage } from '@inertiajs/react';
 import { FunnelPlusIcon, SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactNode, SubmitEventHandler } from 'react';
@@ -8,8 +7,6 @@ import {
     buildClearAllPatch,
     getQueryValue,
     getQueryValues,
-    parseCurrentQuery,
-    resolveCurrentSearch,
 } from '@/components/search/query-utils';
 import type { SearchClearControl } from '@/components/search/query-utils';
 import { SearchAppliedFiltersDisclosure } from '@/components/search/search-applied-filters';
@@ -19,7 +16,10 @@ import type {
     SearchRangeValue,
 } from '@/components/search/types';
 import { useSearchNavigation } from '@/components/search/use-search-navigation';
-import type { SearchNavigationController } from '@/components/search/use-search-navigation';
+import type {
+    SearchNavigationOptions,
+    SearchNavigationState,
+} from '@/components/search/use-search-navigation';
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
 import type { RouteResolver } from '@/components/types/wayfinder';
@@ -29,7 +29,7 @@ import { Input } from '@/components/ui/input';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
 
-export interface UseSearchReturn extends SearchNavigationController {
+export interface UseSearchReturn extends SearchNavigationState {
     filters: ServerSearchFilter[];
     initialSearch: string;
     filterValues: Record<string, string[]>;
@@ -40,19 +40,18 @@ export interface UseSearchReturn extends SearchNavigationController {
     filterPopoverState: SearchFilterPopoverState;
 }
 
-export interface UseSearchOptions {
+export interface UseSearchOptions extends SearchNavigationOptions {
+    filters?: ServerSearchFilter[];
     viewControls?: SearchClearControl[];
 }
 
 export function useSearch(
     routeFn: RouteResolver<'get'>,
-    filters: ServerSearchFilter[] = [],
-    options: UseSearchOptions = {},
+    options: UseSearchOptions,
 ): UseSearchReturn {
-    const { url } = usePage();
-
-    const queryString = resolveCurrentSearch(url);
-    const currentQuery = parseCurrentQuery(queryString);
+    const { filters = [] } = options;
+    const navigation = useSearchNavigation(routeFn, options);
+    const currentQuery = navigation.effectiveQuery;
 
     const filterValues: Record<string, string[]> = {};
     const selectValues: Record<string, string | null> = {};
@@ -90,7 +89,6 @@ export function useSearch(
     const hasActiveFilterValues = Object.values(filterValues).some(
         (values) => values.length > 0,
     );
-    const navigation = useSearchNavigation(routeFn);
     const [activeFilterPopoverKey, setActiveFilterPopoverKey] = useState<
         string | null
     >(null);
