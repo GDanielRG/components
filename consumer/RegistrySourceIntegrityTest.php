@@ -35,7 +35,7 @@ function registrySourceFileDrift(array $expected): array
         $absolutePath = base_path($path);
 
         if (! File::exists($absolutePath)) {
-            $drift[] = sprintf('%s (missing)', $path);
+            $drift[] = "{$path} (missing)";
 
             continue;
         }
@@ -101,11 +101,7 @@ it('documents every declared exception', function (): void {
         );
 
         if ($missingMetadata !== []) {
-            $incompleteExceptions[] = sprintf(
-                '%s (missing: %s)',
-                $path,
-                implode(', ', $missingMetadata),
-            );
+            $incompleteExceptions[] = $path.' (missing: '.implode(', ', $missingMetadata).')';
         }
     }
 
