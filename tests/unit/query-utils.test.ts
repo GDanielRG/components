@@ -97,6 +97,17 @@ describe('splitPageUrl / resolveCurrentSearch', () => {
     it('resolveCurrentSearch returns just the query', () => {
         expect(resolveCurrentSearch('/x?a=1')).toBe('a=1');
     });
+
+    it('excludes fragments from both the query and base path', () => {
+        expect(splitPageUrl('/employees?filter[search]=foo#results')).toEqual({
+            basePath: '/employees',
+            currentSearch: 'filter[search]=foo',
+        });
+        expect(splitPageUrl('/employees#results')).toEqual({
+            basePath: '/employees',
+            currentSearch: '',
+        });
+    });
 });
 
 describe('clearedFilterValues', () => {

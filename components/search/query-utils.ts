@@ -318,13 +318,20 @@ export function splitPageUrl(pageUrl: string): {
     basePath: string;
     currentSearch: string;
 } {
-    const questionIndex = pageUrl.indexOf('?');
+    const hashIndex = pageUrl.indexOf('#');
+    const pageUrlWithoutFragment =
+        hashIndex >= 0 ? pageUrl.slice(0, hashIndex) : pageUrl;
+    const questionIndex = pageUrlWithoutFragment.indexOf('?');
 
     return {
         basePath:
-            questionIndex >= 0 ? pageUrl.slice(0, questionIndex) : pageUrl,
+            questionIndex >= 0
+                ? pageUrlWithoutFragment.slice(0, questionIndex)
+                : pageUrlWithoutFragment,
         currentSearch:
-            questionIndex >= 0 ? pageUrl.slice(questionIndex + 1) : '',
+            questionIndex >= 0
+                ? pageUrlWithoutFragment.slice(questionIndex + 1)
+                : '',
     };
 }
 

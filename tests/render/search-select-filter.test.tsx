@@ -15,7 +15,10 @@ import { cleanup, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Filters } from '@/components/search/filters';
 import { SelectFilter } from '@/components/search/select-filter';
-import type { ServerSearchFilter } from '@/components/types/server-search';
+import type {
+    ServerSearchFilter,
+    ServerSearchRangeFilter,
+} from '@/components/types/server-search';
 import type { RouteDefinition } from '@/components/types/wayfinder';
 import type { SearchNavigationController } from '@/components/search/use-search-navigation';
 
@@ -133,5 +136,51 @@ describe('Filters — nullable select defaults', () => {
         expect(
             screen.queryByTestId('filter-estado-clear'),
         ).not.toBeInTheDocument();
+    });
+});
+
+describe('Filters — mixed control order', () => {
+    const navigation: SearchNavigationController = {
+        only: [],
+        buildRoute: (): RouteDefinition<'get'> => ({
+            url: '/things',
+            method: 'get',
+        }),
+        visit: vi.fn(),
+    };
+    const priceFilter: ServerSearchRangeFilter = {
+        key: 'price',
+        label: 'Price',
+        type: 'range',
+        fromKey: 'price_min',
+        toKey: 'price_max',
+        fromLabel: 'Minimum price',
+        toLabel: 'Maximum price',
+        inputType: 'number',
+        applyLabel: 'Apply',
+        clearLabel: 'Clear',
+    };
+
+    it('keeps select and range controls in the server catalog order', () => {
+        const { container } = render(
+            <Filters
+                filters={[plainSelectFilter, priceFilter, archivedFilter]}
+                filterValues={{}}
+                navigation={navigation}
+            />,
+        );
+
+        expect(
+            Array.from(
+                container.querySelectorAll<HTMLElement>(
+                    '[data-test$="-trigger"]',
+                ),
+                (trigger) => trigger.dataset.test,
+            ),
+        ).toEqual([
+            'filter-estado-trigger',
+            'filter-price-trigger',
+            'filter-resource_status-trigger',
+        ]);
     });
 });

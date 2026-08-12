@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { shouldIntercept } from '@inertiajs/core';
 import {
     FunnelIcon,
     FunnelXIcon,
@@ -6,6 +6,7 @@ import {
     SearchIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import type { MouseEvent } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { Filters } from '@/components/search/filters';
 import type {
@@ -55,9 +56,24 @@ function SearchClearFiltersAction({
     'appliedFilters' | 'popoverState' | 'testIdPrefix'
 >) {
     const copy: SearchCopy = useSharedComponentCopy();
+    const [isClearing, setIsClearing] = useState(false);
     const clearAllRoute = appliedFilters.navigation.buildRoute(
         appliedFilters.clearAllPatch,
     );
+
+    function clearAll(event: MouseEvent<Element>): void {
+        popoverState?.setOpenFilterKey(null);
+
+        if (!shouldIntercept(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        setIsClearing(true);
+        appliedFilters.navigation.visit(appliedFilters.clearAllPatch, {
+            onFinish: () => setIsClearing(false),
+        });
+    }
 
     return (
         <ActionsDropdownMenu
@@ -78,25 +94,20 @@ function SearchClearFiltersAction({
             <DropdownMenuItem
                 data-test={resolveTestId('clear-filters-action', testIdPrefix)}
                 variant="destructive"
-                render={
-                    <Link
-                        href={clearAllRoute}
-                        only={appliedFilters.navigation.only}
-                        replace
-                        preserveState
-                        preserveScroll
-                        onClick={() => popoverState?.setOpenFilterKey(null)}
-                    />
-                }
+                render={<a href={clearAllRoute.url} />}
+                onClick={clearAll}
             >
-                <FunnelXIcon className="group-data-[loading]/dropdown-menu-item:hidden" />
-                <LoaderCircle className="hidden animate-spin group-data-[loading]/dropdown-menu-item:block" />
-                <span className="group-data-[loading]/dropdown-menu-item:hidden">
-                    {copy.searchClearFilters}
-                </span>
-                <span className="hidden group-data-[loading]/dropdown-menu-item:inline">
-                    {copy.searchClearing}
-                </span>
+                {isClearing ? (
+                    <>
+                        <LoaderCircle className="animate-spin" />
+                        <span>{copy.searchClearing}</span>
+                    </>
+                ) : (
+                    <>
+                        <FunnelXIcon />
+                        <span>{copy.searchClearFilters}</span>
+                    </>
+                )}
             </DropdownMenuItem>
         </ActionsDropdownMenu>
     );
@@ -122,14 +133,26 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
 
     const appliedFilterCount = getAppliedFilterCount(appliedFilters);
     const hasSearch = !!searchValue.trim();
+    const [isClearingSearch, setIsClearingSearch] = useState(false);
 
     if (appliedFilterCount === 0) {
         return null;
     }
 
-    const clearSearchRoute = navigation.buildRoute(
-        buildPathPatch(['filter', 'search'], null),
-    );
+    const clearSearchPatch = buildPathPatch(['filter', 'search'], null);
+    const clearSearchRoute = navigation.buildRoute(clearSearchPatch);
+
+    function clearSearch(event: MouseEvent<Element>): void {
+        if (!shouldIntercept(event)) {
+            return;
+        }
+
+        event.preventDefault();
+        setIsClearingSearch(true);
+        navigation.visit(clearSearchPatch, {
+            onFinish: () => setIsClearingSearch(false),
+        });
+    }
 
     return (
         <div className={cn('flex flex-wrap items-center gap-2', className)}>
@@ -165,24 +188,20 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
                             testIdPrefix,
                         )}
                         variant="destructive"
-                        render={
-                            <Link
-                                href={clearSearchRoute}
-                                only={navigation.only}
-                                replace
-                                preserveState
-                                preserveScroll
-                            />
-                        }
+                        render={<a href={clearSearchRoute.url} />}
+                        onClick={clearSearch}
                     >
-                        <SearchIcon className="group-data-[loading]/dropdown-menu-item:hidden" />
-                        <LoaderCircle className="hidden animate-spin group-data-[loading]/dropdown-menu-item:block" />
-                        <span className="group-data-[loading]/dropdown-menu-item:hidden">
-                            {copy.searchClearSearch}
-                        </span>
-                        <span className="hidden group-data-[loading]/dropdown-menu-item:inline">
-                            {copy.searchClearing}
-                        </span>
+                        {isClearingSearch ? (
+                            <>
+                                <LoaderCircle className="animate-spin" />
+                                <span>{copy.searchClearing}</span>
+                            </>
+                        ) : (
+                            <>
+                                <SearchIcon />
+                                <span>{copy.searchClearSearch}</span>
+                            </>
+                        )}
                     </DropdownMenuItem>
                 </ActionsDropdownMenu>
             )}

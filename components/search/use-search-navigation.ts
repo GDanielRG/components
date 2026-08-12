@@ -83,32 +83,47 @@ export function useSearchNavigation(
         [url],
     );
     const [pendingVisit, setPendingVisit] = useState<PendingVisit | null>(null);
+    // Synchronous mirror of `pendingVisit`: a visit issued before React
+    // re-renders (rapid clear-then-filter clicks) must compose on the latest
+    // pending query, not on the last rendered state. Every write goes through
+    // `trackPendingVisit` so the ref and the state can never disagree.
+    const pendingVisitRef = useRef<PendingVisit | null>(null);
     const nextVisitId = useRef(0);
     const baseQuery = useMemo(
         () => resolveBaseQuery(url, currentQuery, pendingVisit),
         [currentQuery, pendingVisit, url],
     );
 
+    function trackPendingVisit(nextPendingVisit: PendingVisit | null): void {
+        pendingVisitRef.current = nextPendingVisit;
+        setPendingVisit(nextPendingVisit);
+    }
+
     useEffect(() => {
-        setPendingVisit((currentPendingVisit) => {
-            if (currentPendingVisit === null) {
-                return null;
-            }
+        const currentPendingVisit = pendingVisitRef.current;
 
-            const currentPage = toPageUrl(url);
-            const pendingPage = toPageUrl(currentPendingVisit.url);
+        if (currentPendingVisit === null) {
+            return;
+        }
 
-            return currentPage.pathname === pendingPage.pathname &&
-                currentPage.search === pendingPage.search
-                ? null
-                : currentPendingVisit;
-        });
+        const currentPage = toPageUrl(url);
+        const pendingPage = toPageUrl(currentPendingVisit.url);
+
+        if (
+            currentPage.pathname === pendingPage.pathname &&
+            currentPage.search === pendingPage.search
+        ) {
+            trackPendingVisit(null);
+        }
     }, [url]);
 
     function buildNextQuery(
         patch: SearchNavigationPatch,
     ): SearchNavigationData {
-        return buildQueryDataFromCurrent(baseQuery, patch);
+        return buildQueryDataFromCurrent(
+            resolveBaseQuery(url, currentQuery, pendingVisitRef.current),
+            patch,
+        );
     }
 
     function buildRoute(patch: SearchNavigationPatch): RouteDefinition<'get'> {
@@ -126,7 +141,7 @@ export function useSearchNavigation(
         const visitId = ++nextVisitId.current;
         const { onFinish, ...visitOptions } = options;
 
-        setPendingVisit({
+        trackPendingVisit({
             id: visitId,
             query: nextQuery,
             url: nextRoute.url,
@@ -139,11 +154,9 @@ export function useSearchNavigation(
             ...defaultVisitOptions,
             ...visitOptions,
             onFinish: (visit) => {
-                setPendingVisit((currentPendingVisit) =>
-                    currentPendingVisit?.id === visitId
-                        ? null
-                        : currentPendingVisit,
-                );
+                if (pendingVisitRef.current?.id === visitId) {
+                    trackPendingVisit(null);
+                }
 
                 onFinish?.(visit);
             },

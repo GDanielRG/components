@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SearchFilterControls, useSearch } from '@/components/search/search';
 import type { SearchNavigationData } from '@/components/search/query-utils';
+import { useSearchNavigation } from '@/components/search/use-search-navigation';
 import type { ServerSearchChoiceFilter } from '@/components/types/server-search';
 import type {
     RouteDefinition,
@@ -93,6 +94,23 @@ function SearchHarness() {
     );
 }
 
+function SameTickVisitHarness() {
+    const navigation = useSearchNavigation(thingsRoute, {
+        only: ['things'],
+    });
+
+    return (
+        <button
+            type="button"
+            data-test="compose-visits"
+            onClick={() => {
+                navigation.visit({ filter: { search: null } });
+                navigation.visit({ filter: { status: ['active'] } });
+            }}
+        />
+    );
+}
+
 beforeEach(() => {
     page.url = '/things';
     visits.length = 0;
@@ -130,5 +148,17 @@ describe('useSearch pending filter query', () => {
         expect(
             screen.getByTestId('filter-status-option-pending'),
         ).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    it('composes visits issued in the same event from the latest pending query', () => {
+        page.url = '/things?filter[search]=voyage&filter[status][]=pending';
+        render(<SameTickVisitHarness />);
+
+        fireEvent.click(screen.getByTestId('compose-visits'));
+
+        expect(visits).toEqual([
+            '/things?filter%5Bstatus%5D%5B%5D=pending',
+            '/things?filter%5Bstatus%5D%5B%5D=active',
+        ]);
     });
 });

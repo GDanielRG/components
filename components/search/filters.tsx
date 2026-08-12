@@ -68,12 +68,15 @@ export function Filters(props: FiltersProps) {
         (filter): filter is ServerSearchChoiceFilter =>
             (filter.type ?? 'multiselect') === 'multiselect',
     );
-    const selectFilters = scopedFilters.filter(
-        (filter): filter is ServerSearchChoiceFilter =>
-            filter.type === 'select',
-    );
-    const rangeFilters = scopedFilters.filter(
-        (filter): filter is ServerSearchRangeFilter => filter.type === 'range',
+    // Selects and ranges render interleaved in the server catalog's order —
+    // the server deliberately positions entries (e.g. the archive lifecycle
+    // filter is always last), so grouping by control type here would
+    // silently reorder them.
+    const orderedFilters = scopedFilters.filter(
+        (
+            filter,
+        ): filter is ServerSearchChoiceFilter | ServerSearchRangeFilter =>
+            filter.type === 'select' || filter.type === 'range',
     );
 
     function handleFilterValueChange(
@@ -130,7 +133,7 @@ export function Filters(props: FiltersProps) {
     }
 
     // Multiselect-only (most index pages): preserve the historical markup.
-    if (selectFilters.length === 0 && rangeFilters.length === 0) {
+    if (orderedFilters.length === 0) {
         return (
             <FacetedFilters
                 filters={multiselectFilters}
@@ -156,33 +159,40 @@ export function Filters(props: FiltersProps) {
                     testIdPrefix={testIdPrefix}
                 />
             )}
-            {selectFilters.map((filter) => (
-                <SelectFilter
-                    key={filter.key}
-                    filter={filter}
-                    value={selectValues[filter.key] ?? null}
-                    open={openFilterKey === filter.key}
-                    onOpenChange={(open) =>
-                        handleFilterOpenChange(filter.key, open)
-                    }
-                    onValueChange={(value) => handleSelectChange(filter, value)}
-                    testIdPrefix={testIdPrefix}
-                    clearable={filter.defaultValue == null}
-                />
-            ))}
-            {rangeFilters.map((filter) => (
-                <RangeFilter
-                    key={filter.key}
-                    filter={filter}
-                    value={rangeValues[filter.key] ?? { from: null, to: null }}
-                    open={openFilterKey === filter.key}
-                    onOpenChange={(open) =>
-                        handleFilterOpenChange(filter.key, open)
-                    }
-                    onValueChange={(value) => handleRangeChange(filter, value)}
-                    testIdPrefix={testIdPrefix}
-                />
-            ))}
+            {orderedFilters.map((filter) =>
+                filter.type === 'range' ? (
+                    <RangeFilter
+                        key={filter.key}
+                        filter={filter}
+                        value={
+                            rangeValues[filter.key] ?? { from: null, to: null }
+                        }
+                        open={openFilterKey === filter.key}
+                        onOpenChange={(open) =>
+                            handleFilterOpenChange(filter.key, open)
+                        }
+                        onValueChange={(value) =>
+                            handleRangeChange(filter, value)
+                        }
+                        testIdPrefix={testIdPrefix}
+                    />
+                ) : (
+                    <SelectFilter
+                        key={filter.key}
+                        filter={filter}
+                        value={selectValues[filter.key] ?? null}
+                        open={openFilterKey === filter.key}
+                        onOpenChange={(open) =>
+                            handleFilterOpenChange(filter.key, open)
+                        }
+                        onValueChange={(value) =>
+                            handleSelectChange(filter, value)
+                        }
+                        testIdPrefix={testIdPrefix}
+                        clearable={filter.defaultValue == null}
+                    />
+                ),
+            )}
         </div>
     );
 }
