@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260812-4993d0b — 2026-08-12
 
 - **Fixed** mixed select/range filter controls reordering the server-provided
   catalog, query fragments leaking into search state, and clear actions bypassing
