@@ -8,6 +8,14 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Fixed** mixed select/range filter controls reordering the server-provided
+  catalog, query fragments leaking into search state, and clear actions bypassing
+  the consuming app's injected navigation contract.
+- **Fixed** synchronous clear-then-filter visits composing from stale rendered
+  state while an Inertia navigation is still pending.
+
 ### snapshot-20260811-e7750a5 — 2026-08-11
 
 - **Updated** stable registry fixture and test dependencies, including Inertia 3.6,
