@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260818-141cfd1 — 2026-08-18
 
 - **Fixed** the exported activity section-id union drifting when consuming apps
   run Oxfmt over registry-owned source. Its layout is now byte-stable under both
