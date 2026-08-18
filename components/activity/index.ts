@@ -5,3 +5,7 @@ export {
 export { CommentTypingIndicator } from '@/components/activity/comment-typing-indicator';
 export type { CommentTypingIndicatorUser } from '@/components/activity/comment-typing-indicator';
 export { useCommentsDocumentsSidebar } from '@/components/activity/comments-documents-sidebar';
+export type {
+    ActivitySidebarAdditionalSection,
+    ActivitySidebarSectionId,
+} from '@/components/activity/comments-documents-sidebar';

@@ -69,3 +69,12 @@ while a comment draft is being created or edited so a remote reload cannot repla
 local input. Pass `readOnly` for archived or otherwise immutable resources; the
 sidebar then withholds comment/document mutations, upload controls, typing presence,
 and live-update subscriptions while retaining download access.
+
+## Additional activity sections
+
+`useCommentsDocumentsSidebar` accepts optional `additionalSections` for app-owned
+domain content that should share the comments/documents shell. Each descriptor owns
+its stable id, label, Lucide icon, content, optional count, footer, header action, and
+test selectors. The registry keeps responsive sidebar state, tab switching, scrolling,
+and presentation consistent without adding domain-specific copy or icons to the shared
+contract. Existing consumers that only use comments and documents require no changes.

@@ -6,6 +6,7 @@ import {
     PanelRightCloseIcon,
     PanelRightOpenIcon,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { AppRightSidebar } from '@/components/app-right-sidebar';
@@ -38,14 +39,41 @@ import { cn } from '@/lib/utils';
 
 type CommentsDocumentsSidebarTab = 'comments' | 'documents';
 
-type RenderCommentLiveUpdates = (state: { enabled: boolean }) => ReactNode;
-
-interface UseCommentsDocumentsSidebarStateProps {
-    defaultOpen?: boolean;
-    defaultTab?: CommentsDocumentsSidebarTab;
+function isCommentsDocumentsSidebarTab(
+    tab: string,
+): tab is CommentsDocumentsSidebarTab {
+    return tab === 'comments' || tab === 'documents';
 }
 
-interface UseCommentsDocumentsSidebarProps {
+export type ActivitySidebarSectionId<AdditionalId extends string = never> =
+    CommentsDocumentsSidebarTab | AdditionalId;
+
+/**
+ * App-owned content that joins the registry-owned comments/documents sidebar.
+ * The registry owns the shell and responsive behaviour; the consumer owns the
+ * section's domain copy, icon, content, actions, and test selectors.
+ */
+export interface ActivitySidebarAdditionalSection<Id extends string = string> {
+    id: Exclude<Id, CommentsDocumentsSidebarTab>;
+    label: string;
+    icon: LucideIcon;
+    count?: number;
+    content?: ReactNode;
+    footer?: ReactNode;
+    hasContent?: boolean;
+    headerAction?: ReactNode;
+    triggerDataTest?: string;
+    countDataTest?: string;
+}
+
+type RenderCommentLiveUpdates = (state: { enabled: boolean }) => ReactNode;
+
+interface UseCommentsDocumentsSidebarStateProps<AdditionalId extends string> {
+    defaultOpen?: boolean;
+    defaultTab?: ActivitySidebarSectionId<AdditionalId>;
+}
+
+interface UseCommentsDocumentsSidebarProps<AdditionalId extends string> {
     comments: Comment[];
     documents: Document[];
     readOnly?: boolean;
@@ -82,23 +110,24 @@ interface UseCommentsDocumentsSidebarProps {
      * change, or sidebar close) so the app can stop broadcasting typing.
      */
     onCommentComposerClose?: () => void;
+    additionalSections?: readonly ActivitySidebarAdditionalSection<AdditionalId>[];
     defaultOpen?: boolean;
 }
 
-function useCommentsDocumentsSidebarState({
+function useCommentsDocumentsSidebarState<AdditionalId extends string>({
     defaultOpen = false,
     defaultTab = 'comments',
-}: UseCommentsDocumentsSidebarStateProps) {
+}: UseCommentsDocumentsSidebarStateProps<AdditionalId>) {
     const isSidebarSheet = useIsSidebarSheet();
     const [open, setOpenState] = useState(() => !isSidebarSheet && defaultOpen);
     const [activeTab, setActiveTab] =
-        useState<CommentsDocumentsSidebarTab>(defaultTab);
+        useState<ActivitySidebarSectionId<AdditionalId>>(defaultTab);
 
     const setOpen = (nextOpen: boolean) => {
         setOpenState(nextOpen);
     };
 
-    const openTab = (tab: CommentsDocumentsSidebarTab) => {
+    const openTab = (tab: ActivitySidebarSectionId<AdditionalId>) => {
         if (open && activeTab === tab) {
             setOpen(false);
 
@@ -114,14 +143,15 @@ function useCommentsDocumentsSidebarState({
         setOpen,
         activeTab,
         setActiveTab,
-        openCommentsTab: () => openTab('comments'),
-        openDocumentsTab: () => openTab('documents'),
+        openSection: openTab,
         closeSidebar: () => setOpen(false),
         isSidebarSheet,
     };
 }
 
-export function useCommentsDocumentsSidebar({
+export function useCommentsDocumentsSidebar<
+    const AdditionalId extends string = never,
+>({
     comments,
     documents,
     readOnly = false,
@@ -140,8 +170,9 @@ export function useCommentsDocumentsSidebar({
     onCommentDraftFocus,
     onCommentDraftBlur,
     onCommentComposerClose,
+    additionalSections = [],
     defaultOpen,
-}: UseCommentsDocumentsSidebarProps) {
+}: UseCommentsDocumentsSidebarProps<AdditionalId>) {
     const copy: ActivityCopy = useSharedComponentCopy();
     const [editingCommentId, setEditingCommentId] = useState<number | null>(
         null,
@@ -158,11 +189,10 @@ export function useCommentsDocumentsSidebar({
         activeTab,
         closeSidebar,
         open,
-        openCommentsTab,
-        openDocumentsTab,
+        openSection: setOpenSection,
         setActiveTab,
         setOpen,
-    } = useCommentsDocumentsSidebarState({
+    } = useCommentsDocumentsSidebarState<AdditionalId>({
         defaultOpen: resolvedDefaultOpen,
         defaultTab,
     });
@@ -214,12 +244,20 @@ export function useCommentsDocumentsSidebar({
         setOpen(true);
     };
 
-    const handleTabChange = (tab: CommentsDocumentsSidebarTab) => {
+    const handleTabChange = (tab: ActivitySidebarSectionId<AdditionalId>) => {
         setActiveTab(tab);
 
         if (tab !== 'comments') {
             clearCommentComposerState();
         }
+    };
+
+    const openSection = (tab: ActivitySidebarSectionId<AdditionalId>) => {
+        if (tab !== 'comments' || (open && activeTab === tab)) {
+            clearCommentComposerState();
+        }
+
+        setOpenSection(tab);
     };
 
     const handleEditComment = (commentId: number) => {
@@ -229,9 +267,14 @@ export function useCommentsDocumentsSidebar({
 
     return {
         documentCount: documentsPanel.count,
-        activePanel: open ? activeTab : null,
-        openCommentsTab,
-        openDocumentsTab,
+        activePanel:
+            open && isCommentsDocumentsSidebarTab(activeTab) ? activeTab : null,
+        activeSectionId: open ? activeTab : null,
+        isSectionActive: (sectionId: ActivitySidebarSectionId<AdditionalId>) =>
+            open && activeTab === sectionId,
+        openSection,
+        openCommentsTab: () => openSection('comments'),
+        openDocumentsTab: () => openSection('documents'),
         toolbar: !open ? (
             <SidebarToggleButton open={false} onToggle={toggleSidebar} />
         ) : null,
@@ -320,6 +363,7 @@ export function useCommentsDocumentsSidebar({
                         content: documentsPanel.content,
                         footer: documentsPanel.footer,
                     }}
+                    additionalSections={additionalSections}
                 />
             </>
         ),
@@ -331,6 +375,7 @@ interface SidebarSection {
     content?: ReactNode;
     footer?: ReactNode;
     hasContent?: boolean;
+    headerAction?: ReactNode;
 }
 
 function SidebarToggleButton({
@@ -363,21 +408,18 @@ function ActivityTabs({
     onTabChange,
     comments,
     documents,
+    additionalSections,
 }: {
-    activeTab: CommentsDocumentsSidebarTab;
-    onTabChange: (tab: CommentsDocumentsSidebarTab) => void;
+    activeTab: string;
+    onTabChange: (tab: string) => void;
     comments?: SidebarSection;
     documents?: SidebarSection;
+    additionalSections: readonly ActivitySidebarAdditionalSection[];
 }) {
     const copy: ActivityCopy = useSharedComponentCopy();
 
     return (
-        <Tabs
-            value={activeTab}
-            onValueChange={(value: string) =>
-                onTabChange(value as CommentsDocumentsSidebarTab)
-            }
-        >
+        <Tabs value={activeTab} onValueChange={onTabChange}>
             <TabsList>
                 {comments && (
                     <TabsTrigger
@@ -419,22 +461,49 @@ function ActivityTabs({
                         )}
                     </TabsTrigger>
                 )}
+                {additionalSections.map((section) => {
+                    const Icon = section.icon;
+
+                    return (
+                        <TabsTrigger
+                            key={section.id}
+                            value={section.id}
+                            aria-label={section.label}
+                            data-test={section.triggerDataTest}
+                        >
+                            <Icon />
+                            {section.count !== undefined && (
+                                <Badge
+                                    variant={
+                                        activeTab === section.id
+                                            ? 'secondary'
+                                            : 'ghost'
+                                    }
+                                    data-test={section.countDataTest}
+                                >
+                                    {section.count}
+                                </Badge>
+                            )}
+                        </TabsTrigger>
+                    );
+                })}
             </TabsList>
         </Tabs>
     );
 }
 
-interface CommentsDocumentsSidebarProps {
+interface CommentsDocumentsSidebarProps<AdditionalId extends string> {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    activeTab: CommentsDocumentsSidebarTab;
-    onTabChange: (tab: CommentsDocumentsSidebarTab) => void;
+    activeTab: ActivitySidebarSectionId<AdditionalId>;
+    onTabChange: (tab: ActivitySidebarSectionId<AdditionalId>) => void;
     onToggle: () => void;
     comments?: SidebarSection;
     documents?: SidebarSection;
+    additionalSections: readonly ActivitySidebarAdditionalSection<AdditionalId>[];
 }
 
-function CommentsDocumentsSidebar({
+function CommentsDocumentsSidebar<AdditionalId extends string>({
     open,
     onOpenChange,
     activeTab,
@@ -442,24 +511,32 @@ function CommentsDocumentsSidebar({
     onToggle,
     comments,
     documents,
-}: CommentsDocumentsSidebarProps) {
+    additionalSections,
+}: CommentsDocumentsSidebarProps<AdditionalId>) {
     const copy: ActivityCopy = useSharedComponentCopy();
-    const availableTabs = {
-        comments: comments !== undefined,
-        documents: documents !== undefined,
-    };
-    let resolvedActiveTab = activeTab;
+    const additionalSection = additionalSections.find(
+        (section) => section.id === activeTab,
+    );
+    let resolvedActiveTab: string = activeTab;
+    let activeSection: SidebarSection | undefined =
+        activeTab === 'comments'
+            ? comments
+            : activeTab === 'documents'
+              ? documents
+              : additionalSection;
 
-    if (activeTab === 'comments' && !availableTabs.comments) {
-        resolvedActiveTab = 'documents';
+    if (!activeSection) {
+        if (comments) {
+            resolvedActiveTab = 'comments';
+            activeSection = comments;
+        } else if (documents) {
+            resolvedActiveTab = 'documents';
+            activeSection = documents;
+        } else {
+            resolvedActiveTab = additionalSections[0]?.id ?? activeTab;
+            activeSection = additionalSections[0];
+        }
     }
-
-    if (activeTab === 'documents' && !availableTabs.documents) {
-        resolvedActiveTab = 'comments';
-    }
-
-    const activeSection =
-        resolvedActiveTab === 'comments' ? comments : documents;
     const showActiveContent =
         activeSection?.hasContent ?? Boolean(activeSection?.content);
 
@@ -468,11 +545,19 @@ function CommentsDocumentsSidebar({
             <SidebarHeader className="min-h-13 flex-row items-center justify-between gap-2 px-4 py-2 lg:px-0">
                 <ActivityTabs
                     activeTab={resolvedActiveTab}
-                    onTabChange={onTabChange}
+                    onTabChange={(tab) =>
+                        onTabChange(
+                            tab as ActivitySidebarSectionId<AdditionalId>,
+                        )
+                    }
                     comments={comments}
                     documents={documents}
+                    additionalSections={additionalSections}
                 />
-                <SidebarToggleButton open={open} onToggle={onToggle} />
+                <div className="flex items-center gap-1">
+                    {activeSection?.headerAction}
+                    <SidebarToggleButton open={open} onToggle={onToggle} />
+                </div>
             </SidebarHeader>
 
             {showActiveContent && (
@@ -480,7 +565,7 @@ function CommentsDocumentsSidebar({
                     data-test="activity-sidebar-content"
                     className={cn(
                         'm-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden lg:mx-0',
-                        resolvedActiveTab === 'comments' &&
+                        resolvedActiveTab !== 'documents' &&
                             'rounded-xl border bg-background shadow-sm lg:border-0',
                     )}
                 >

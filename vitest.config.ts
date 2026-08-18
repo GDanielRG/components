@@ -25,6 +25,15 @@ function resolveAtAlias(): import('vite').Plugin {
             if (sub === 'hooks/use-shared-component-copy') {
                 return resolve(stubs, 'hooks/use-shared-component-copy.ts');
             }
+            if (sub === 'components/app-right-sidebar') {
+                return resolve(stubs, 'components/app-right-sidebar.tsx');
+            }
+            if (sub === 'components/chat/message-scroller') {
+                return resolve(stubs, 'components/chat/message-scroller.tsx');
+            }
+            if (sub === 'components/ui/sidebar') {
+                return resolve(stubs, 'ui/sidebar.tsx');
+            }
 
             if (sub.startsWith('components/types/')) {
                 return resolveExisting(

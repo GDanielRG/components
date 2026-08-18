@@ -19,6 +19,7 @@ import {
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ActivitySidebarTriggers } from '@/components/activity/activity-triggers';
 import { CommentTypingIndicator } from '@/components/activity/comment-typing-indicator';
+import { useCommentsDocumentsSidebar } from '@/components/activity/comments-documents-sidebar';
 import { CommentForm } from '@/components/comments/comment-form';
 import { CommentList } from '@/components/comments/comment-list';
 import type { Comment } from '@/components/comments/types';
@@ -29,6 +30,7 @@ import type {
     ExistingDocumentData,
 } from '@/components/documents/types';
 import { Attachment } from '@/components/ui/attachment';
+import { ClipboardListIcon } from 'lucide-react';
 
 afterEach(cleanup);
 
@@ -38,6 +40,60 @@ const route = (verb: string) => (id: number) => ({
 });
 const updateCommentForm = route('put') as never;
 const destroyCommentForm = route('delete') as never;
+
+function AdditionalSectionHarness() {
+    const sidebar = useCommentsDocumentsSidebar({
+        comments: [],
+        documents: [],
+        readOnly: true,
+        allowedDocumentMimes: [],
+        maxDocumentKilobytes: 1024,
+        storeCommentForm: { url: '/comments', method: 'post' } as never,
+        storeDocumentAction: { url: '/documents', method: 'post' } as never,
+        updateDocumentAction: route('put') as never,
+        destroyDocumentAction: route('delete') as never,
+        showDocumentAction: route('get') as never,
+        updateCommentForm,
+        destroyCommentForm,
+        defaultOpen: false,
+        additionalSections: [
+            {
+                id: 'audit',
+                label: 'Audit trail',
+                icon: ClipboardListIcon,
+                count: 0,
+                hasContent: true,
+                content: <div>App-owned audit content</div>,
+                footer: <div>App-owned audit footer</div>,
+                headerAction: <button type="button">Export audit</button>,
+                triggerDataTest: 'activity-tab-audit',
+                countDataTest: 'activity-tab-audit-count',
+            },
+        ],
+    });
+
+    return (
+        <>
+            <button
+                type="button"
+                data-test="open-audit-section"
+                onClick={() => sidebar.openSection('audit')}
+            >
+                Audit
+            </button>
+            <output data-test="active-panel">
+                {sidebar.activePanel ?? 'none'}
+            </output>
+            <output data-test="active-section">
+                {sidebar.activeSectionId ?? 'none'}
+            </output>
+            <output data-test="audit-is-active">
+                {String(sidebar.isSectionActive('audit'))}
+            </output>
+            {sidebar.rightSidebar}
+        </>
+    );
+}
 
 function makeComment(overrides: Partial<Comment> = {}): Comment {
     return {
@@ -248,6 +304,39 @@ describe('ActivitySidebarTriggers — read-only affordances', () => {
         ).toBeNull();
         expect(documents.querySelector('svg.lucide-files')).not.toBeNull();
         expect(documents.querySelector('svg.lucide-file-plus')).toBeNull();
+    });
+});
+
+describe('useCommentsDocumentsSidebar — additional sections', () => {
+    it('hosts an app-owned section without extending the shared copy contract', () => {
+        render(<AdditionalSectionHarness />);
+
+        expect(screen.getByTestId('active-panel')).toHaveTextContent('none');
+        expect(screen.getByTestId('active-section')).toHaveTextContent('none');
+
+        fireEvent.click(screen.getByTestId('open-audit-section'));
+
+        expect(screen.getByTestId('active-panel')).toHaveTextContent('none');
+        expect(screen.getByTestId('active-section')).toHaveTextContent('audit');
+        expect(screen.getByTestId('audit-is-active')).toHaveTextContent('true');
+        expect(screen.getByTestId('activity-tab-audit')).toHaveAccessibleName(
+            'Audit trail',
+        );
+        expect(
+            screen.getByTestId('activity-tab-audit-count'),
+        ).toHaveTextContent('0');
+        expect(screen.getByText('App-owned audit content')).toBeInTheDocument();
+        expect(screen.getByText('App-owned audit footer')).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Export audit' }),
+        ).toBeInTheDocument();
+
+        fireEvent.click(screen.getByTestId('open-audit-section'));
+
+        expect(screen.getByTestId('active-section')).toHaveTextContent('none');
+        expect(screen.getByTestId('audit-is-active')).toHaveTextContent(
+            'false',
+        );
     });
 });
 
