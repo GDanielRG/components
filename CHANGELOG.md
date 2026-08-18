@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260818-d67746b — 2026-08-18
 
 - **Added** optional app-owned sections to `useCommentsDocumentsSidebar`. Consumers
   can place domain content in the shared responsive activity shell while retaining
