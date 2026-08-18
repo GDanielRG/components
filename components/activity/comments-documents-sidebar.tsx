@@ -45,8 +45,12 @@ function isCommentsDocumentsSidebarTab(
     return tab === 'comments' || tab === 'documents';
 }
 
+// Prettier and the consuming apps' Oxfmt disagree on this union layout. Keep
+// the installed registry bytes stable under both format checks.
+// prettier-ignore
 export type ActivitySidebarSectionId<AdditionalId extends string = never> =
-    CommentsDocumentsSidebarTab | AdditionalId;
+    | CommentsDocumentsSidebarTab
+    | AdditionalId;
 
 /**
  * App-owned content that joins the registry-owned comments/documents sidebar.

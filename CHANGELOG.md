@@ -8,6 +8,12 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Fixed** the exported activity section-id union drifting when consuming apps
+  run Oxfmt over registry-owned source. Its layout is now byte-stable under both
+  the registry's Prettier gate and sibling format checks.
+
 ### snapshot-20260818-d67746b — 2026-08-18
 
 - **Added** optional app-owned sections to `useCommentsDocumentsSidebar`. Consumers
