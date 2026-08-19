@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260818-c374ada — 2026-08-18
 
 - **Fixed** app-owned activity sections rendering a zero-count badge while the
   built-in comments and documents sections suppress empty counts.
