@@ -75,6 +75,8 @@ and live-update subscriptions while retaining download access.
 `useCommentsDocumentsSidebar` accepts optional `additionalSections` for app-owned
 domain content that should share the comments/documents shell. Each descriptor owns
 its stable id, label, Lucide icon, content, optional count, footer, header action, and
-test selectors. The registry keeps responsive sidebar state, tab switching, scrolling,
-and presentation consistent without adding domain-specific copy or icons to the shared
-contract. Existing consumers that only use comments and documents require no changes.
+test selectors. As with the built-in comments and documents sections, count badges are
+shown only for positive counts. The registry keeps responsive sidebar state, tab
+switching, scrolling, and presentation consistent without adding domain-specific copy
+or icons to the shared contract. Existing consumers that only use comments and
+documents require no changes.

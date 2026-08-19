@@ -8,6 +8,11 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Fixed** app-owned activity sections rendering a zero-count badge while the
+  built-in comments and documents sections suppress empty counts.
+
 ### snapshot-20260818-141cfd1 — 2026-08-18
 
 - **Fixed** the exported activity section-id union drifting when consuming apps

@@ -41,7 +41,7 @@ const route = (verb: string) => (id: number) => ({
 const updateCommentForm = route('put') as never;
 const destroyCommentForm = route('delete') as never;
 
-function AdditionalSectionHarness() {
+function AdditionalSectionHarness({ count = 0 }: { count?: number }) {
     const sidebar = useCommentsDocumentsSidebar({
         comments: [],
         documents: [],
@@ -61,7 +61,7 @@ function AdditionalSectionHarness() {
                 id: 'audit',
                 label: 'Audit trail',
                 icon: ClipboardListIcon,
-                count: 0,
+                count,
                 hasContent: true,
                 content: <div>App-owned audit content</div>,
                 footer: <div>App-owned audit footer</div>,
@@ -323,8 +323,8 @@ describe('useCommentsDocumentsSidebar — additional sections', () => {
             'Audit trail',
         );
         expect(
-            screen.getByTestId('activity-tab-audit-count'),
-        ).toHaveTextContent('0');
+            screen.queryByTestId('activity-tab-audit-count'),
+        ).not.toBeInTheDocument();
         expect(screen.getByText('App-owned audit content')).toBeInTheDocument();
         expect(screen.getByText('App-owned audit footer')).toBeInTheDocument();
         expect(
@@ -337,6 +337,16 @@ describe('useCommentsDocumentsSidebar — additional sections', () => {
         expect(screen.getByTestId('audit-is-active')).toHaveTextContent(
             'false',
         );
+    });
+
+    it('shows an app-owned section count only when it is positive', () => {
+        render(<AdditionalSectionHarness count={3} />);
+
+        fireEvent.click(screen.getByTestId('open-audit-section'));
+
+        expect(
+            screen.getByTestId('activity-tab-audit-count'),
+        ).toHaveTextContent('3');
     });
 });
 

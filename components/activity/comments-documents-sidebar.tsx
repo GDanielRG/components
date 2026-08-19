@@ -476,7 +476,7 @@ function ActivityTabs({
                             data-test={section.triggerDataTest}
                         >
                             <Icon />
-                            {section.count !== undefined && (
+                            {(section.count ?? 0) > 0 && (
                                 <Badge
                                     variant={
                                         activeTab === section.id
