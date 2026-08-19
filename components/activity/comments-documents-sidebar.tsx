@@ -182,12 +182,20 @@ export function useCommentsDocumentsSidebar<
         null,
     );
     const [isCreatingComment, setIsCreatingComment] = useState(false);
+    const populatedAdditionalSection = additionalSections.find(
+        (section) => (section.count ?? 0) > 0,
+    );
     const resolvedDefaultOpen =
-        defaultOpen ?? (comments.length > 0 || documents.length > 0);
+        defaultOpen ??
+        (comments.length > 0 ||
+            documents.length > 0 ||
+            populatedAdditionalSection !== undefined);
     const defaultTab =
-        comments.length > 0 || documents.length === 0
+        comments.length > 0
             ? 'comments'
-            : 'documents';
+            : documents.length > 0
+              ? 'documents'
+              : (populatedAdditionalSection?.id ?? 'comments');
     const chronologicalComments = comments.slice().reverse();
     const {
         activeTab,

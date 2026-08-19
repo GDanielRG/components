@@ -41,7 +41,13 @@ const route = (verb: string) => (id: number) => ({
 const updateCommentForm = route('put') as never;
 const destroyCommentForm = route('delete') as never;
 
-function AdditionalSectionHarness({ count = 0 }: { count?: number }) {
+function AdditionalSectionHarness({
+    count = 0,
+    defaultOpen,
+}: {
+    count?: number;
+    defaultOpen?: boolean;
+}) {
     const sidebar = useCommentsDocumentsSidebar({
         comments: [],
         documents: [],
@@ -55,7 +61,7 @@ function AdditionalSectionHarness({ count = 0 }: { count?: number }) {
         showDocumentAction: route('get') as never,
         updateCommentForm,
         destroyCommentForm,
-        defaultOpen: false,
+        defaultOpen,
         additionalSections: [
             {
                 id: 'audit',
@@ -340,13 +346,34 @@ describe('useCommentsDocumentsSidebar — additional sections', () => {
     });
 
     it('shows an app-owned section count only when it is positive', () => {
-        render(<AdditionalSectionHarness count={3} />);
+        render(<AdditionalSectionHarness count={3} defaultOpen={false} />);
 
         fireEvent.click(screen.getByTestId('open-audit-section'));
 
         expect(
             screen.getByTestId('activity-tab-audit-count'),
         ).toHaveTextContent('3');
+    });
+
+    it('opens on the first populated app-owned section by default', () => {
+        render(<AdditionalSectionHarness count={2} />);
+
+        expect(screen.getByTestId('app-right-sidebar')).toHaveAttribute(
+            'data-open',
+            'true',
+        );
+        expect(screen.getByTestId('active-section')).toHaveTextContent('audit');
+        expect(screen.getByTestId('audit-is-active')).toHaveTextContent('true');
+    });
+
+    it('honors an explicit closed default for a populated app-owned section', () => {
+        render(<AdditionalSectionHarness count={2} defaultOpen={false} />);
+
+        expect(screen.getByTestId('app-right-sidebar')).toHaveAttribute(
+            'data-open',
+            'false',
+        );
+        expect(screen.getByTestId('active-section')).toHaveTextContent('none');
     });
 });
 

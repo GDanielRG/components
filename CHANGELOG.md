@@ -8,6 +8,11 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Fixed** populated app-owned activity sections not participating in the
+  sidebar's automatic opening and initial-section selection.
+
 ### snapshot-20260818-c374ada — 2026-08-18
 
 - **Fixed** app-owned activity sections rendering a zero-count badge while the
