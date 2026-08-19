@@ -32,7 +32,16 @@ import type {
 import { Attachment } from '@/components/ui/attachment';
 import { ClipboardListIcon } from 'lucide-react';
 
-afterEach(cleanup);
+const sidebarSheetState = vi.hoisted(() => ({ current: false }));
+
+vi.mock('@/hooks/use-sidebar-sheet', () => ({
+    useIsSidebarSheet: () => sidebarSheetState.current,
+}));
+
+afterEach(() => {
+    sidebarSheetState.current = false;
+    cleanup();
+});
 
 const route = (verb: string) => (id: number) => ({
     url: `/x/${id}`,
@@ -44,13 +53,17 @@ const destroyCommentForm = route('delete') as never;
 function AdditionalSectionHarness({
     count = 0,
     defaultOpen,
+    comments = [],
+    documents = [],
 }: {
     count?: number;
     defaultOpen?: boolean;
+    comments?: Comment[];
+    documents?: ExistingDocumentData[];
 }) {
     const sidebar = useCommentsDocumentsSidebar({
-        comments: [],
-        documents: [],
+        comments,
+        documents,
         readOnly: true,
         allowedDocumentMimes: [],
         maxDocumentKilobytes: 1024,
@@ -368,6 +381,41 @@ describe('useCommentsDocumentsSidebar — additional sections', () => {
 
     it('honors an explicit closed default for a populated app-owned section', () => {
         render(<AdditionalSectionHarness count={2} defaultOpen={false} />);
+
+        expect(screen.getByTestId('app-right-sidebar')).toHaveAttribute(
+            'data-open',
+            'false',
+        );
+        expect(screen.getByTestId('active-section')).toHaveTextContent('none');
+    });
+
+    it('prefers populated comments and then documents over app-owned sections', () => {
+        const { unmount } = render(
+            <AdditionalSectionHarness count={2} comments={[makeComment()]} />,
+        );
+
+        expect(screen.getByTestId('active-section')).toHaveTextContent(
+            'comments',
+        );
+
+        unmount();
+
+        render(
+            <AdditionalSectionHarness
+                count={2}
+                documents={[makeExistingDocument()]}
+            />,
+        );
+
+        expect(screen.getByTestId('active-section')).toHaveTextContent(
+            'documents',
+        );
+    });
+
+    it('keeps a populated app-owned section closed in sheet mode', () => {
+        sidebarSheetState.current = true;
+
+        render(<AdditionalSectionHarness count={2} />);
 
         expect(screen.getByTestId('app-right-sidebar')).toHaveAttribute(
             'data-open',
