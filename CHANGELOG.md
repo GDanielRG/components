@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260820-afe9faa — 2026-08-20
 
 - **Fixed** inline activity triggers to forward the consuming app's optional cache
   invalidation tags to comment and document writes.
