@@ -88,11 +88,6 @@
                     "target": "@ui/scroll-area.tsx"
                 },
                 {
-                    "path": "components/inertia-prefetch-policy.ts",
-                    "type": "registry:lib",
-                    "target": "@components/inertia-prefetch-policy.ts"
-                },
-                {
                     "path": "components/actions-dropdown-menu.tsx",
                     "type": "registry:component",
                     "target": "@components/actions-dropdown-menu.tsx"
@@ -426,7 +421,7 @@
                     "target": "@components/comments/types.ts"
                 }
             ],
-            "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories.",
+            "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
@@ -522,7 +517,7 @@
                     "target": "@components/documents/index.ts"
                 }
             ],
-            "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories.",
+            "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
             "dependencies": [
                 "@inertiajs/core@^3.3.1",
                 "@inertiajs/react@^3.3.1",
@@ -568,7 +563,7 @@
                     "target": "@components/activity/index.ts"
                 }
             ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
+            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
             "dependencies": ["lucide-react@^1.17.0"]
         },
         {

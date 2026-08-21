@@ -81,6 +81,7 @@ interface UseCommentsDocumentsSidebarProps<AdditionalId extends string> {
     comments: Comment[];
     documents: Document[];
     readOnly?: boolean;
+    invalidateCacheTags?: string | string[];
     allowedDocumentMimes: string[];
     maxDocumentKilobytes: number;
     storeCommentForm: RouteDefinition<'post'>;
@@ -159,6 +160,7 @@ export function useCommentsDocumentsSidebar<
     comments,
     documents,
     readOnly = false,
+    invalidateCacheTags,
     allowedDocumentMimes,
     maxDocumentKilobytes,
     storeCommentForm,
@@ -211,6 +213,7 @@ export function useCommentsDocumentsSidebar<
     const documentsPanel = useDocumentsPanel({
         documents,
         readOnly,
+        invalidateCacheTags,
         allowedDocumentMimes,
         maxDocumentKilobytes,
         storeAction: storeDocumentAction,
@@ -310,6 +313,7 @@ export function useCommentsDocumentsSidebar<
                             <>
                                 <CommentList
                                     comments={chronologicalComments}
+                                    invalidateCacheTags={invalidateCacheTags}
                                     updateFormAction={
                                         readOnly ? undefined : updateCommentForm
                                     }
@@ -347,6 +351,7 @@ export function useCommentsDocumentsSidebar<
                             <CommentForm
                                 formAction={storeCommentForm}
                                 mode="create"
+                                invalidateCacheTags={invalidateCacheTags}
                                 onCancel={hideCreateComment}
                                 onContentChange={onCommentDraftChange}
                                 onContentFocus={onCommentDraftFocus}

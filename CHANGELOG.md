@@ -8,6 +8,15 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Changed** pagination and edit-history prefetching to use Inertia's native cache
+  duration instead of a registry-owned override.
+- **Added** optional `invalidateCacheTags` forwarding to every comment/document write
+  surface, keeping tag vocabularies and invalidation policy application-owned.
+- **Removed** the unused `comment.employee.user` fallback; consumers provide the
+  canonical `comment.author` shape.
+
 ### snapshot-20260818-30eacb3 — 2026-08-18
 
 - **Fixed** populated app-owned activity sections not participating in the
