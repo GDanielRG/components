@@ -8,6 +8,11 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Fixed** inline activity triggers to forward the consuming app's optional cache
+  invalidation tags to comment and document writes.
+
 ### snapshot-20260820-1ce42a3 — 2026-08-20
 
 - **Changed** pagination and edit-history prefetching to use Inertia's native cache

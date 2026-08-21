@@ -19,6 +19,7 @@ interface ActivityTriggersProps {
     destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     destroyCommentForm?: (commentId: number) => RouteDefinition<'delete'>;
+    invalidateCacheTags?: string | string[];
     compact?: boolean;
     className?: string;
     commentsTriggerDataTest?: string;
@@ -34,6 +35,7 @@ export function ActivityTriggers({
     destroyDocumentAction,
     showDocumentAction,
     destroyCommentForm,
+    invalidateCacheTags,
     compact = false,
     className,
     commentsTriggerDataTest,
@@ -44,11 +46,13 @@ export function ActivityTriggers({
                 documents={documents}
                 destroyDocumentAction={destroyDocumentAction}
                 showDocumentAction={showDocumentAction}
+                invalidateCacheTags={invalidateCacheTags}
                 compact={compact}
             />
             <CommentsListPopover
                 comments={comments}
                 destroyFormAction={destroyCommentForm}
+                invalidateCacheTags={invalidateCacheTags}
                 compact={compact}
                 dataTest={commentsTriggerDataTest}
             />
