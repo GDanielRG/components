@@ -55,10 +55,11 @@ and apply it in `visit`.
 
 ## Prefetch invalidation
 
-`AppPagination` prefetching is opt-in. Its default cache policy has a revalidation
-window; a scalar Inertia `cacheFor` value does not. Name prefetched resources with
-`cacheTags` and invalidate those tags after writes. `EditHistoryPopover` accepts
-`employeeCacheTags` for the same reason.
+`AppPagination` prefetching is opt-in and follows Inertia's native cache duration. Name
+prefetched resources with `cacheTags` and invalidate those tags after writes.
+`EditHistoryPopover` accepts `employeeCacheTags` for the same reason. The comments and
+documents mutation surfaces accept `invalidateCacheTags` and forward the app-owned tag
+or tag set to Inertia; the registry owns no tag vocabulary or invalidation policy.
 
 ## Live comment updates
 

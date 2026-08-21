@@ -1,7 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { ChevronDownIcon, HistoryIcon } from 'lucide-react';
 import { useState } from 'react';
-import { DEFAULT_PREFETCH_CACHE_FOR } from '@/components/inertia-prefetch-policy';
 import type { EditHistoryEntry } from '@/components/types/edit-history-entry';
 import type { HistoryCopy } from '@/components/types/shared-component-copy';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -184,7 +183,6 @@ function EditHistoryCauserName({
             <Link
                 href={employeeHref(causer.id)}
                 prefetch
-                cacheFor={DEFAULT_PREFETCH_CACHE_FOR}
                 cacheTags={employeeCacheTags}
                 className="font-semibold hover:underline"
             >

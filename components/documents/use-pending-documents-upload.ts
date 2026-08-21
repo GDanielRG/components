@@ -128,11 +128,13 @@ const createFailedBatch = (
 interface UsePendingDocumentsUploadProps {
     maxDocumentKilobytes: number;
     storeAction: RouteDefinition<'post'>;
+    invalidateCacheTags?: string | string[];
 }
 
 export function usePendingDocumentsUpload({
     maxDocumentKilobytes,
     storeAction,
+    invalidateCacheTags,
 }: UsePendingDocumentsUploadProps) {
     const copy: DocumentsCopy = useSharedComponentCopy();
     const [documentBatch, setDocumentBatch] =
@@ -263,6 +265,7 @@ export function usePendingDocumentsUpload({
         router.post(storeAction, payload, {
             preserveScroll: true,
             forceFormData: true,
+            invalidateCacheTags,
             onCancelToken: (cancelToken: CancelToken) => {
                 updateBatchIfCurrent(batch.id, (currentBatch) => ({
                     ...currentBatch,

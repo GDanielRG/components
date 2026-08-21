@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
 import type { ComponentProps } from 'react';
-import { DEFAULT_PREFETCH_CACHE_FOR } from '@/components/inertia-prefetch-policy';
 import type { PaginatedData } from '@/components/types/paginated-data';
 import {
     Pagination,
@@ -15,7 +14,7 @@ import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
 type PaginationPrefetchProps = Pick<
     ComponentProps<typeof Link>,
-    'prefetch' | 'cacheFor' | 'cacheTags'
+    'prefetch' | 'cacheTags'
 >;
 
 interface AppPaginationProps<T> extends PaginationPrefetchProps {
@@ -25,16 +24,13 @@ interface AppPaginationProps<T> extends PaginationPrefetchProps {
 /**
  * Page links prefetch only when the consumer asks for it with `prefetch`.
  *
- * `cacheFor` is a `[staleAfter, expiresAfter]` tuple, never a scalar: a scalar
- * makes stale equal expires, so there is no revalidation window and a
- * prefetched page is served verbatim for its whole lifetime — including to the
- * user who just wrote a record. Name the resource with `cacheTags` so the
- * writing surface can drop those entries with `invalidateCacheTags`.
+ * Name the resource with `cacheTags` so the writing surface can drop those
+ * entries with `invalidateCacheTags`. Cache duration follows Inertia's native
+ * default.
  */
 export function AppPagination<T>({
     paginatedData,
     prefetch,
-    cacheFor = DEFAULT_PREFETCH_CACHE_FOR,
     cacheTags,
 }: AppPaginationProps<T>) {
     const { paginationNextLabel, paginationPreviousLabel } =
@@ -42,7 +38,7 @@ export function AppPagination<T>({
 
     // A boundary link renders as `#`, which is not a page worth prefetching.
     function prefetchProps(url: string | null): PaginationPrefetchProps {
-        return url ? { prefetch, cacheFor, cacheTags } : {};
+        return url ? { prefetch, cacheTags } : {};
     }
 
     return (
