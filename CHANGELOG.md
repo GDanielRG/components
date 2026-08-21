@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260820-1ce42a3 — 2026-08-20
 
 - **Changed** pagination and edit-history prefetching to use Inertia's native cache
   duration instead of a registry-owned override.
