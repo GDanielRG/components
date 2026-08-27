@@ -10,6 +10,8 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Removed** the unconsumed `notifications` bundle from the registry and
+  `foundations` until a real shared contract exists.
 - **Removed** the registry receipt/lock mechanism and its installed integrity test;
   consumers own installed source without a strict byte lock.
 - **Fixed** nullable document metadata requiring non-null assertions in the shared

@@ -46,9 +46,8 @@ route contracts.
 - `documents` — polymorphic document and upload UI
 - `activity` — combined comments/documents activity UI
 - `chat-display` — chat message rendering primitives
-- `chat` — chat input and conversation shell (held out of `foundations`: it
-  depends on the pre-1.0 `@shadcn/react` package)
-- `notifications` — notification bell, center, and popover list
+- `chat` — virtualized message scroller (held out of `foundations`: it depends
+  on the pre-1.0 `@shadcn/react` package)
 - `foundations` — installs every bundle except `chat`
 
 `registry.json` is the live inventory; this list is a reading aid, so check it
