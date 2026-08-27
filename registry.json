@@ -18,11 +18,6 @@
             ],
             "files": [
                 {
-                    "path": "consumer/RegistrySourceIntegrityTest.php",
-                    "type": "registry:file",
-                    "target": "tests/Unit/RegistrySourceIntegrityTest.php"
-                },
-                {
                     "path": "types/options.ts",
                     "type": "registry:file",
                     "target": "@components/types/options.ts"
@@ -88,11 +83,6 @@
                     "target": "@ui/scroll-area.tsx"
                 },
                 {
-                    "path": "components/inertia-prefetch-policy.ts",
-                    "type": "registry:lib",
-                    "target": "@components/inertia-prefetch-policy.ts"
-                },
-                {
                     "path": "components/actions-dropdown-menu.tsx",
                     "type": "registry:component",
                     "target": "@components/actions-dropdown-menu.tsx"
@@ -153,7 +143,7 @@
                     "target": "@components/form-actions.tsx"
                 }
             ],
-            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`. Installs a local Pest source-integrity test at `tests/Unit/RegistrySourceIntegrityTest.php`.",
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
@@ -426,7 +416,7 @@
                     "target": "@components/comments/types.ts"
                 }
             ],
-            "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories.",
+            "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {
@@ -522,7 +512,7 @@
                     "target": "@components/documents/index.ts"
                 }
             ],
-            "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories.",
+            "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
             "dependencies": [
                 "@inertiajs/core@^3.3.1",
                 "@inertiajs/react@^3.3.1",
@@ -568,7 +558,7 @@
                     "target": "@components/activity/index.ts"
                 }
             ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
+            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
             "dependencies": ["lucide-react@^1.17.0"]
         },
         {
@@ -628,50 +618,6 @@
             "dependencies": ["@shadcn/react@0.1.0", "lucide-react@^1.17.0"]
         },
         {
-            "name": "notifications",
-            "type": "registry:item",
-            "title": "Notifications",
-            "description": "Backend-agnostic notification bell, unseen badge, and paginated popover inbox.",
-            "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/documents",
-                "badge",
-                "button",
-                "empty",
-                "item",
-                "popover",
-                "separator"
-            ],
-            "files": [
-                {
-                    "path": "components/notifications/types.ts",
-                    "type": "registry:file",
-                    "target": "@components/notifications/types.ts"
-                },
-                {
-                    "path": "components/notifications/notification-bell.tsx",
-                    "type": "registry:component",
-                    "target": "@components/notifications/notification-bell.tsx"
-                },
-                {
-                    "path": "components/notifications/notification-popover-content.tsx",
-                    "type": "registry:component",
-                    "target": "@components/notifications/notification-popover-content.tsx"
-                },
-                {
-                    "path": "components/notifications/notification-center.tsx",
-                    "type": "registry:component",
-                    "target": "@components/notifications/notification-center.tsx"
-                },
-                {
-                    "path": "components/notifications/index.ts",
-                    "type": "registry:file",
-                    "target": "@components/notifications/index.ts"
-                }
-            ],
-            "dependencies": ["lucide-react@^1.17.0"]
-        },
-        {
             "name": "foundations",
             "type": "registry:item",
             "title": "Foundations",
@@ -686,8 +632,7 @@
                 "GDanielRG/components/activity",
                 "GDanielRG/components/archive",
                 "GDanielRG/components/edit-history",
-                "GDanielRG/components/chat-display",
-                "GDanielRG/components/notifications"
+                "GDanielRG/components/chat-display"
             ],
             "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
         }

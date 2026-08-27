@@ -8,6 +8,33 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Removed** the unconsumed `notifications` bundle from the registry and
+  `foundations` until a real shared contract exists.
+- **Removed** the registry receipt/lock mechanism and its installed integrity test;
+  consumers own installed source without a strict byte lock.
+- **Fixed** nullable document metadata requiring non-null assertions in the shared
+  panel and removed the ExportDialog/Search dependency cycle.
+- **Fixed** `OptionalAddButton` focus handoff to avoid scrolling revealed content
+  or retaining rejected controlled open requests.
+- **Changed** `DialogFormLayout` descriptions to support structured content while
+  preserving Base UI's accessible dialog wiring.
+
+### snapshot-20260820-afe9faa — 2026-08-20
+
+- **Fixed** inline activity triggers to forward the consuming app's optional cache
+  invalidation tags to comment and document writes.
+
+### snapshot-20260820-1ce42a3 — 2026-08-20
+
+- **Changed** pagination and edit-history prefetching to use Inertia's native cache
+  duration instead of a registry-owned override.
+- **Added** optional `invalidateCacheTags` forwarding to every comment/document write
+  surface, keeping tag vocabularies and invalidation policy application-owned.
+- **Removed** the unused `comment.employee.user` fallback; consumers provide the
+  canonical `comment.author` shape.
+
 ### snapshot-20260818-30eacb3 — 2026-08-18
 
 - **Fixed** populated app-owned activity sections not participating in the

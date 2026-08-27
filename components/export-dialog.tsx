@@ -6,8 +6,8 @@ import {
     SendHorizonalIcon,
 } from 'lucide-react';
 import { useState } from 'react';
-import type { UseSearchReturn } from '@/components/search/search';
 import { SearchAppliedFilters } from '@/components/search/search-applied-filters';
+import type { UseSearchReturn } from '@/components/search/types';
 import type {
     DialogCopy,
     ExportCopy,
@@ -55,9 +55,7 @@ export function ExportDialog({
         ...appliedFilters?.filterValues,
     };
 
-    // A select default is part of the effective server query even when the
-    // URL omits it. Keep the scope described in the dialog and the submitted
-    // export payload aligned with that effective query.
+    // URL-omitted select defaults still belong to the effective server query.
     for (const searchFilter of searchFilters) {
         if (
             searchFilter.type === 'select' &&

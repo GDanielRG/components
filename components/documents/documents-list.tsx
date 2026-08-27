@@ -29,6 +29,7 @@ import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 interface DocumentDeleteDialogProps {
     documentId: number;
     destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
+    invalidateCacheTags?: string | string[];
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
     onClose?: () => void;
@@ -38,6 +39,7 @@ interface DocumentDeleteDialogProps {
 export function DocumentDeleteDialog({
     documentId,
     destroyDocumentAction,
+    invalidateCacheTags,
     isOpen,
     setIsOpen,
     onClose,
@@ -49,6 +51,7 @@ export function DocumentDeleteDialog({
         <Form
             action={destroyDocumentAction(documentId)}
             options={{ preserveScroll: true }}
+            invalidateCacheTags={invalidateCacheTags}
             disableWhileProcessing
             onSuccess={() => onSuccess?.()}
         >
@@ -128,6 +131,7 @@ interface DocumentsListDropdownProps {
     documents: Document[];
     destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
+    invalidateCacheTags?: string | string[];
     trigger?: ReactElement;
     compact?: boolean;
 }
@@ -136,6 +140,7 @@ export function DocumentsListDropdown({
     documents,
     destroyDocumentAction,
     showDocumentAction,
+    invalidateCacheTags,
     trigger,
     compact = false,
 }: DocumentsListDropdownProps) {
@@ -178,6 +183,7 @@ export function DocumentsListDropdown({
                 <DocumentDeleteDialog
                     documentId={documentToDelete}
                     destroyDocumentAction={destroyDocumentAction}
+                    invalidateCacheTags={invalidateCacheTags}
                     isOpen={deleteDocumentIsOpen}
                     setIsOpen={setDeleteDocumentIsOpen}
                     onClose={() => setDocumentToDelete(null)}

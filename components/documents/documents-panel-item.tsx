@@ -56,6 +56,7 @@ interface ExistingDocumentFormData {
 interface DocumentsPanelItemProps {
     document: ExistingDocumentData;
     readOnly?: boolean;
+    invalidateCacheTags?: string | string[];
     updateDocumentAction: (
         documentId: number,
     ) => RouteDefinition<'put' | 'patch' | 'post'>;
@@ -67,6 +68,7 @@ interface DocumentsPanelItemProps {
 export function DocumentsPanelItem({
     document,
     readOnly = false,
+    invalidateCacheTags,
     updateDocumentAction,
     showDocumentAction,
     onDelete,
@@ -163,6 +165,7 @@ export function DocumentsPanelItem({
     const submitUpdate = () => {
         form.submit({
             preserveScroll: true,
+            invalidateCacheTags,
             onSuccess: () => {
                 setIsEditingMetadata(false);
             },

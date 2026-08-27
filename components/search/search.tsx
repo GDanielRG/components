@@ -11,15 +11,12 @@ import {
 import type { SearchClearControl } from '@/components/search/query-utils';
 import { SearchAppliedFiltersDisclosure } from '@/components/search/search-applied-filters';
 import type {
-    SearchAppliedFiltersState,
     SearchFilterPopoverState,
     SearchRangeValue,
+    UseSearchReturn,
 } from '@/components/search/types';
 import { useSearchNavigation } from '@/components/search/use-search-navigation';
-import type {
-    SearchNavigationOptions,
-    SearchNavigationState,
-} from '@/components/search/use-search-navigation';
+import type { SearchNavigationOptions } from '@/components/search/use-search-navigation';
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchCopy } from '@/components/types/shared-component-copy';
 import type { RouteResolver } from '@/components/types/wayfinder';
@@ -29,16 +26,7 @@ import { Input } from '@/components/ui/input';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { cn } from '@/lib/utils';
 
-export interface UseSearchReturn extends SearchNavigationState {
-    filters: ServerSearchFilter[];
-    initialSearch: string;
-    filterValues: Record<string, string[]>;
-    selectValues: Record<string, string | null>;
-    rangeValues: Record<string, SearchRangeValue>;
-    hasActiveFilters: boolean;
-    appliedFilters: SearchAppliedFiltersState;
-    filterPopoverState: SearchFilterPopoverState;
-}
+export type { UseSearchReturn } from '@/components/search/types';
 
 export interface UseSearchOptions extends SearchNavigationOptions {
     filters?: ServerSearchFilter[];
@@ -118,13 +106,6 @@ export function useSearch(
     };
 }
 
-/**
- * Search input plus the inactive-filter disclosure. The "Filters" latch only
- * earns its click when it hides at least two controls: with more than one
- * unset (inactive) filter the latch renders and reveals them on demand
- * (sticky per pageview); with exactly one unset filter that filter renders
- * inline immediately, the slide-in reserved for latch-triggered reveals.
- */
 export function SearchControls({
     search,
     placeholder,
@@ -213,10 +194,6 @@ export function SearchControls({
     );
 }
 
-/**
- * Definition-driven controls without the free-text input. Public discovery
- * surfaces use this when search already lives in an editorial hero.
- */
 export function SearchFilterControls({
     search,
     className,

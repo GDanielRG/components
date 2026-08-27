@@ -65,10 +65,6 @@ const getBatchTotalBytes = (documents: NewDocumentData[]): number => {
     return documents.reduce((total, document) => total + document.file.size, 0);
 };
 
-/**
- * Project the internal batch onto the per-file view the panel renders. Progress
- * stays honest at the batch level; each item only reports its own state/errors.
- */
 const buildPendingUpload = (
     batch: DocumentUploadBatch | null,
 ): PendingDocumentUpload | null => {
@@ -128,11 +124,13 @@ const createFailedBatch = (
 interface UsePendingDocumentsUploadProps {
     maxDocumentKilobytes: number;
     storeAction: RouteDefinition<'post'>;
+    invalidateCacheTags?: string | string[];
 }
 
 export function usePendingDocumentsUpload({
     maxDocumentKilobytes,
     storeAction,
+    invalidateCacheTags,
 }: UsePendingDocumentsUploadProps) {
     const copy: DocumentsCopy = useSharedComponentCopy();
     const [documentBatch, setDocumentBatch] =
@@ -263,6 +261,7 @@ export function usePendingDocumentsUpload({
         router.post(storeAction, payload, {
             preserveScroll: true,
             forceFormData: true,
+            invalidateCacheTags,
             onCancelToken: (cancelToken: CancelToken) => {
                 updateBatchIfCurrent(batch.id, (currentBatch) => ({
                     ...currentBatch,

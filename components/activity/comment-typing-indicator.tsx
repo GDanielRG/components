@@ -10,11 +10,6 @@ import {
 import { Marker, MarkerContent, MarkerIcon } from '@/components/ui/marker';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
-/**
- * Minimal display shape for a user currently typing a comment. The app maps its
- * presence/whisper payload onto this; the registry component is presentational
- * and never sees channel names, policies, email, or draft content.
- */
 export interface CommentTypingIndicatorUser {
     id: number | string;
     name: string;
@@ -23,10 +18,7 @@ export interface CommentTypingIndicatorUser {
 
 const MAX_VISIBLE_AVATARS = 3;
 
-/**
- * Enter/leave duration. Kept in sync with the `duration-300` utility on the
- * animated wrapper below — change both together.
- */
+// Keep in sync with the wrapper's `duration-300` transition.
 const TYPING_TRANSITION_MS = 300;
 
 function avatarInitials(name: string): string {
@@ -43,16 +35,6 @@ function avatarInitials(name: string): string {
     return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
 }
 
-/**
- * Ephemeral "someone is typing" affordance for the end of the comments panel: a
- * grouped-avatar marker with a single shimmering localized line. Pure
- * presentation — no live wiring here.
- *
- * It stays mounted through its own leave transition (collapsing height + fade)
- * so it eases out instead of vanishing, retaining the last roster while it
- * closes. Once empty it unmounts and renders nothing; the parent list item is
- * `empty:hidden`, so a closed indicator leaves no gap behind.
- */
 export function CommentTypingIndicator({
     users,
 }: {
@@ -61,18 +43,14 @@ export function CommentTypingIndicator({
     const copy: ActivityCopy = useSharedComponentCopy();
     const hasTypers = users.length > 0;
 
-    // Stable content key so the presence effect reacts to roster *changes*, not
-    // to every fresh array identity from the parent (which would otherwise keep
-    // resetting the leave timer and pin a phantom row open).
+    // Key by roster content so fresh array identities cannot reset the leave timer.
     const rosterKey = users.map((user) => `${user.id}:${user.name}`).join('|');
 
     const [isMounted, setIsMounted] = useState(hasTypers);
-    // Last non-empty roster, held on screen while the marker animates closed.
+    // Retain the last non-empty roster during the leave transition.
     const [roster, setRoster] = useState(users);
 
-    // Mirror props into a ref so the key-driven presence effect can read the
-    // latest users without depending on the per-render array identity. Synced
-    // post-commit per the project's react-hooks/refs rule.
+    // The key drives the effect; the ref supplies its latest roster.
     const usersRef = useRef(users);
     useEffect(() => {
         usersRef.current = users;

@@ -14,8 +14,6 @@
         "registry:list": "shadcn list GDanielRG/components",
         "registry:check": "bun run format:check && bun run registry:validate && bun run registry:build",
         "registry:release": "bun scripts/release.mjs",
-        "parity:lock": "bun scripts/parity-lock.mjs",
-        "parity:report": "bun scripts/parity-report.mjs",
         "smoke": "bun scripts/smoke-baseline.mjs",
         "test": "vitest run"
     },

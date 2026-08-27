@@ -56,6 +56,7 @@ export function CommentsToggleButton({
 
 interface CommentsListPopoverProps {
     comments: Comment[];
+    invalidateCacheTags?: string | string[];
     trigger?: ReactElement | ((open: boolean) => ReactElement);
     destroyFormAction?: (commentId: number) => RouteDefinition<'delete'>;
     compact?: boolean;
@@ -64,6 +65,7 @@ interface CommentsListPopoverProps {
 
 export function CommentsListPopover({
     comments,
+    invalidateCacheTags,
     trigger,
     destroyFormAction,
     compact = false,
@@ -101,6 +103,7 @@ export function CommentsListPopover({
                 <ScrollArea className="max-h-72">
                     <CommentList
                         comments={comments}
+                        invalidateCacheTags={invalidateCacheTags}
                         destroyFormAction={destroyFormAction}
                         disableDateTooltip
                     />

@@ -19,19 +19,6 @@ Consumers provide:
 Locale and shell styling vary by app, so registry installs never own or overwrite
 these seams.
 
-## Installed provenance
-
-`registry.lock.json` records the human release `ref`, its full resolved `commit`,
-and hashes of registry-owned files. The ref identifies the upgrade wave; the commit
-keeps that receipt unambiguous if a local alias or tag later resolves differently.
-
-The core bundle installs `tests/Unit/RegistrySourceIntegrityTest.php`. It reads only
-the consumer's local receipt and source files: no sibling checkout, network request,
-or moving registry branch is part of the consumer test gate. Registry-owned files
-must remain byte-identical to the receipt. A deliberate app-specific fork belongs
-under `exceptions`, pinned by SHA-256 and documented with a reason, owner, and review
-date.
-
 ## Injected routes
 
 Comments receive `storeCommentForm`, `updateCommentForm`, and
@@ -55,10 +42,11 @@ and apply it in `visit`.
 
 ## Prefetch invalidation
 
-`AppPagination` prefetching is opt-in. Its default cache policy has a revalidation
-window; a scalar Inertia `cacheFor` value does not. Name prefetched resources with
-`cacheTags` and invalidate those tags after writes. `EditHistoryPopover` accepts
-`employeeCacheTags` for the same reason.
+`AppPagination` prefetching is opt-in and follows Inertia's native cache duration. Name
+prefetched resources with `cacheTags` and invalidate those tags after writes.
+`EditHistoryPopover` accepts `employeeCacheTags` for the same reason. The comments and
+documents mutation surfaces accept `invalidateCacheTags` and forward the app-owned tag
+or tag set to Inertia; the registry owns no tag vocabulary or invalidation policy.
 
 ## Live comment updates
 

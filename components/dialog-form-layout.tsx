@@ -16,10 +16,6 @@ interface DialogFormLayoutProps {
     children: ReactNode;
     footer?: ReactNode;
     showCancelAction?: boolean;
-    /**
-     * Optional element rendered in the header next to the close button.
-     * Use for discoverable secondary actions like history / activity.
-     */
     headerAction?: ReactNode;
 }
 
@@ -36,17 +32,15 @@ export function DialogFormLayout({
     return (
         <>
             <div className="grid shrink-0 auto-rows-min grid-cols-[1fr_auto] items-start gap-1.5 border-b px-6 pt-5 pb-6">
-                {/* Base UI derives the popup's aria-labelledby/aria-describedby
-                    from these two, and their default h2/p elements keep the
-                    heading semantics a plain div loses. The classes reproduce
-                    the card title/description scale: leading-normal and
-                    tracking-normal cancel DialogTitle's leading-none and the
-                    app.css h2 base tracking-tight. */}
                 <DialogTitle className="font-heading text-base leading-normal font-medium tracking-normal">
                     {title}
                 </DialogTitle>
                 {description ? (
-                    <DialogDescription className="text-sm leading-snug text-muted-foreground">
+                    /* Base UI defaults to p, but callers may provide structured metadata. */
+                    <DialogDescription
+                        render={<div />}
+                        className="text-sm leading-snug text-muted-foreground"
+                    >
                         {description}
                     </DialogDescription>
                 ) : null}

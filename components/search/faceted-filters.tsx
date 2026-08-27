@@ -41,8 +41,6 @@ function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;
 }
 
-// A named icon stays visible regardless of selection state; the default
-// FunnelPlus icon only shows while the filter is empty.
 const namedTriggerIcons = {
     archive: ArchiveIcon,
     featured: StarIcon,
@@ -65,8 +63,6 @@ export function FacetedFilters({
             {filters.map((filter) => {
                 const isOpen = openFilterKey === filter.key;
                 const selectedValues = filterValues[filter.key] ?? [];
-                // An empty value is the catalogue's "any" placeholder: absence
-                // of the filter already expresses it, so it is never selectable.
                 const options = filter.options.filter(
                     (option) => option.value !== '',
                 );

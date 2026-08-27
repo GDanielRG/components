@@ -1,6 +1,4 @@
-// Structural route types compatible with Laravel Wayfinder's generated output.
-// Defined inline (rather than re-exported from the app-owned `@/wayfinder`
-// barrel) so the registry does not require Wayfinder generation to install.
+// Inline structural route types keep registry installs independent of generated app output.
 
 type Method = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options';
 
@@ -37,18 +35,7 @@ export type RouteQueryOptions = {
     mergeQuery?: QueryParams;
 };
 
-/**
- * A route narrowed to the only thing most consumers do with it: CALL it.
- *
- * Wayfinder's generated route objects satisfy this structurally, and so does a
- * bare arrow that pre-binds arguments — which is what lets a caller pass
- * `(options) => CompanyController.show({ company: slug }, options)` instead of
- * building an `Object.assign` carrier whose only job is to supply `.url` and
- * `.form` members nothing ever reads.
- *
- * Prefer this everywhere. Reach for {@link RouteMutationFn} only when a consumer
- * genuinely reads `.form()` — spreading it onto an Inertia `<Form>`.
- */
+/** Callable-only route seam; use RouteMutationFn only when a consumer reads `.form()`. */
 export type RouteResolver<TMethod extends Method> = (
     options?: RouteQueryOptions,
 ) => RouteDefinition<TMethod>;

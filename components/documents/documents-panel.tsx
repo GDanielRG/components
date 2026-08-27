@@ -23,6 +23,7 @@ import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 interface DocumentsPanelProps {
     documents: Document[];
     readOnly?: boolean;
+    invalidateCacheTags?: string | string[];
     allowedDocumentMimes: string[];
     maxDocumentKilobytes: number;
     storeAction: RouteDefinition<'post'>;
@@ -47,14 +48,14 @@ const mapExistingDocument = (document: Document): ExistingDocumentData => {
         name: document.name,
         description: document.description,
         path: document.path,
-        formatted_created_at: document.formatted_created_at!,
-        formatted_created_at_diff: document.formatted_created_at_diff!,
+        formatted_created_at: document.formatted_created_at,
+        formatted_created_at_diff: document.formatted_created_at_diff,
         formatted_updated_at:
             document.formatted_updated_at ?? document.formatted_created_at,
         formatted_updated_at_diff:
             document.formatted_updated_at_diff ??
             document.formatted_created_at_diff,
-        created_at: document.created_at!,
+        created_at: document.created_at,
         updated_at: document.updated_at,
     };
 };
@@ -62,6 +63,7 @@ const mapExistingDocument = (document: Document): ExistingDocumentData => {
 export function useDocumentsPanel({
     documents,
     readOnly = false,
+    invalidateCacheTags,
     allowedDocumentMimes,
     maxDocumentKilobytes,
     storeAction,
@@ -92,6 +94,7 @@ export function useDocumentsPanel({
     } = usePendingDocumentsUpload({
         maxDocumentKilobytes,
         storeAction,
+        invalidateCacheTags,
     });
 
     const confirmDeleteDocument = (document: ExistingDocumentData) => {
@@ -108,6 +111,7 @@ export function useDocumentsPanel({
 
         router.delete(destroyDocumentAction(documentToDelete.id), {
             preserveScroll: true,
+            invalidateCacheTags,
             onFinish: () => {
                 setDeleteProcessing(false);
                 setDeleteIsOpen(false);
@@ -142,6 +146,7 @@ export function useDocumentsPanel({
                     <DocumentsPanelItem
                         key={`document-${document.id}-${document.updated_at ?? document.created_at}`}
                         document={document}
+                        invalidateCacheTags={invalidateCacheTags}
                         updateDocumentAction={updateDocumentAction}
                         showDocumentAction={showDocumentAction}
                         onDelete={

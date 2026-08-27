@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +8,15 @@ import {
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
+
+const FOCUSABLE_SELECTOR = [
+    'a[href]',
+    'button:not(:disabled)',
+    'input:not(:disabled):not([type="hidden"])',
+    'select:not(:disabled)',
+    'textarea:not(:disabled)',
+    '[tabindex]:not([tabindex="-1"])',
+].join(',');
 
 export function OptionalAddButton({
     children,
@@ -33,9 +42,37 @@ export function OptionalAddButton({
     contentClassName?: string;
 }) {
     const [internalOpen, setInternalOpen] = useState(defaultOpen);
+    const [focusRequest, setFocusRequest] = useState(0);
+    const contentRef = useRef<HTMLDivElement>(null);
+    const focusOnOpenRef = useRef(false);
     const isOpen = open ?? internalOpen;
 
+    useLayoutEffect(() => {
+        if (!focusOnOpenRef.current) {
+            return;
+        }
+
+        focusOnOpenRef.current = false;
+
+        if (!isOpen) {
+            return;
+        }
+
+        const content = contentRef.current;
+        const focusTarget =
+            content?.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? content;
+
+        // Opening hides the trigger; hand focus into the revealed content.
+        focusTarget?.focus({ preventScroll: true });
+    }, [focusRequest, isOpen]);
+
     const handleOpenChange = (nextOpen: boolean) => {
+        focusOnOpenRef.current = nextOpen;
+
+        if (nextOpen) {
+            setFocusRequest((request) => request + 1);
+        }
+
         setInternalOpen(nextOpen);
         onOpenChange?.(nextOpen);
     };
@@ -66,6 +103,7 @@ export function OptionalAddButton({
             </CollapsibleTrigger>
 
             <CollapsibleContent
+                render={<div ref={contentRef} tabIndex={-1} />}
                 className={cn(closedLabel && 'w-full', contentClassName)}
             >
                 {children}

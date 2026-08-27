@@ -18,16 +18,7 @@ import type {
 export type SearchVisitOptions = VisitHelperOptions;
 
 export interface SearchNavigationOptions {
-    /**
-     * The page props a search, sort or pagination visit has to refresh — the
-     * collection, its filter catalogue, and any counter rendered from the same
-     * query. Everything else (the permission-derived sidebar, translation
-     * catalogues, shared props) is left alone, so a keystroke no longer re-runs
-     * the whole controller.
-     *
-     * Only the page knows its own prop names, so there is no default. Pass `[]`
-     * to keep the full reload deliberately.
-     */
+    /** Props to reload; an empty list requests a full reload. */
     only: string[];
 }
 
@@ -83,10 +74,7 @@ export function useSearchNavigation(
         [url],
     );
     const [pendingVisit, setPendingVisit] = useState<PendingVisit | null>(null);
-    // Synchronous mirror of `pendingVisit`: a visit issued before React
-    // re-renders (rapid clear-then-filter clicks) must compose on the latest
-    // pending query, not on the last rendered state. Every write goes through
-    // `trackPendingVisit` so the ref and the state can never disagree.
+    // Compose rapid visits from the synchronous pending query, not the last React render.
     const pendingVisitRef = useRef<PendingVisit | null>(null);
     const nextVisitId = useRef(0);
     const baseQuery = useMemo(
@@ -147,8 +135,7 @@ export function useSearchNavigation(
             url: nextRoute.url,
         });
 
-        // The whole route object goes through, not just its url: it carries the
-        // real verb and the `component` Inertia needs to swap a cached page.
+        // Preserve the generated route's verb and component metadata, not only its URL.
         router.visit(nextRoute, {
             only,
             ...defaultVisitOptions,

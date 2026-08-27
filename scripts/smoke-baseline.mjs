@@ -86,18 +86,6 @@ try {
     };
     const installed = snapshot();
 
-    const integrityTestPath = 'tests/Unit/RegistrySourceIntegrityTest.php';
-    if (
-        installed[integrityTestPath] !==
-        fs.readFileSync(
-            path.join(ROOT, 'consumer/RegistrySourceIntegrityTest.php'),
-            'utf8',
-        )
-    )
-        throw new Error(
-            `core bundle did not install ${integrityTestPath} byte-identically`,
-        );
-
     // The documents bundle vendors its own `ui/spinner.tsx` (registry:ui) rather
     // than leaning on a bare `spinner` shadcn dependency, which would resolve
     // against a drifting upstream copy. Prove the registry-owned spinner is what

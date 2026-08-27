@@ -19,21 +19,19 @@ interface ActivityTriggersProps {
     destroyDocumentAction: (documentId: number) => RouteDefinition<'delete'>;
     showDocumentAction: (documentId: number) => RouteDefinition<'get'>;
     destroyCommentForm?: (commentId: number) => RouteDefinition<'delete'>;
+    invalidateCacheTags?: string | string[];
     compact?: boolean;
     className?: string;
     commentsTriggerDataTest?: string;
 }
 
-/**
- * Inline activity triggers: a documents dropdown + a comments popover, for
- * surfaces (table rows, lists) that reveal activity in place without a sidebar.
- */
 export function ActivityTriggers({
     comments,
     documents,
     destroyDocumentAction,
     showDocumentAction,
     destroyCommentForm,
+    invalidateCacheTags,
     compact = false,
     className,
     commentsTriggerDataTest,
@@ -44,11 +42,13 @@ export function ActivityTriggers({
                 documents={documents}
                 destroyDocumentAction={destroyDocumentAction}
                 showDocumentAction={showDocumentAction}
+                invalidateCacheTags={invalidateCacheTags}
                 compact={compact}
             />
             <CommentsListPopover
                 comments={comments}
                 destroyFormAction={destroyCommentForm}
+                invalidateCacheTags={invalidateCacheTags}
                 compact={compact}
                 dataTest={commentsTriggerDataTest}
             />
@@ -67,10 +67,6 @@ interface ActivitySidebarTriggersProps {
     className?: string;
 }
 
-/**
- * Sidebar activity triggers: documents + comments toggle buttons that open the
- * right-sidebar panels. Pair with `useCommentsDocumentsSidebar`.
- */
 export function ActivitySidebarTriggers({
     comments,
     documents,

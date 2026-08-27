@@ -327,6 +327,24 @@ describe('ActivitySidebarTriggers — read-only affordances', () => {
 });
 
 describe('useCommentsDocumentsSidebar — additional sections', () => {
+    it('renders persisted documents when optional timestamps are unavailable', () => {
+        render(
+            <AdditionalSectionHarness
+                documents={[
+                    makeExistingDocument({
+                        created_at: null,
+                        formatted_created_at: undefined,
+                        formatted_created_at_diff: undefined,
+                    }),
+                ]}
+            />,
+        );
+
+        expect(screen.getByTestId('active-panel')).toHaveTextContent(
+            'documents',
+        );
+    });
+
     it('hosts an app-owned section without extending the shared copy contract', () => {
         render(<AdditionalSectionHarness />);
 

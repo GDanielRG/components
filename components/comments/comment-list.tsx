@@ -37,6 +37,7 @@ import { cn } from '@/lib/utils';
 
 interface CommentListProps {
     comments: Comment[];
+    invalidateCacheTags?: string | string[];
     updateFormAction?: (commentId: number) => RouteDefinition<'put' | 'patch'>;
     editingCommentId?: number | null;
     onEdit?: (commentId: number) => void;
@@ -44,21 +45,14 @@ interface CommentListProps {
     destroyFormAction?: (commentId: number) => RouteDefinition<'delete'>;
     disableDateTooltip?: boolean;
     renderItem?: (item: ReactNode, comment: Comment) => ReactNode;
-    /**
-     * Override the list wrapper. Defaults to a `MessageGroup`. Pass an identity
-     * renderer (`(items) => items`) when each item is already wrapped (via
-     * `renderItem`) for an external container such as `MessageScrollerContent`,
-     * so the wrapped items become its direct DOM children. The scroller's
-     * height and anchor tracking measure direct children, and a
-     * `display: contents` wrapper between them generates no box — breaking those
-     * measurements — so the wrapper must be dropped, not flattened with CSS.
-     */
+    /** Drop the wrapper when an external scroller must measure each item as a direct child. */
     renderContainer?: (items: ReactNode) => ReactNode;
 }
 
 interface CommentDeleteDialogProps {
     commentId: number;
     destroyFormAction: (commentId: number) => RouteDefinition<'delete'>;
+    invalidateCacheTags?: string | string[];
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
 }
@@ -66,6 +60,7 @@ interface CommentDeleteDialogProps {
 function CommentDeleteDialog({
     commentId,
     destroyFormAction,
+    invalidateCacheTags,
     isOpen,
     setIsOpen,
 }: CommentDeleteDialogProps) {
@@ -76,6 +71,7 @@ function CommentDeleteDialog({
         <Form
             action={destroyRoute}
             options={{ preserveScroll: true }}
+            invalidateCacheTags={invalidateCacheTags}
             disableWhileProcessing
         >
             {({ processing, submit }) => (
@@ -105,6 +101,7 @@ function getInitials(name: string): string {
 
 interface CommentItemProps {
     comment: Comment;
+    invalidateCacheTags?: string | string[];
     updateFormAction?: (commentId: number) => RouteDefinition<'put' | 'patch'>;
     isEditing?: boolean;
     onEdit?: (commentId: number) => void;
@@ -115,6 +112,7 @@ interface CommentItemProps {
 
 function CommentItem({
     comment,
+    invalidateCacheTags,
     updateFormAction,
     isEditing = false,
     onEdit,
@@ -124,7 +122,7 @@ function CommentItem({
 }: CommentItemProps) {
     const copy: CommentsCopy & DialogCopy = useSharedComponentCopy();
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const authoredName = comment.author?.name ?? comment.employee?.user?.name;
+    const authoredName = comment.author?.name;
     const authorAvatar = comment.author?.avatar ?? null;
     const initials = authoredName ? getInitials(authoredName) : '?';
     const isCurrentUser = Boolean(comment.is_current_user);
@@ -231,6 +229,7 @@ function CommentItem({
                                 <CommentForm
                                     formAction={updateFormAction(comment.id)}
                                     mode="edit"
+                                    invalidateCacheTags={invalidateCacheTags}
                                     initialValue={comment.content}
                                     onCancel={onCancelEdit}
                                     autoFocus
@@ -268,6 +267,7 @@ function CommentItem({
                 <CommentDeleteDialog
                     commentId={comment.id}
                     destroyFormAction={destroyFormAction}
+                    invalidateCacheTags={invalidateCacheTags}
                     isOpen={deleteOpen}
                     setIsOpen={setDeleteOpen}
                 />
@@ -278,6 +278,7 @@ function CommentItem({
 
 export function CommentList({
     comments,
+    invalidateCacheTags,
     updateFormAction,
     editingCommentId = null,
     onEdit,
@@ -292,6 +293,7 @@ export function CommentList({
             <CommentItem
                 key={comment.id}
                 comment={comment}
+                invalidateCacheTags={invalidateCacheTags}
                 updateFormAction={updateFormAction}
                 isEditing={editingCommentId === comment.id}
                 onEdit={onEdit}

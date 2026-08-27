@@ -16,12 +16,6 @@ interface PendingDocumentItemProps {
     item: DocumentUploadItem;
 }
 
-/**
- * A pending upload rendered inline in the documents list, aligned with
- * persisted `DocumentsPanelItem` rows. The Attachment state drives the visuals:
- * `uploading` spins + shimmers the title, `error` flags the field message,
- * `idle` shows the file resting (ready to retry after a failed batch).
- */
 export function PendingDocumentItem({ item }: PendingDocumentItemProps) {
     return (
         <div data-document-item>

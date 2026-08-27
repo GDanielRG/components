@@ -25,8 +25,6 @@ function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;
 }
 
-// A named icon stays visible regardless of selection state; the default
-// FunnelPlus icon only shows while the filter is empty.
 const namedTriggerIcons = {
     archive: ArchiveIcon,
     featured: StarIcon,
@@ -40,19 +38,9 @@ type SelectFilterProps = {
     onOpenChange: (open: boolean) => void;
     onValueChange: (value: string | null) => void;
     testIdPrefix?: string;
-    /**
-     * Whether the value can be cleared back to "none". Required view controls
-     * (e.g. grouping / period) that always carry a default pass `false` so the
-     * popover omits the clear action and the trigger never reads as empty.
-     */
     clearable?: boolean;
 };
 
-/**
- * Single-value filter rendered as a Popover-with-form: the trigger mirrors the
- * faceted-filter chip and the popup holds a radio list. Picking an option
- * commits immediately; the clear action resets it (unless `clearable` is false).
- */
 export function SelectFilter({
     filter,
     value,
