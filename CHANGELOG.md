@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260827-de8d0e9 — 2026-08-27
 
 - **Removed** the unconsumed `notifications` bundle from the registry and
   `foundations` until a real shared contract exists.
