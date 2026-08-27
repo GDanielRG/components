@@ -23,32 +23,12 @@ import {
 } from '@/components/ui/tooltip';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
-/**
- * History is a discoverable feature: a small icon button placed inside an
- * edit form (or any context where a model is being inspected). Clicking it
- * opens a popover with the model's edit timeline.
- *
- * Per-locale changes render with a small locale badge so a single edit that
- * touches multiple languages shows as one change row per locale. Structured
- * fields (repeaters/matrices) render a server summary with expandable per-leaf
- * detail. Timestamps and enum/date values arrive server-formatted — this
- * component does no client date formatting.
- *
- * The causer link is a seam: pass `employeeHref` to turn viewable causer names
- * into `<Link>`s (registry files never import app-generated Wayfinder routes).
- * Omit it and every causer renders as plain text.
- */
 type EmployeeHref = (causerId: number) => string;
 
 type EditHistoryPopoverProps = {
     history: EditHistoryEntry[];
     dataTestPrefix?: string;
     employeeHref?: EmployeeHref;
-    /**
-     * Cache tags for the prefetched causer page, so the surface that edits an
-     * employee can drop those entries with `invalidateCacheTags`. Without them
-     * a prefetched causer page outlives the write that changed it.
-     */
     employeeCacheTags?: string | string[];
 };
 
@@ -207,9 +187,7 @@ function EditHistoryChangeLine({
         fieldValueLabels: copy.historyFieldValueLabels,
     };
 
-    // Structured fields (repeaters/matrices) carry a server-rendered summary
-    // plus optional expandable per-leaf detail, so they never render a raw
-    // object. A scalar change has no `summary` and renders as a from→to diff.
+    // A summary marks a structured change; scalar changes render from→to.
     if (change.summary !== undefined) {
         return (
             <EditHistoryStructuredChange

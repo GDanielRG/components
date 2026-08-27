@@ -20,11 +20,6 @@ type EmptyCardProps = Omit<
     content?: ReactNode;
 };
 
-/**
- * Bordered empty-state card: an optional icon medallion, title, subtitle and an
- * optional action slot. Pass `className` to extend the wrapper and omit `icon`
- * for icon-less states.
- */
 export function EmptyCard({
     className,
     icon: Icon,

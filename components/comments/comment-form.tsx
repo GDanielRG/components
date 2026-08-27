@@ -27,15 +27,9 @@ interface CommentFormProps {
     initialValue?: string;
     onCancel?: () => void;
     autoFocus?: boolean;
-    /**
-     * Fires on every textarea change with the current draft text. Used by live
-     * typing indicators. The input stays uncontrolled (Inertia `<Form>` owns the
-     * value); this is a passive notification, never a controlled-value setter.
-     */
+    /** Passive draft notification; the Inertia form keeps the textarea uncontrolled. */
     onContentChange?: (content: string) => void;
-    /** Fires when the textarea receives focus. */
     onContentFocus?: () => void;
-    /** Fires when the textarea loses focus. */
     onContentBlur?: () => void;
 }
 

@@ -1,7 +1,4 @@
 import type { CancelToken } from '@inertiajs/core';
-
-// Narrow structural contract for a persisted document. The consumer's richer
-// domain `Document` (an Eloquent resource) is assignable to this.
 export interface Document {
     id: number;
     name: string | null;
@@ -30,10 +27,6 @@ type ExistingDocumentModelFields =
     | 'formatted_updated_at'
     | 'formatted_updated_at_diff';
 
-type WithNonNullableFields<T, K extends keyof T> = Omit<T, K> & {
-    [P in K]-?: NonNullable<T[P]>;
-};
-
 export interface NewDocumentData {
     tempId: string;
     file: File;
@@ -41,9 +34,9 @@ export interface NewDocumentData {
     description?: string;
 }
 
-export type ExistingDocumentData = WithNonNullableFields<
-    Pick<Document, ExistingDocumentModelFields>,
-    'created_at' | 'formatted_created_at' | 'formatted_created_at_diff'
+export type ExistingDocumentData = Pick<
+    Document,
+    ExistingDocumentModelFields
 > & {
     can_be_deleted?: boolean;
     file?: File;
@@ -73,19 +66,8 @@ export interface DocumentUploadBatch {
     canRetry: boolean;
 }
 
-/**
- * Per-file lifecycle state surfaced to the panel. `uploading` shimmers while the
- * batch is in flight, `error` carries a field-level message, `idle` is a file
- * that rode along on a failed batch with no error of its own (ready to retry).
- */
 export type DocumentUploadItemState = 'uploading' | 'error' | 'idle';
 
-/**
- * A file-level view of a pending upload. The transport stays batch-level (one
- * multipart request); these units exist so the UI renders per file and a future
- * queued per-file transport can replace the hook internals without touching the
- * panel.
- */
 export interface DocumentUploadItem {
     tempId: string;
     file: File;
@@ -95,10 +77,6 @@ export interface DocumentUploadItem {
     errors: DocumentBatchItemErrors;
 }
 
-/**
- * Aggregate of an in-flight or failed upload: the per-file `items` plus the
- * honest batch-level progress/error fields the status control reads from.
- */
 export interface PendingDocumentUpload {
     items: DocumentUploadItem[];
     isUploading: boolean;

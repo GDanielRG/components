@@ -21,13 +21,6 @@ interface AppPaginationProps<T> extends PaginationPrefetchProps {
     paginatedData: PaginatedData<T>;
 }
 
-/**
- * Page links prefetch only when the consumer asks for it with `prefetch`.
- *
- * Name the resource with `cacheTags` so the writing surface can drop those
- * entries with `invalidateCacheTags`. Cache duration follows Inertia's native
- * default.
- */
 export function AppPagination<T>({
     paginatedData,
     prefetch,
@@ -36,7 +29,6 @@ export function AppPagination<T>({
     const { paginationNextLabel, paginationPreviousLabel } =
         useSharedComponentCopy();
 
-    // A boundary link renders as `#`, which is not a page worth prefetching.
     function prefetchProps(url: string | null): PaginationPrefetchProps {
         return url ? { prefetch, cacheTags } : {};
     }

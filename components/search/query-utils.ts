@@ -45,13 +45,7 @@ function normalizePath(path: string | string[]): string[] {
 }
 
 function parseQueryKey(key: string): { path: string[]; isArray: boolean } {
-    // PHP serializes nested URL arrays in two equivalent ways:
-    //   - `filter[type][]=hob`     (empty brackets)
-    //   - `filter[type][0]=hob`    (numeric index)
-    // Both round-trip through PHP as an array. The frontend must treat them
-    // the same so a re-render of a parsed URL doesn't silently drop array-ness
-    // (which previously caused 422s the moment a second chip filter was added
-    // on top of an existing indexed filter).
+    // PHP's [] and numeric-index encodings must round-trip as the same array.
     const isExplicitArray = key.endsWith('[]');
     const normalizedKey = isExplicitArray ? key.slice(0, -2) : key;
     const rawSegments = normalizedKey
@@ -296,9 +290,6 @@ export function getQueryValues(
     return typeof value === 'string' ? [value] : [];
 }
 
-/**
- * Apply a nested query patch to canonical query data.
- */
 export function buildQueryDataFromCurrent(
     currentData: SearchNavigationData,
     patch: SearchNavigationPatch,
@@ -341,11 +332,6 @@ export function resolveCurrentSearch(pageUrl: string): string {
     return currentSearch;
 }
 
-/**
- * The `filter[*]` values that clear a single filter. Both a filter's own
- * control and "clear all" build on this so clearing behaves identically
- * everywhere.
- */
 export function clearedFilterValues(
     filter: ServerSearchFilter,
 ): SearchNavigationPatch {

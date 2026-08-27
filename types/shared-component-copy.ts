@@ -1,17 +1,3 @@
-/**
- * Shared default copy consumed by the foundation components. The values are
- * app-owned (the consuming app's `@/hooks/use-shared-component-copy` provides
- * them in its own locale, or via i18n); the registry only ships these contracts
- * so the components can read the keys type-safely without baking in a default
- * locale.
- *
- * The contract is split into small slices so a component depends only on the
- * keys it actually uses — a dialog needs `DialogCopy`, not the whole surface.
- * `SharedComponentCopy` composes every slice for an app that installs the full
- * foundation; a consumer that installs only one area can type its hook against
- * just that area's slice(s).
- */
-
 export interface DialogCopy {
     dialogCancel: string;
     dialogClose: string;
@@ -42,16 +28,9 @@ export interface HistoryCopy {
     historyAriaLabel: string;
     historyBooleanFalse: string;
     historyBooleanTrue: string;
-    /** Label shown while a structured field's per-leaf detail is expanded. */
     historyDetailHide: string;
-    /** Trigger label to expand a structured field's per-leaf detail. */
     historyDetailShow: (count: number) => string;
     historyEmptyValue: string;
-    /**
-     * Per-field value overrides, keyed by field then raw value (e.g. enum or
-     * boolean), so a change row can show a human label instead of the raw value.
-     * Domain-specific entries live in the app-owned copy hook; empty is fine.
-     */
     historyFieldValueLabels: Record<string, Record<string, string>>;
     historySystem: string;
     historyTitle: string;
@@ -85,12 +64,7 @@ export interface ActivityCopy {
     activityDocumentsTab: string;
     activityScrollToLatest: string;
     activityToggleSidebar: string;
-    /**
-     * Ephemeral "someone is typing" line for the comments panel. Receives the
-     * display names of the users currently typing (already filtered to exclude
-     * the current user); returns one concise localized line. Never receives
-     * email or draft content.
-     */
+    /** Receives display names only; never email addresses or draft content. */
     commentsTyping: (names: string[]) => string;
 }
 

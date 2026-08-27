@@ -12,28 +12,12 @@ import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
 import { cn } from '@/lib/utils';
 
 interface TimestampWithRevealProps {
-    /**
-     * Relative label rendered inline (e.g. "2h ago"). The reveal surface
-     * exposes the absolute timestamp.
-     */
     relativeLabel: string;
-    /** Absolute timestamp shown on hover/focus reveal. */
     absoluteLabel: string;
-    /**
-     * Force the openOnHover Popover reveal instead of the default Tooltip,
-     * regardless of viewport. Combined with the sidebar-sheet breakpoint so a
-     * caller already inside a sidebar sheet always gets the Popover.
-     */
     disableDateTooltip?: boolean;
     className?: string;
 }
 
-/**
- * Relative timestamp that reveals the absolute date on reveal: a desktop
- * `Tooltip`, or an `openOnHover` `Popover` when inside the sidebar sheet (the
- * Tooltip is unreliable inside the sheet's portal stacking context). The reveal
- * surface is chosen by `disableDateTooltip || useIsSidebarSheet()`.
- */
 export function TimestampWithReveal({
     relativeLabel,
     absoluteLabel,
@@ -57,6 +41,7 @@ export function TimestampWithReveal({
         </span>
     );
 
+    // Use a popover inside sidebar sheets where tooltip portal stacking is unreliable.
     if (disableDateTooltip || isSidebarSheet) {
         return (
             <Popover>

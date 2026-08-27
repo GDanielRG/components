@@ -31,11 +31,6 @@ proves a reinstall is byte-identical. This is the repository's real type check;
 Vitest transpiles TypeScript without checking it. Wayfinder compatibility declarations
 therefore live in `tests/fixture-consumer/resources/js/wayfinder-contract.ts`.
 
-`bun run parity:report` is an advisory workspace report and always exits successfully.
-It hashes each consumer's installed registry-owned and exception-pinned files against
-that consumer's receipt, so a zero-exception row cannot conceal undeclared edits. The
-installed `RegistrySourceIntegrityTest` is the blocking local counterpart.
-
 ## Release
 
 Published refs are immutable. Never move or delete one; release a new ref instead.
@@ -66,35 +61,6 @@ The SHA suffix identifies the clean source commit before the pinned release comm
 The helper verifies that provenance. Keep pending notes under `### Unreleased`; after
 publishing, backfill that heading with the exact snapshot ref in a new default-branch
 commit. Published headings are frozen.
-
-### Consumer parity
-
-Write each consumer receipt from the published snapshot:
-
-```sh
-bun run parity:lock -- ../amnsa ../grupo-3t --ref snapshot-20260726-1a2b3c4
-```
-
-During an upgrade wave, add `--install` to copy only the declared bundles'
-registry-owned files before the receipt is written. It deliberately does not
-overwrite stock ShadCN primitives or app-owned seams, and it preserves explicit
-exceptions:
-
-```sh
-bun run parity:lock -- ../amnsa ../grupo-3t --ref snapshot-20260726-1a2b3c4 --install
-```
-
-Hashes come from the registry, never the consumer files. Omitting `--ref` records a
-`worktree@<sha>` receipt for unreleased propagation; consumer CI rejects that form.
-With `--ref`, pass either an exact annotated snapshot/SemVer tag or a full 40-character
-commit SHA; moving names such as `main` and `HEAD` are rejected. Every receipt stores
-both its human `ref` and the full resolved `commit`. For a worktree receipt, `commit`
-is the current full HEAD while file hashes represent the working tree. The first
-receipt needs `--bundles`; later runs retain declared bundles and explicit exceptions.
-
-The source-integrity test is itself registry-owned and locked. Installing `core`
-therefore restores both the shared source and the local invariant that protects it;
-consumers do not maintain copied parity-test logic by hand.
 
 ### Production
 

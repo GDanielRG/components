@@ -16,13 +16,6 @@ type ArchiveConfirmationFormProps = Omit<
     confirmLabel?: string;
 };
 
-/**
- * Archive analog of {@link DestroyConfirmationForm}: pairs an Inertia `<Form>`
- * with the registry {@link ArchiveConfirmationModal}. Archive reuses the DELETE
- * route, so callers pass the resource's `destroy` action as `action`.
- * Validation errors surface as a toast because this confirmation surface has
- * no input to anchor an inline message to.
- */
 export function ArchiveConfirmationForm({
     open,
     onOpenChange,

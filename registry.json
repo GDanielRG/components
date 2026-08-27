@@ -18,11 +18,6 @@
             ],
             "files": [
                 {
-                    "path": "consumer/RegistrySourceIntegrityTest.php",
-                    "type": "registry:file",
-                    "target": "tests/Unit/RegistrySourceIntegrityTest.php"
-                },
-                {
                     "path": "types/options.ts",
                     "type": "registry:file",
                     "target": "@components/types/options.ts"
@@ -148,7 +143,7 @@
                     "target": "@components/form-actions.tsx"
                 }
             ],
-            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`. Installs a local Pest source-integrity test at `tests/Unit/RegistrySourceIntegrityTest.php`.",
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
             "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
         },
         {

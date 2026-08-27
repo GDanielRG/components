@@ -1,16 +1,4 @@
 // @vitest-environment jsdom
-//
-// Accessibility regression gate for the DialogFormLayout header. The layout
-// used to render the title through `CardTitle` (a plain `div`) and the
-// description through `CardDescription`, which cost the dialog its `h2` / `p`
-// semantics. It now renders Base UI's `DialogTitle` / `DialogDescription` in
-// their default elements, so this mounts the REAL layout inside a REAL Base UI
-// dialog and proves:
-//   1. the popup's `aria-labelledby` resolves to the element carrying the
-//      visible title text, and that element is an `h2`;
-//   2. `aria-describedby` resolves to the `p` carrying the description;
-//   3. `aria-describedby` is ABSENT when no description is passed (a dangling
-//      reference is worse than none).
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DialogFormLayout } from '@/components/dialog-form-layout';
@@ -22,7 +10,7 @@ const title = 'Editar empleado';
 const description = 'Actualiza los datos del empleado.';
 
 function renderDialogForm(
-    props: { description?: string; footer?: React.ReactNode } = {},
+    props: { description?: React.ReactNode; footer?: React.ReactNode } = {},
 ) {
     render(
         <Dialog open={true}>
@@ -57,18 +45,28 @@ describe('DialogFormLayout — header semantics', () => {
         expect(label).not.toBeNull();
         expect(label).toHaveTextContent(title);
         expect(label?.tagName).toBe('H2');
-        // The title must be the accessible name, not merely present somewhere.
         expect(popup).toHaveAccessibleName(title);
     });
 
-    it('describes the popup with the description paragraph when one is passed', () => {
+    it('describes the popup with the description element when one is passed', () => {
         const popup = renderDialogForm({ description });
         const describedBy = resolveReference(popup, 'aria-describedby');
 
         expect(describedBy).not.toBeNull();
         expect(describedBy).toHaveTextContent(description);
-        expect(describedBy?.tagName).toBe('P');
+        expect(describedBy?.tagName).toBe('DIV');
         expect(popup).toHaveAccessibleDescription(description);
+    });
+
+    it('accepts structured description content without invalid paragraph nesting', () => {
+        const popup = renderDialogForm({
+            description: <div data-test="metadata">Metadata</div>,
+        });
+        const describedBy = resolveReference(popup, 'aria-describedby');
+
+        expect(describedBy?.tagName).toBe('DIV');
+        expect(screen.getByTestId('metadata')).toBeVisible();
+        expect(popup).toHaveAccessibleDescription('Metadata');
     });
 
     it('omits aria-describedby entirely when no description is passed', () => {

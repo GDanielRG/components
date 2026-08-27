@@ -18,11 +18,6 @@ interface DocumentUploadStatusProps {
     onCancel: () => void;
 }
 
-/**
- * Compact batch-level status for a pending upload. The per-file rows live inline
- * in the documents list; this only owns the honest group-level progress while
- * uploading, and the error + retry/dismiss affordance on failure.
- */
 export function DocumentUploadStatus({
     upload,
     onRetry,

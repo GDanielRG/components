@@ -48,14 +48,14 @@ const mapExistingDocument = (document: Document): ExistingDocumentData => {
         name: document.name,
         description: document.description,
         path: document.path,
-        formatted_created_at: document.formatted_created_at!,
-        formatted_created_at_diff: document.formatted_created_at_diff!,
+        formatted_created_at: document.formatted_created_at,
+        formatted_created_at_diff: document.formatted_created_at_diff,
         formatted_updated_at:
             document.formatted_updated_at ?? document.formatted_created_at,
         formatted_updated_at_diff:
             document.formatted_updated_at_diff ??
             document.formatted_created_at_diff,
-        created_at: document.created_at!,
+        created_at: document.created_at,
         updated_at: document.updated_at,
     };
 };

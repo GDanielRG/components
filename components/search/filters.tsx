@@ -68,10 +68,7 @@ export function Filters(props: FiltersProps) {
         (filter): filter is ServerSearchChoiceFilter =>
             (filter.type ?? 'multiselect') === 'multiselect',
     );
-    // Selects and ranges render interleaved in the server catalog's order —
-    // the server deliberately positions entries (e.g. the archive lifecycle
-    // filter is always last), so grouping by control type here would
-    // silently reorder them.
+    // Preserve server catalog order; grouping by control type changes filter priority.
     const orderedFilters = scopedFilters.filter(
         (
             filter,
@@ -132,7 +129,6 @@ export function Filters(props: FiltersProps) {
         setOpenFilterKey(nextOpenFilterKey);
     }
 
-    // Multiselect-only (most index pages): preserve the historical markup.
     if (orderedFilters.length === 0) {
         return (
             <FacetedFilters

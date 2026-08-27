@@ -52,11 +52,6 @@ export type ActivitySidebarSectionId<AdditionalId extends string = never> =
     | CommentsDocumentsSidebarTab
     | AdditionalId;
 
-/**
- * App-owned content that joins the registry-owned comments/documents sidebar.
- * The registry owns the shell and responsive behaviour; the consumer owns the
- * section's domain copy, icon, content, actions, and test selectors.
- */
 export interface ActivitySidebarAdditionalSection<Id extends string = string> {
     id: Exclude<Id, CommentsDocumentsSidebarTab>;
     label: string;
@@ -94,26 +89,10 @@ interface UseCommentsDocumentsSidebarProps<AdditionalId extends string> {
     updateCommentForm: (commentId: number) => RouteDefinition<'put' | 'patch'>;
     destroyCommentForm: (commentId: number) => RouteDefinition<'delete'>;
     renderCommentLiveUpdates?: RenderCommentLiveUpdates;
-    /**
-     * Optional ephemeral typing indicator appended after the comment list as a
-     * trailing scroller item. Pass a falsy value (e.g. `null`) when nobody is
-     * typing so the scroller never reserves an empty item. App-owned: the
-     * registry only places it.
-     */
     commentTypingIndicator?: ReactNode;
-    /**
-     * Fires with the create-composer draft on every change, for live typing
-     * presence. Wired to the create `CommentForm`'s `onContentChange`.
-     */
     onCommentDraftChange?: (content: string) => void;
-    /** Fires when the create-composer textarea receives focus. */
     onCommentDraftFocus?: () => void;
-    /** Fires when the create-composer textarea loses focus. */
     onCommentDraftBlur?: () => void;
-    /**
-     * Fires whenever the create composer closes (cancel, successful submit, tab
-     * change, or sidebar close) so the app can stop broadcasting typing.
-     */
     onCommentComposerClose?: () => void;
     additionalSections?: readonly ActivitySidebarAdditionalSection<AdditionalId>[];
     defaultOpen?: boolean;

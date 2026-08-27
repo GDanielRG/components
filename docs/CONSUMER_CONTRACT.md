@@ -19,19 +19,6 @@ Consumers provide:
 Locale and shell styling vary by app, so registry installs never own or overwrite
 these seams.
 
-## Installed provenance
-
-`registry.lock.json` records the human release `ref`, its full resolved `commit`,
-and hashes of registry-owned files. The ref identifies the upgrade wave; the commit
-keeps that receipt unambiguous if a local alias or tag later resolves differently.
-
-The core bundle installs `tests/Unit/RegistrySourceIntegrityTest.php`. It reads only
-the consumer's local receipt and source files: no sibling checkout, network request,
-or moving registry branch is part of the consumer test gate. Registry-owned files
-must remain byte-identical to the receipt. A deliberate app-specific fork belongs
-under `exceptions`, pinned by SHA-256 and documented with a reason, owner, and review
-date.
-
 ## Injected routes
 
 Comments receive `storeCommentForm`, `updateCommentForm`, and

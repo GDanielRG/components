@@ -25,10 +25,6 @@ interface ActivityTriggersProps {
     commentsTriggerDataTest?: string;
 }
 
-/**
- * Inline activity triggers: a documents dropdown + a comments popover, for
- * surfaces (table rows, lists) that reveal activity in place without a sidebar.
- */
 export function ActivityTriggers({
     comments,
     documents,
@@ -71,10 +67,6 @@ interface ActivitySidebarTriggersProps {
     className?: string;
 }
 
-/**
- * Sidebar activity triggers: documents + comments toggle buttons that open the
- * right-sidebar panels. Pair with `useCommentsDocumentsSidebar`.
- */
 export function ActivitySidebarTriggers({
     comments,
     documents,

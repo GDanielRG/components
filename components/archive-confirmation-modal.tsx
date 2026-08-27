@@ -17,14 +17,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
-/**
- * Confirmation dialog for archiving a record (a soft delete reused as archive).
- *
- * Mirrors the registry-owned {@link DeleteConfirmationModal} but with archive
- * semantics: a destructive action tone and the `ArchiveIcon`, because archiving
- * removes the record from the working dataset while keeping it reachable
- * read-only with an archive badge.
- */
 export function ArchiveConfirmationModal({
     open,
     onOpenChange,

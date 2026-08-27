@@ -1,6 +1,9 @@
 import type { ServerSearchFilter } from '@/components/types/server-search';
 import type { SearchNavigationPatch } from './query-utils';
-import type { SearchNavigationController } from './use-search-navigation';
+import type {
+    SearchNavigationController,
+    SearchNavigationState,
+} from './use-search-navigation';
 
 export interface SearchRangeValue {
     from: string | null;
@@ -20,4 +23,15 @@ export interface SearchAppliedFiltersState {
     navigation: SearchNavigationController;
     searchValue: string;
     clearAllPatch: SearchNavigationPatch;
+}
+
+export interface UseSearchReturn extends SearchNavigationState {
+    filters: ServerSearchFilter[];
+    initialSearch: string;
+    filterValues: Record<string, string[]>;
+    selectValues: Record<string, string | null>;
+    rangeValues: Record<string, SearchRangeValue>;
+    hasActiveFilters: boolean;
+    appliedFilters: SearchAppliedFiltersState;
+    filterPopoverState: SearchFilterPopoverState;
 }

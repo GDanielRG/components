@@ -65,10 +65,6 @@ const getBatchTotalBytes = (documents: NewDocumentData[]): number => {
     return documents.reduce((total, document) => total + document.file.size, 0);
 };
 
-/**
- * Project the internal batch onto the per-file view the panel renders. Progress
- * stays honest at the batch level; each item only reports its own state/errors.
- */
 const buildPendingUpload = (
     batch: DocumentUploadBatch | null,
 ): PendingDocumentUpload | null => {

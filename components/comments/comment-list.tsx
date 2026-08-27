@@ -45,15 +45,7 @@ interface CommentListProps {
     destroyFormAction?: (commentId: number) => RouteDefinition<'delete'>;
     disableDateTooltip?: boolean;
     renderItem?: (item: ReactNode, comment: Comment) => ReactNode;
-    /**
-     * Override the list wrapper. Defaults to a `MessageGroup`. Pass an identity
-     * renderer (`(items) => items`) when each item is already wrapped (via
-     * `renderItem`) for an external container such as `MessageScrollerContent`,
-     * so the wrapped items become its direct DOM children. The scroller's
-     * height and anchor tracking measure direct children, and a
-     * `display: contents` wrapper between them generates no box — breaking those
-     * measurements — so the wrapper must be dropped, not flattened with CSS.
-     */
+    /** Drop the wrapper when an external scroller must measure each item as a direct child. */
     renderContainer?: (items: ReactNode) => ReactNode;
 }
 
