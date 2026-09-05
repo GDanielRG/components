@@ -109,7 +109,9 @@ function DeleteProcessingReporter({
     // cannot re-run the effect; every `true` is paired with a `false` on
     // completion or unmount.
     const onProcessingChangeRef = useRef(onProcessingChange);
-    onProcessingChangeRef.current = onProcessingChange;
+    useEffect(() => {
+        onProcessingChangeRef.current = onProcessingChange;
+    });
 
     useEffect(() => {
         if (!processing) {
