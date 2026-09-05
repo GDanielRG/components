@@ -65,7 +65,10 @@ export interface ActivitySidebarAdditionalSection<Id extends string = string> {
     countDataTest?: string;
 }
 
-type RenderCommentLiveUpdates = (state: { enabled: boolean }) => ReactNode;
+type RenderCommentLiveUpdates = (state: {
+    enabled: boolean;
+    visible: boolean;
+}) => ReactNode;
 
 interface UseCommentsDocumentsSidebarStateProps<AdditionalId extends string> {
     defaultOpen?: boolean;
@@ -163,6 +166,15 @@ export function useCommentsDocumentsSidebar<
         null,
     );
     const [isCreatingComment, setIsCreatingComment] = useState(false);
+    const [pendingCommentDeletions, setPendingCommentDeletions] = useState(0);
+
+    if (
+        editingCommentId !== null &&
+        !comments.some((comment) => comment.id === editingCommentId)
+    ) {
+        setEditingCommentId(null);
+    }
+
     const populatedAdditionalSection = additionalSections.find(
         (section) => (section.count ?? 0) > 0,
     );
@@ -259,6 +271,10 @@ export function useCommentsDocumentsSidebar<
         setEditingCommentId(commentId);
     };
 
+    const handleDeleteProcessingChange = (processing: boolean) => {
+        setPendingCommentDeletions((count) => count + (processing ? 1 : -1));
+    };
+
     return {
         documentCount: documentsPanel.count,
         activePanel:
@@ -277,7 +293,10 @@ export function useCommentsDocumentsSidebar<
                 {!readOnly &&
                     renderCommentLiveUpdates?.({
                         enabled:
-                            !isCreatingComment && editingCommentId === null,
+                            !isCreatingComment &&
+                            editingCommentId === null &&
+                            pendingCommentDeletions === 0,
+                        visible: open && activeTab === 'comments',
                     })}
                 <CommentsDocumentsSidebar
                     open={open}
@@ -305,6 +324,9 @@ export function useCommentsDocumentsSidebar<
                                         readOnly
                                             ? undefined
                                             : destroyCommentForm
+                                    }
+                                    onDeleteProcessingChange={
+                                        handleDeleteProcessingChange
                                     }
                                     renderContainer={(items) => items}
                                     renderItem={(item, comment) => (

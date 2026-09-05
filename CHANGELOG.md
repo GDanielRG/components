@@ -8,6 +8,15 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Added** `visible` to the activity sidebar's `renderCommentLiveUpdates` state,
+  reporting whether the comments tab is open, beside the existing `enabled`.
+- **Fixed** `renderCommentLiveUpdates` reporting `enabled` while a comment deletion
+  was still in flight.
+- **Fixed** the activity sidebar staying in comment edit mode, with live updates
+  paused, after the edited row left the `comments` prop.
+
 ### snapshot-20260827-de8d0e9 — 2026-08-27
 
 - **Removed** the unconsumed `notifications` bundle from the registry and

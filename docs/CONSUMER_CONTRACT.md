@@ -51,10 +51,14 @@ or tag set to Inertia; the registry owns no tag vocabulary or invalidation polic
 ## Live comment updates
 
 The activity sidebar owns the comments/documents shell and accepts
-`renderCommentLiveUpdates({ enabled })`. Consumers keep broadcast clients, generated
-channel helpers, and Echo/Reverb hooks app-owned. The sidebar passes `enabled=false`
-while a comment draft is being created or edited so a remote reload cannot replace
-local input. Pass `readOnly` for archived or otherwise immutable resources; the
+`renderCommentLiveUpdates({ enabled, visible })`. Consumers keep broadcast clients,
+generated channel helpers, and Echo/Reverb hooks app-owned. The sidebar passes
+`enabled=false` while a comment draft is being created or edited, or a comment
+deletion is in flight, so a remote reload cannot replace local input; an edit whose
+row disappears from `comments` is dropped so updates never stay paused without an
+editor. `visible` is true while the sidebar is open on the comments tab, letting
+consumers scope periodic reads to the visible surface while a subscription stays
+mounted. Pass `readOnly` for archived or otherwise immutable resources; the
 sidebar then withholds comment/document mutations, upload controls, typing presence,
 and live-update subscriptions while retaining download access.
 
