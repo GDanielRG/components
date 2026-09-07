@@ -1,6 +1,6 @@
 import { Form } from '@inertiajs/react';
 import { MoreHorizontalIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { TimestampWithReveal } from '@/components/chat/timestamp-with-reveal';
@@ -43,6 +43,8 @@ interface CommentListProps {
     onEdit?: (commentId: number) => void;
     onCancelEdit?: () => void;
     destroyFormAction?: (commentId: number) => RouteDefinition<'delete'>;
+    /** Balanced start/end notifications for each in-flight delete request. */
+    onDeleteProcessingChange?: (processing: boolean) => void;
     disableDateTooltip?: boolean;
     renderItem?: (item: ReactNode, comment: Comment) => ReactNode;
     /** Drop the wrapper when an external scroller must measure each item as a direct child. */
@@ -55,6 +57,7 @@ interface CommentDeleteDialogProps {
     invalidateCacheTags?: string | string[];
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
+    onProcessingChange?: (processing: boolean) => void;
 }
 
 function CommentDeleteDialog({
@@ -63,6 +66,7 @@ function CommentDeleteDialog({
     invalidateCacheTags,
     isOpen,
     setIsOpen,
+    onProcessingChange,
 }: CommentDeleteDialogProps) {
     const copy: CommentsCopy & DialogCopy = useSharedComponentCopy();
     const destroyRoute = destroyFormAction(commentId);
@@ -75,17 +79,53 @@ function CommentDeleteDialog({
             disableWhileProcessing
         >
             {({ processing, submit }) => (
-                <DeleteConfirmationModal
-                    open={isOpen || processing}
-                    onOpenChange={setIsOpen}
-                    title={copy.commentsDeleteTitle}
-                    description={copy.commentsDeleteDescription}
-                    processing={processing}
-                    onDestroy={submit}
-                />
+                <>
+                    <DeleteProcessingReporter
+                        processing={processing}
+                        onProcessingChange={onProcessingChange}
+                    />
+                    <DeleteConfirmationModal
+                        open={isOpen || processing}
+                        onOpenChange={setIsOpen}
+                        title={copy.commentsDeleteTitle}
+                        description={copy.commentsDeleteDescription}
+                        processing={processing}
+                        onDestroy={submit}
+                    />
+                </>
             )}
         </Form>
     );
+}
+
+function DeleteProcessingReporter({
+    processing,
+    onProcessingChange,
+}: {
+    processing: boolean;
+    onProcessingChange?: (processing: boolean) => void;
+}) {
+    // The callback is read through a ref so an unstable consumer callback
+    // cannot re-run the effect; every `true` is paired with a `false` on
+    // completion or unmount.
+    const onProcessingChangeRef = useRef(onProcessingChange);
+    useEffect(() => {
+        onProcessingChangeRef.current = onProcessingChange;
+    });
+
+    useEffect(() => {
+        if (!processing) {
+            return;
+        }
+
+        onProcessingChangeRef.current?.(true);
+
+        return () => {
+            onProcessingChangeRef.current?.(false);
+        };
+    }, [processing]);
+
+    return null;
 }
 
 function getInitials(name: string): string {
@@ -107,6 +147,7 @@ interface CommentItemProps {
     onEdit?: (commentId: number) => void;
     onCancelEdit?: () => void;
     destroyFormAction?: (commentId: number) => RouteDefinition<'delete'>;
+    onDeleteProcessingChange?: (processing: boolean) => void;
     disableDateTooltip?: boolean;
 }
 
@@ -118,6 +159,7 @@ function CommentItem({
     onEdit,
     onCancelEdit,
     destroyFormAction,
+    onDeleteProcessingChange,
     disableDateTooltip = false,
 }: CommentItemProps) {
     const copy: CommentsCopy & DialogCopy = useSharedComponentCopy();
@@ -270,6 +312,7 @@ function CommentItem({
                     invalidateCacheTags={invalidateCacheTags}
                     isOpen={deleteOpen}
                     setIsOpen={setDeleteOpen}
+                    onProcessingChange={onDeleteProcessingChange}
                 />
             )}
         </div>
@@ -284,6 +327,7 @@ export function CommentList({
     onEdit,
     onCancelEdit,
     destroyFormAction,
+    onDeleteProcessingChange,
     disableDateTooltip = false,
     renderItem,
     renderContainer,
@@ -299,6 +343,7 @@ export function CommentList({
                 onEdit={onEdit}
                 onCancelEdit={onCancelEdit}
                 destroyFormAction={destroyFormAction}
+                onDeleteProcessingChange={onDeleteProcessingChange}
                 disableDateTooltip={disableDateTooltip}
             />
         );

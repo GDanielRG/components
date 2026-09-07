@@ -3,12 +3,16 @@
 // Render-level regression gate for the W2 shadcn rebuild of the comments and
 // documents surfaces. This mounts the REAL rebuilt components (CommentList,
 // DocumentsPanelItem, DocumentItem) and the REAL chat-display primitive
-// (Attachment) — only the stock shadcn primitives and the two consumer-owned
-// contracts are stubbed (see tests/render/stubs + vitest.config.ts). It proves:
+// (Attachment) — only the stock shadcn primitives, the two consumer-owned
+// contracts (see tests/render/stubs + vitest.config.ts), and Inertia's `Form`
+// (a render-prop double whose `processing` the tests control) are stubbed. It
+// proves:
 //   1. the behavioural data-test ids survive the rebuild;
 //   2. the can_be_managed edit/delete gating renders when allowed and is omitted
 //      when not;
-//   3. a document row's `state` surfaces as data-state for uploading vs error.
+//   3. a document row's `state` surfaces as data-state for uploading vs error;
+//   4. the sidebar's live-update state tracks surface visibility, drafts, and
+//      in-flight deletions.
 import {
     act,
     cleanup,
@@ -16,6 +20,7 @@ import {
     render,
     screen,
 } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ActivitySidebarTriggers } from '@/components/activity/activity-triggers';
 import { CommentTypingIndicator } from '@/components/activity/comment-typing-indicator';
@@ -33,13 +38,40 @@ import { Attachment } from '@/components/ui/attachment';
 import { ClipboardListIcon } from 'lucide-react';
 
 const sidebarSheetState = vi.hoisted(() => ({ current: false }));
+const formState = vi.hoisted(() => ({ processing: false }));
 
 vi.mock('@/hooks/use-sidebar-sheet', () => ({
     useIsSidebarSheet: () => sidebarSheetState.current,
 }));
 
+vi.mock('@inertiajs/react', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@inertiajs/react')>()),
+    Form: ({
+        children,
+    }: {
+        children: (state: {
+            errors: Record<string, string>;
+            processing: boolean;
+            isDirty: boolean;
+            submit: () => void;
+            resetAndClearErrors: () => void;
+        }) => ReactNode;
+    }) => (
+        <form>
+            {children({
+                errors: {},
+                processing: formState.processing,
+                isDirty: true,
+                submit: () => {},
+                resetAndClearErrors: () => {},
+            })}
+        </form>
+    ),
+}));
+
 afterEach(() => {
     sidebarSheetState.current = false;
+    formState.processing = false;
     cleanup();
 });
 
@@ -109,6 +141,49 @@ function AdditionalSectionHarness({
             <output data-test="audit-is-active">
                 {String(sidebar.isSectionActive('audit'))}
             </output>
+            {sidebar.rightSidebar}
+        </>
+    );
+}
+
+function LiveUpdatesHarness({ comments }: { comments: Comment[] }) {
+    const sidebar = useCommentsDocumentsSidebar({
+        comments,
+        documents: [],
+        allowedDocumentMimes: [],
+        maxDocumentKilobytes: 1024,
+        storeCommentForm: { url: '/comments', method: 'post' } as never,
+        storeDocumentAction: { url: '/documents', method: 'post' } as never,
+        updateDocumentAction: route('put') as never,
+        destroyDocumentAction: route('delete') as never,
+        showDocumentAction: route('get') as never,
+        updateCommentForm,
+        destroyCommentForm,
+        renderCommentLiveUpdates: ({ enabled, visible }) => (
+            <output
+                data-test="live-updates"
+                data-enabled={String(enabled)}
+                data-visible={String(visible)}
+            />
+        ),
+    });
+
+    return (
+        <>
+            <button
+                type="button"
+                data-test="open-comments-section"
+                onClick={sidebar.openCommentsTab}
+            >
+                Comments
+            </button>
+            <button
+                type="button"
+                data-test="open-documents-section"
+                onClick={sidebar.openDocumentsTab}
+            >
+                Documents
+            </button>
             {sidebar.rightSidebar}
         </>
     );
@@ -440,6 +515,118 @@ describe('useCommentsDocumentsSidebar — additional sections', () => {
             'false',
         );
         expect(screen.getByTestId('active-section')).toHaveTextContent('none');
+    });
+});
+
+describe('useCommentsDocumentsSidebar — live comment updates', () => {
+    it('reports the comments surface visibility beside refresh safety', () => {
+        render(<LiveUpdatesHarness comments={[makeComment()]} />);
+
+        const liveUpdates = () => screen.getByTestId('live-updates');
+
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'true');
+        expect(liveUpdates()).toHaveAttribute('data-visible', 'true');
+
+        fireEvent.click(screen.getByTestId('open-documents-section'));
+
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'true');
+        expect(liveUpdates()).toHaveAttribute('data-visible', 'false');
+
+        fireEvent.click(screen.getByTestId('open-comments-section'));
+
+        expect(liveUpdates()).toHaveAttribute('data-visible', 'true');
+
+        fireEvent.click(screen.getByTestId('app-right-sidebar-dismiss'));
+
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'true');
+        expect(liveUpdates()).toHaveAttribute('data-visible', 'false');
+    });
+
+    it('pauses while a comment is edited and resumes when the edited row leaves the props', () => {
+        const { rerender } = render(
+            <LiveUpdatesHarness comments={[makeComment({ id: 3 })]} />,
+        );
+
+        fireEvent.click(screen.getByTestId('edit-comment'));
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'false',
+        );
+        expect(screen.getByTestId('submit-comment')).toBeInTheDocument();
+
+        // An authoritative update that keeps the row does not interrupt the edit.
+        rerender(
+            <LiveUpdatesHarness
+                comments={[makeComment({ id: 3, content: 'Changed remotely' })]}
+            />,
+        );
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'false',
+        );
+        expect(screen.getByTestId('submit-comment')).toBeInTheDocument();
+
+        // The edited row disappears: no editor remains, so updates resume.
+        rerender(
+            <LiveUpdatesHarness
+                comments={[makeComment({ id: 4, content: 'Another' })]}
+            />,
+        );
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'true',
+        );
+        expect(screen.queryByTestId('submit-comment')).toBeNull();
+        expect(screen.getByTestId('edit-comment')).toBeInTheDocument();
+    });
+
+    it('pauses while a comment deletion is in flight', () => {
+        const { rerender } = render(
+            <LiveUpdatesHarness comments={[makeComment()]} />,
+        );
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'true',
+        );
+
+        formState.processing = true;
+        rerender(<LiveUpdatesHarness comments={[makeComment()]} />);
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'false',
+        );
+
+        formState.processing = false;
+        rerender(<LiveUpdatesHarness comments={[makeComment()]} />);
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'true',
+        );
+    });
+
+    it('releases a deletion pause when the deleted row leaves the props', () => {
+        formState.processing = true;
+        const { rerender } = render(
+            <LiveUpdatesHarness comments={[makeComment()]} />,
+        );
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'false',
+        );
+
+        rerender(<LiveUpdatesHarness comments={[]} />);
+
+        expect(screen.getByTestId('live-updates')).toHaveAttribute(
+            'data-enabled',
+            'true',
+        );
     });
 });
 
