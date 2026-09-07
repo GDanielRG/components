@@ -152,7 +152,7 @@
             "title": "Archive",
             "description": "Archive status badge and confirmation modal for soft-delete-backed archive flows.",
             "registryDependencies": [
-                "GDanielRG/components/core",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
                 "alert-dialog",
                 "badge",
                 "tooltip"
@@ -187,7 +187,7 @@
             "title": "Edit History",
             "description": "Discoverable per-model edit-history popover with a locale-aware from→to diff and server-driven structured-field summaries.",
             "registryDependencies": [
-                "GDanielRG/components/core",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
                 "avatar",
                 "badge",
                 "button",
@@ -248,7 +248,7 @@
             "title": "Search",
             "description": "Server-driven search controls: useSearch, filters, applied filters, and the export dialog.",
             "registryDependencies": [
-                "GDanielRG/components/core",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
                 "alert-dialog",
                 "badge",
                 "button",
@@ -339,8 +339,8 @@
             "title": "Table",
             "description": "Column header/visibility menus, row actions, and sort/visibility hooks for index tables.",
             "registryDependencies": [
-                "GDanielRG/components/search",
-                "GDanielRG/components/core",
+                "GDanielRG/components/search#snapshot-20260907-8185e8d",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
                 "button",
                 "dropdown-menu",
                 "table"
@@ -380,8 +380,8 @@
             "title": "Comments",
             "description": "Polymorphic comment list, form, and inline triggers.",
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/chat-display",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
+                "GDanielRG/components/chat-display#snapshot-20260907-8185e8d",
                 "avatar",
                 "button",
                 "dropdown-menu",
@@ -425,8 +425,8 @@
             "title": "Documents",
             "description": "Polymorphic document list, upload panel, and inline triggers.",
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/chat-display",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
+                "GDanielRG/components/chat-display#snapshot-20260907-8185e8d",
                 "badge",
                 "button",
                 "dropdown-menu",
@@ -525,11 +525,11 @@
             "title": "Activity",
             "description": "Combined comments + documents right-sidebar and inline activity triggers.",
             "registryDependencies": [
-                "GDanielRG/components/comments",
-                "GDanielRG/components/documents",
-                "GDanielRG/components/core",
-                "GDanielRG/components/sidebar",
-                "GDanielRG/components/chat",
+                "GDanielRG/components/comments#snapshot-20260907-8185e8d",
+                "GDanielRG/components/documents#snapshot-20260907-8185e8d",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
+                "GDanielRG/components/sidebar#snapshot-20260907-8185e8d",
+                "GDanielRG/components/chat#snapshot-20260907-8185e8d",
                 "avatar",
                 "badge",
                 "button",
@@ -567,7 +567,7 @@
             "title": "Chat Display",
             "description": "Shared chat display primitives — attachment and marker — plus a timestamp-with-reveal, composed on stock shadcn message/bubble. No @shadcn/react; folded into foundations so comments/documents can build on them.",
             "registryDependencies": [
-                "GDanielRG/components/core",
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
                 "bubble",
                 "button",
                 "message",
@@ -601,7 +601,10 @@
             "type": "registry:item",
             "title": "Chat",
             "description": "The virtualized, stick-to-bottom message scroller. The only bundle that pulls the pre-1.0 @shadcn/react.",
-            "registryDependencies": ["GDanielRG/components/core", "button"],
+            "registryDependencies": [
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
+                "button"
+            ],
             "files": [
                 {
                     "path": "components/chat/message-scroller.tsx",
@@ -623,16 +626,16 @@
             "title": "Foundations",
             "description": "Installs the full shared Laravel/Inertia component foundation.",
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/sidebar",
-                "GDanielRG/components/search",
-                "GDanielRG/components/table",
-                "GDanielRG/components/comments",
-                "GDanielRG/components/documents",
-                "GDanielRG/components/activity",
-                "GDanielRG/components/archive",
-                "GDanielRG/components/edit-history",
-                "GDanielRG/components/chat-display"
+                "GDanielRG/components/core#snapshot-20260907-8185e8d",
+                "GDanielRG/components/sidebar#snapshot-20260907-8185e8d",
+                "GDanielRG/components/search#snapshot-20260907-8185e8d",
+                "GDanielRG/components/table#snapshot-20260907-8185e8d",
+                "GDanielRG/components/comments#snapshot-20260907-8185e8d",
+                "GDanielRG/components/documents#snapshot-20260907-8185e8d",
+                "GDanielRG/components/activity#snapshot-20260907-8185e8d",
+                "GDanielRG/components/archive#snapshot-20260907-8185e8d",
+                "GDanielRG/components/edit-history#snapshot-20260907-8185e8d",
+                "GDanielRG/components/chat-display#snapshot-20260907-8185e8d"
             ],
             "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
         }
