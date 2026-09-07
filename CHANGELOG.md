@@ -8,7 +8,7 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260907-8185e8d — 2026-09-07
 
 - **Added** `visible` to the activity sidebar's `renderCommentLiveUpdates` state,
   reporting whether the comments tab is open, beside the existing `enabled`.
