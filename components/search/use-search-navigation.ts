@@ -20,6 +20,8 @@ export type SearchVisitOptions = VisitHelperOptions;
 export interface SearchNavigationOptions {
     /** Props to reload; an empty list requests a full reload. */
     only: string[];
+    /** Pagination key owned by this surface. */
+    pageParam?: string;
 }
 
 export interface SearchNavigationController extends SearchNavigationOptions {
@@ -66,7 +68,7 @@ function resolveBaseQuery(
 
 export function useSearchNavigation(
     routeFn: RouteResolver<'get'>,
-    { only }: SearchNavigationOptions,
+    { only, pageParam = 'page' }: SearchNavigationOptions,
 ): SearchNavigationState {
     const { url } = usePage();
     const currentQuery = useMemo(
@@ -111,6 +113,7 @@ export function useSearchNavigation(
         return buildQueryDataFromCurrent(
             resolveBaseQuery(url, currentQuery, pendingVisitRef.current),
             patch,
+            pageParam,
         );
     }
 
@@ -150,5 +153,5 @@ export function useSearchNavigation(
         });
     }
 
-    return { only, effectiveQuery: baseQuery, buildRoute, visit };
+    return { only, pageParam, effectiveQuery: baseQuery, buildRoute, visit };
 }

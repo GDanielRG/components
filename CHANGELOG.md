@@ -10,6 +10,8 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- Move nested-table `pageParam` configuration from `useSort` to `useSearchNavigation` so sorting resets only its own paginator.
+
 - **Fixed** export submissions preserving named range bounds independently,
   query-scoped filters, select defaults, and multiselect arrays.
 - **Fixed** sort indicators and repeated sort selections reading the navigation

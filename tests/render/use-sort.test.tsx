@@ -93,10 +93,10 @@ function IndexHarness() {
 function NestedTableHarness() {
     const navigation = useSearchNavigation(thingsRoute, {
         only: ['things'],
+        pageParam: 'members_page',
     });
     const { sort, order, handleSort } = useSort({
         sortPath: ['members', 'sort'],
-        pageParam: 'members_page',
         navigation,
     });
 
@@ -190,6 +190,20 @@ describe('useSort — sortPath and pageParam', () => {
         fireEvent.click(screen.getByTestId('sort-name-desc'));
 
         expect(visitedUrls()).toEqual(['/things?members[sort]=-name']);
+    });
+
+    it('preserves the outer table state when sorting and clearing a nested table', () => {
+        page.url =
+            '/things?page=8&sort=-created_at&members_page=3&members[filter][status]=active';
+        render(<NestedTableHarness />);
+
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+
+        expect(visitedUrls()).toEqual([
+            '/things?page=8&sort=-created_at&members[filter][status]=active&members[sort]=-name',
+            '/things?page=8&sort=-created_at&members[filter][status]=active',
+        ]);
     });
 
     it('clears the nested sort key when the active direction is re-selected', () => {

@@ -11,14 +11,12 @@ interface UseSortReturn {
 
 interface UseSortOptions {
     sortPath?: string | string[];
-    pageParam?: string;
     // Must be the surface's controller so sorting sees any in-flight filter URL.
     navigation: SearchNavigationState;
 }
 
 export function useSort({
     sortPath = 'sort',
-    pageParam = 'page',
     navigation,
 }: UseSortOptions): UseSortReturn {
     const sortValue = getQueryValue(navigation.effectiveQuery, sortPath);
@@ -30,21 +28,16 @@ export function useSort({
         : null;
 
     function handleSort(column: string, direction: SortOrder) {
-        const patch =
-            sort === column && order === direction
-                ? {
-                      ...buildPathPatch(sortPath, null),
-                      [pageParam]: null,
-                  }
-                : {
-                      ...buildPathPatch(
-                          sortPath,
-                          direction === 'desc' ? `-${column}` : column,
-                      ),
-                      [pageParam]: null,
-                  };
-
-        navigation.visit(patch);
+        navigation.visit(
+            buildPathPatch(
+                sortPath,
+                sort === column && order === direction
+                    ? null
+                    : direction === 'desc'
+                      ? `-${column}`
+                      : column,
+            ),
+        );
     }
 
     return { sort, order, handleSort };

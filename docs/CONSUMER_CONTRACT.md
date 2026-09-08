@@ -81,3 +81,8 @@ default-open and initial-section selection after comments and documents; an expl
 switching, scrolling, and presentation consistent without adding domain-specific copy
 or icons to the shared contract. Existing consumers that only use comments and
 documents require no changes.
+
+Pagination belongs to the search navigation controller. Set `pageParam` on
+`useSearchNavigation` for a nested table (for example, `employees_page`), and pass
+that controller to `useSort`. The default remains `page`. A visit resets only
+that surface's pagination, preserving unrelated tables' query state.
