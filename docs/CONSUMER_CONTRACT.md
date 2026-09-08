@@ -36,9 +36,16 @@ the collection, filter catalogue, and query-derived counters. Search, sort, filt
 and clear visits reload only those props. Use `only: []` when a full reload is
 intentional.
 
-Pass the same navigation instance to `useSort`; it owns the effective query while an
-Inertia visit is pending. A hand-built `SearchNavigationController` must expose `only`
-and apply it in `visit`.
+Pass the same `SearchNavigationState` instance to `useSort`; it owns the effective
+query while an Inertia visit is pending. Both navigation hooks return this state.
+A hand-built navigation state must expose `effectiveQuery` and `only`, and apply
+`only` in `visit`.
+
+`SearchAppliedFilters` accepts `additionalAppliedCount` for app-owned filters. The
+app renders those chips and includes their removal through `useSearch`'s
+`viewControls` (or its own `clearAllPatch`); the
+shared component includes their count in its total and keeps the clear action
+available when they are the only active filters.
 
 ## Prefetch invalidation
 
@@ -74,3 +81,8 @@ default-open and initial-section selection after comments and documents; an expl
 switching, scrolling, and presentation consistent without adding domain-specific copy
 or icons to the shared contract. Existing consumers that only use comments and
 documents require no changes.
+
+Pagination belongs to the search navigation controller. Set `pageParam` on
+`useSearchNavigation` for a nested table (for example, `employees_page`), and pass
+that controller to `useSort`. The default remains `page`. A visit resets only
+that surface's pagination, preserving unrelated tables' query state.

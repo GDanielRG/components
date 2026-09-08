@@ -4,7 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SearchFilterControls, useSearch } from '@/components/search/search';
 import type { SearchNavigationData } from '@/components/search/query-utils';
 import { useSearchNavigation } from '@/components/search/use-search-navigation';
-import type { ServerSearchChoiceFilter } from '@/components/types/server-search';
+import type {
+    ServerSearchChoiceFilter,
+    ServerSearchFilter,
+    ServerSearchRangeFilter,
+} from '@/components/types/server-search';
 import type {
     RouteDefinition,
     RouteResolver,
@@ -78,9 +82,13 @@ const thingsRoute: RouteResolver<'get'> = (
     };
 };
 
-function SearchHarness() {
+function SearchHarness({
+    filters = [statusFilter],
+}: {
+    filters?: ServerSearchFilter[];
+}) {
     const search = useSearch(thingsRoute, {
-        filters: [statusFilter],
+        filters,
         only: ['things'],
     });
 
@@ -90,6 +98,17 @@ function SearchHarness() {
             <output data-test="selected-values">
                 {(search.filterValues.status ?? []).join(',')}
             </output>
+            <output data-test="range-values">
+                {JSON.stringify(search.rangeValues)}
+            </output>
+            <button
+                type="button"
+                onClick={() =>
+                    search.visit(search.appliedFilters.clearAllPatch)
+                }
+            >
+                Clear all
+            </button>
         </>
     );
 }
@@ -122,6 +141,86 @@ afterEach(() => {
 });
 
 describe('useSearch pending filter query', () => {
+    it('keeps a query-scoped multiselect in the top-level URL while selecting and clearing', () => {
+        page.url = '/things?status[]=active&filter[search]=retained';
+        render(
+            <SearchHarness filters={[{ ...statusFilter, scope: 'query' }]} />,
+        );
+
+        expect(screen.getByTestId('selected-values')).toHaveTextContent(
+            'active',
+        );
+        fireEvent.click(screen.getByTestId('filter-status-trigger'));
+        fireEvent.click(screen.getByTestId('filter-status-option-pending'));
+
+        expect(visits[0]).toBe(
+            '/things?status%5B%5D=active&status%5B%5D=pending&filter%5Bsearch%5D=retained',
+        );
+        expect(screen.getByTestId('selected-values')).toHaveTextContent(
+            'active,pending',
+        );
+        fireEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+        expect(visits[1]).toBe('/things');
+        expect(screen.getByTestId('selected-values')).toBeEmptyDOMElement();
+    });
+
+    it.each([undefined, 'filter', 'query'] as const)(
+        'reads, applies and clears named range bounds for scope %s',
+        (scope) => {
+            const rangeFilter: ServerSearchRangeFilter = {
+                key: 'price',
+                label: 'Price',
+                type: 'range',
+                scope,
+                fromKey: 'minimum',
+                toKey: 'maximum',
+                fromLabel: 'Minimum',
+                toLabel: 'Maximum',
+                inputType: 'number',
+                applyLabel: 'Apply',
+                clearLabel: 'Clear',
+            };
+            const prefix = scope === 'query' ? '' : 'filter';
+            page.url =
+                scope === 'query'
+                    ? '/things?maximum=0&filter[status][]=active'
+                    : '/things?filter[maximum]=0&filter[status][]=active';
+            render(<SearchHarness filters={[rangeFilter]} />);
+
+            expect(screen.getByTestId('range-values')).toHaveTextContent(
+                '{"price":{"from":null,"to":"0"}}',
+            );
+            fireEvent.click(screen.getByTestId('filter-price-trigger'));
+            expect(screen.getByTestId('filter-price-to')).toHaveValue(0);
+            fireEvent.change(screen.getByTestId('filter-price-from'), {
+                target: { value: '5' },
+            });
+            fireEvent.change(screen.getByTestId('filter-price-to'), {
+                target: { value: '' },
+            });
+            fireEvent.click(screen.getByTestId('filter-price-apply'));
+
+            const applied = new URL(visits[0], 'https://example.test')
+                .searchParams;
+            expect(applied.get(prefix ? 'filter[minimum]' : 'minimum')).toBe(
+                '5',
+            );
+            expect(applied.has(prefix ? 'filter[maximum]' : 'maximum')).toBe(
+                false,
+            );
+            expect(applied.get('filter[status][]')).toBe('active');
+            expect(screen.getByTestId('range-values')).toHaveTextContent(
+                '{"price":{"from":"5","to":null}}',
+            );
+            fireEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+
+            expect(visits[1]).toBe('/things?filter%5Bstatus%5D%5B%5D=active');
+            expect(screen.getByTestId('range-values')).toHaveTextContent(
+                '{"price":{"from":null,"to":null}}',
+            );
+        },
+    );
+
     it('keeps rapid selections from one multiselect in its URL and controlled state', () => {
         render(<SearchHarness />);
 

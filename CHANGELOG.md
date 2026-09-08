@@ -8,6 +8,21 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- Move nested-table `pageParam` configuration from `useSort` to `useSearchNavigation` so sorting resets only its own paginator.
+
+- **Fixed** export submissions preserving named range bounds independently,
+  query-scoped filters, select defaults, and multiselect arrays.
+- **Fixed** sort indicators and repeated sort selections reading the navigation
+  controller's effective query while a visit is pending. `useSort` now requires
+  `SearchNavigationState`, as returned by the existing navigation hooks.
+- **Added** `additionalAppliedCount` to `SearchAppliedFilters` so app-owned filters
+  participate in its total and clear action without sharing domain-specific chips.
+- **Fixed** `useInitials` handling whitespace and Unicode code points consistently.
+- **Added** pull-request checks for unit tests, registry validation, and the real
+  consumer install/typecheck smoke test.
+
 ### snapshot-20260907-8185e8d — 2026-09-07
 
 - **Added** `visible` to the activity sidebar's `renderCommentLiveUpdates` state,

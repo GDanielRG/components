@@ -47,11 +47,12 @@ export function useSearch(
 
     for (const filter of filters) {
         if (filter.type === 'range') {
+            const scope = filter.scope === 'query' ? [] : ['filter'];
             const from = getQueryValue(currentQuery, [
-                'filter',
+                ...scope,
                 filter.fromKey,
             ]);
-            const to = getQueryValue(currentQuery, ['filter', filter.toKey]);
+            const to = getQueryValue(currentQuery, [...scope, filter.toKey]);
 
             rangeValues[filter.key] = { from, to };
             filterValues[filter.key] = [from, to].filter(

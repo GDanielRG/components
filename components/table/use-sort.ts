@@ -1,12 +1,5 @@
-import { usePage } from '@inertiajs/react';
-import { useMemo } from 'react';
-import {
-    buildPathPatch,
-    getQueryValue,
-    parseCurrentQuery,
-    resolveCurrentSearch,
-} from '@/components/search/query-utils';
-import type { SearchNavigationController } from '@/components/search/use-search-navigation';
+import { buildPathPatch, getQueryValue } from '@/components/search/query-utils';
+import type { SearchNavigationState } from '@/components/search/use-search-navigation';
 
 type SortOrder = 'asc' | 'desc';
 
@@ -18,23 +11,15 @@ interface UseSortReturn {
 
 interface UseSortOptions {
     sortPath?: string | string[];
-    pageParam?: string;
     // Must be the surface's controller so sorting sees any in-flight filter URL.
-    navigation: SearchNavigationController;
+    navigation: SearchNavigationState;
 }
 
 export function useSort({
     sortPath = 'sort',
-    pageParam = 'page',
     navigation,
 }: UseSortOptions): UseSortReturn {
-    const { url } = usePage();
-    const currentData = useMemo(
-        () => parseCurrentQuery(resolveCurrentSearch(url)),
-        [url],
-    );
-
-    const sortValue = getQueryValue(currentData, sortPath);
+    const sortValue = getQueryValue(navigation.effectiveQuery, sortPath);
     const sort = sortValue?.startsWith('-') ? sortValue.slice(1) : sortValue;
     const order = sortValue
         ? sortValue.startsWith('-')
@@ -43,21 +28,16 @@ export function useSort({
         : null;
 
     function handleSort(column: string, direction: SortOrder) {
-        const patch =
-            sort === column && order === direction
-                ? {
-                      ...buildPathPatch(sortPath, null),
-                      [pageParam]: null,
-                  }
-                : {
-                      ...buildPathPatch(
-                          sortPath,
-                          direction === 'desc' ? `-${column}` : column,
-                      ),
-                      [pageParam]: null,
-                  };
-
-        navigation.visit(patch);
+        navigation.visit(
+            buildPathPatch(
+                sortPath,
+                sort === column && order === direction
+                    ? null
+                    : direction === 'desc'
+                      ? `-${column}`
+                      : column,
+            ),
+        );
     }
 
     return { sort, order, handleSort };

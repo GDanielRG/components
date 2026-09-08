@@ -70,3 +70,5 @@ bun run smoke
 
 The source files and root [`registry.json`](registry.json) are the complete registry. See
 [the maintenance guide](docs/MAINTAINING.md) for releases and compatibility changes.
+
+Consumer formatters may reorder equivalent Tailwind classes after installation. The reinstall smoke checks registry installation stability; it does not certify byte identity after a consumer formatter runs. Compare portable behavior and document app-owned adaptations before treating a source diff as drift.

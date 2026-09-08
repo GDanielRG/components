@@ -87,29 +87,49 @@ export function ExportDialog({
                     action={exportAction()}
                     options={{ preserveScroll: true }}
                     transform={() => {
-                        const data: {
-                            filter?: Record<string, string | string[]>;
-                        } = {};
+                        const data: Record<
+                            string,
+                            | string
+                            | string[]
+                            | Record<string, string | string[]>
+                        > = {};
                         const filter: Record<string, string | string[]> = {};
 
                         if (searchValue) {
                             filter.search = searchValue;
                         }
 
-                        for (const [key, values] of Object.entries(
-                            filterValues,
-                        )) {
+                        for (const searchFilter of searchFilters) {
+                            const target =
+                                searchFilter.scope === 'query' ? data : filter;
+
+                            if (searchFilter.type === 'range') {
+                                const range =
+                                    appliedFilters?.rangeValues[
+                                        searchFilter.key
+                                    ];
+
+                                if (range?.from) {
+                                    target[searchFilter.fromKey] = range.from;
+                                }
+
+                                if (range?.to) {
+                                    target[searchFilter.toKey] = range.to;
+                                }
+
+                                continue;
+                            }
+
+                            const values = filterValues[searchFilter.key] ?? [];
+
                             if (values.length === 0) {
                                 continue;
                             }
 
-                            const isSelect = searchFilters.some(
-                                (searchFilter) =>
-                                    searchFilter.key === key &&
-                                    searchFilter.type === 'select',
-                            );
-
-                            filter[key] = isSelect ? values[0] : values;
+                            target[searchFilter.key] =
+                                searchFilter.type === 'select'
+                                    ? values[0]
+                                    : values;
                         }
 
                         if (Object.keys(filter).length > 0) {

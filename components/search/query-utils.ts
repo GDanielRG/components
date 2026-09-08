@@ -293,6 +293,7 @@ export function getQueryValues(
 export function buildQueryDataFromCurrent(
     currentData: SearchNavigationData,
     patch: SearchNavigationPatch,
+    pageParam = 'page',
 ): SearchNavigationData {
     const data = cloneQueryData(currentData);
 
@@ -300,7 +301,7 @@ export function buildQueryDataFromCurrent(
         applyPatchValue(data, [key], value);
     }
 
-    deleteNestedValue(data, ['page']);
+    deleteNestedValue(data, [pageParam]);
 
     return data;
 }
@@ -359,7 +360,7 @@ export function buildClearAllPatch(
 
     for (const filter of filters) {
         if (filter.scope === 'query') {
-            topLevelReset[filter.key] = null;
+            Object.assign(topLevelReset, clearedFilterValues(filter));
         } else {
             Object.assign(filterReset, clearedFilterValues(filter));
         }

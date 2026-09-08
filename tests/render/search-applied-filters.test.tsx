@@ -46,9 +46,11 @@ const statusFilter: ServerSearchChoiceFilter = {
 function buildHarness({
     searchValue = '',
     activeStatus = false,
+    additionalAppliedCount = 0,
 }: {
     searchValue?: string;
     activeStatus?: boolean;
+    additionalAppliedCount?: number;
 } = {}) {
     const visits: Array<{
         patch: SearchNavigationPatch;
@@ -70,6 +72,7 @@ function buildHarness({
         navigation,
         searchValue,
         clearAllPatch: {
+            ...(additionalAppliedCount ? { sync_run: null } : {}),
             filter: {
                 search: null,
                 status: null,
@@ -85,6 +88,7 @@ function buildHarness({
         <SearchAppliedFilters
             appliedFilters={appliedFilters}
             popoverState={popoverState}
+            additionalAppliedCount={additionalAppliedCount}
         />,
     );
 
@@ -92,6 +96,22 @@ function buildHarness({
 }
 
 describe('SearchAppliedFilters clear actions', () => {
+    it.each([false, true])(
+        'clears page-owned filters with shared filters present: %s',
+        (activeStatus) => {
+            const { visits } = buildHarness({
+                activeStatus,
+                additionalAppliedCount: 1,
+            });
+            fireEvent.click(screen.getByTestId('clear-filters-action'));
+            expect(visits).toHaveLength(1);
+            expect(visits[0]?.patch).toEqual({
+                sync_run: null,
+                filter: { search: null, status: null },
+            });
+        },
+    );
+
     it('uses the injected navigation and reflects its loading lifecycle when clearing search', () => {
         const { visits } = buildHarness({ searchValue: 'voyage' });
         const action = screen.getByTestId('clear-search-action');

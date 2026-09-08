@@ -93,10 +93,10 @@ function IndexHarness() {
 function NestedTableHarness() {
     const navigation = useSearchNavigation(thingsRoute, {
         only: ['things'],
+        pageParam: 'members_page',
     });
     const { sort, order, handleSort } = useSort({
         sortPath: ['members', 'sort'],
-        pageParam: 'members_page',
         navigation,
     });
 
@@ -166,6 +166,21 @@ describe('useSort — shared navigation controller', () => {
 });
 
 describe('useSort — sortPath and pageParam', () => {
+    it('reflects a pending sort and clears it when reselected before the page response', () => {
+        page.url = '/things?members_page=3&filter[status]=active';
+        render(<NestedTableHarness />);
+
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+        expect(screen.getByTestId('sort-state')).toHaveTextContent('name:desc');
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+
+        expect(visitedUrls()).toEqual([
+            '/things?filter[status]=active&members[sort]=-name',
+            '/things?filter[status]=active',
+        ]);
+        expect(screen.getByTestId('sort-state')).toHaveTextContent(':');
+    });
+
     it('reads and writes the nested sort key and drops its own page param', () => {
         page.url = '/things?members[sort]=name&members_page=3';
         render(<NestedTableHarness />);
@@ -175,6 +190,20 @@ describe('useSort — sortPath and pageParam', () => {
         fireEvent.click(screen.getByTestId('sort-name-desc'));
 
         expect(visitedUrls()).toEqual(['/things?members[sort]=-name']);
+    });
+
+    it('preserves the outer table state when sorting and clearing a nested table', () => {
+        page.url =
+            '/things?page=8&sort=-created_at&members_page=3&members[filter][status]=active';
+        render(<NestedTableHarness />);
+
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+
+        expect(visitedUrls()).toEqual([
+            '/things?page=8&sort=-created_at&members[filter][status]=active&members[sort]=-name',
+            '/things?page=8&sort=-created_at&members[filter][status]=active',
+        ]);
     });
 
     it('clears the nested sort key when the active direction is re-selected', () => {
