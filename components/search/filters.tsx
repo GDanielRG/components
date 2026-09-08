@@ -80,10 +80,18 @@ export function Filters(props: FiltersProps) {
         filterKey: string,
         nextSelectedValues: string[],
     ): void {
+        const filter = multiselectFilters.find(
+            (filter) => filter.key === filterKey,
+        );
+
+        if (!filter) {
+            return;
+        }
+
         setOpenFilterKey(nextSelectedValues.length > 0 ? filterKey : null);
         navigation.visit(
             buildPathPatch(
-                ['filter', filterKey],
+                filterPath(filter),
                 nextSelectedValues.length > 0 ? nextSelectedValues : null,
             ),
         );
@@ -111,12 +119,13 @@ export function Filters(props: FiltersProps) {
         value: SearchRangeValue,
     ): void {
         setOpenFilterKey(null);
-        navigation.visit({
-            filter: {
-                [filter.fromKey]: value.from,
-                [filter.toKey]: value.to,
-            },
-        });
+        const bounds = {
+            [filter.fromKey]: value.from,
+            [filter.toKey]: value.to,
+        };
+        navigation.visit(
+            filter.scope === 'query' ? bounds : { filter: bounds },
+        );
     }
 
     function handleFilterOpenChange(filterKey: string, open: boolean): void {

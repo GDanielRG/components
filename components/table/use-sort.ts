@@ -1,12 +1,5 @@
-import { usePage } from '@inertiajs/react';
-import { useMemo } from 'react';
-import {
-    buildPathPatch,
-    getQueryValue,
-    parseCurrentQuery,
-    resolveCurrentSearch,
-} from '@/components/search/query-utils';
-import type { SearchNavigationController } from '@/components/search/use-search-navigation';
+import { buildPathPatch, getQueryValue } from '@/components/search/query-utils';
+import type { SearchNavigationState } from '@/components/search/use-search-navigation';
 
 type SortOrder = 'asc' | 'desc';
 
@@ -20,7 +13,7 @@ interface UseSortOptions {
     sortPath?: string | string[];
     pageParam?: string;
     // Must be the surface's controller so sorting sees any in-flight filter URL.
-    navigation: SearchNavigationController;
+    navigation: SearchNavigationState;
 }
 
 export function useSort({
@@ -28,13 +21,7 @@ export function useSort({
     pageParam = 'page',
     navigation,
 }: UseSortOptions): UseSortReturn {
-    const { url } = usePage();
-    const currentData = useMemo(
-        () => parseCurrentQuery(resolveCurrentSearch(url)),
-        [url],
-    );
-
-    const sortValue = getQueryValue(currentData, sortPath);
+    const sortValue = getQueryValue(navigation.effectiveQuery, sortPath);
     const sort = sortValue?.startsWith('-') ? sortValue.slice(1) : sortValue;
     const order = sortValue
         ? sortValue.startsWith('-')

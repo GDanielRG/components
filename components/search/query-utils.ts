@@ -359,7 +359,7 @@ export function buildClearAllPatch(
 
     for (const filter of filters) {
         if (filter.scope === 'query') {
-            topLevelReset[filter.key] = null;
+            Object.assign(topLevelReset, clearedFilterValues(filter));
         } else {
             Object.assign(filterReset, clearedFilterValues(filter));
         }

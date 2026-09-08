@@ -28,6 +28,12 @@ export type SearchAppliedFiltersProps = {
     className?: string;
     filtersClassName?: string;
     testIdPrefix?: string;
+    /**
+     * Filters the page applies outside the shared controls (a chip it renders
+     * itself). They count toward showing the Clear action, whose patch the
+     * page has already extended through `viewControls`.
+     */
+    additionalAppliedCount?: number;
 };
 
 const APPLIED_FILTERS_DISCLOSURE_THRESHOLD = 3;
@@ -36,14 +42,15 @@ function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;
 }
 
-function getAppliedFilterCount({
-    filters,
-    filterValues,
-    searchValue,
-}: SearchAppliedFiltersState): number {
+function getAppliedFilterCount(
+    { filters, filterValues, searchValue }: SearchAppliedFiltersState,
+    additionalAppliedCount = 0,
+): number {
     return (
         filters.filter((filter) => (filterValues[filter.key] ?? []).length > 0)
-            .length + (searchValue.trim() ? 1 : 0)
+            .length +
+        (searchValue.trim() ? 1 : 0) +
+        additionalAppliedCount
     );
 }
 
@@ -121,6 +128,7 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
         className,
         filtersClassName,
         testIdPrefix,
+        additionalAppliedCount,
     } = props;
     const {
         filters,
@@ -131,7 +139,10 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
         searchValue,
     } = appliedFilters;
 
-    const appliedFilterCount = getAppliedFilterCount(appliedFilters);
+    const appliedFilterCount = getAppliedFilterCount(
+        appliedFilters,
+        additionalAppliedCount,
+    );
     const hasSearch = !!searchValue.trim();
     const [isClearingSearch, setIsClearingSearch] = useState(false);
 
@@ -233,10 +244,14 @@ export function SearchAppliedFiltersDisclosure({
     className,
     filtersClassName,
     testIdPrefix,
+    additionalAppliedCount,
 }: SearchAppliedFiltersProps) {
     const copy: SearchCopy = useSharedComponentCopy();
     const [isRevealed, setIsRevealed] = useState(false);
-    const appliedFilterCount = getAppliedFilterCount(appliedFilters);
+    const appliedFilterCount = getAppliedFilterCount(
+        appliedFilters,
+        additionalAppliedCount,
+    );
 
     if (appliedFilterCount === 0) {
         return null;
@@ -255,6 +270,7 @@ export function SearchAppliedFiltersDisclosure({
                     className={className}
                     filtersClassName={filtersClassName}
                     testIdPrefix={testIdPrefix}
+                    additionalAppliedCount={additionalAppliedCount}
                 />
             </div>
         );

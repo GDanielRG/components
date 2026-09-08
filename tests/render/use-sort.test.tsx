@@ -166,6 +166,21 @@ describe('useSort — shared navigation controller', () => {
 });
 
 describe('useSort — sortPath and pageParam', () => {
+    it('reflects a pending sort and clears it when reselected before the page response', () => {
+        page.url = '/things?members_page=3&filter[status]=active';
+        render(<NestedTableHarness />);
+
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+        expect(screen.getByTestId('sort-state')).toHaveTextContent('name:desc');
+        fireEvent.click(screen.getByTestId('sort-name-desc'));
+
+        expect(visitedUrls()).toEqual([
+            '/things?filter[status]=active&members[sort]=-name',
+            '/things?filter[status]=active',
+        ]);
+        expect(screen.getByTestId('sort-state')).toHaveTextContent(':');
+    });
+
     it('reads and writes the nested sort key and drops its own page param', () => {
         page.url = '/things?members[sort]=name&members_page=3';
         render(<NestedTableHarness />);
