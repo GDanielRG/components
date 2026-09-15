@@ -42,11 +42,12 @@ describe('DialogFormLayout — header semantics', () => {
         expect(popup).toHaveAccessibleDescription(description);
     });
 
-    it('accepts structured description content', () => {
+    it('accepts structured description content without invalid paragraph nesting', () => {
         const popup = renderDialogForm({
             description: <div data-test="metadata">Metadata</div>,
         });
         expect(screen.getByTestId('metadata')).toBeVisible();
+        expect(screen.getByTestId('metadata').closest('p')).toBeNull();
         expect(popup).toHaveAccessibleDescription('Metadata');
     });
 
