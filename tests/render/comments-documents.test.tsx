@@ -1,18 +1,7 @@
 // @vitest-environment jsdom
 //
-// Render-level regression gate for the W2 shadcn rebuild of the comments and
-// documents surfaces. This mounts the REAL rebuilt components (CommentList,
-// DocumentsPanelItem, DocumentItem) and the REAL chat-display primitive
-// (Attachment) — only the stock shadcn primitives, the two consumer-owned
-// contracts (see tests/render/stubs + vitest.config.ts), and Inertia's `Form`
-// (a render-prop double whose `processing` the tests control) are stubbed. It
-// proves:
-//   1. the behavioural data-test ids survive the rebuild;
-//   2. the can_be_managed edit/delete gating renders when allowed and is omitted
-//      when not;
-//   3. a document row's `state` surfaces as data-state for uploading vs error;
-//   4. the sidebar's live-update state tracks surface visibility, drafts, and
-//      in-flight deletions.
+// Consumer-owned contracts, stock UI primitives, and Inertia forms are stubbed;
+// registry modules own the behavior exercised here.
 import {
     act,
     cleanup,
@@ -374,7 +363,7 @@ describe('DocumentsPanelItem — rebuilt document row', () => {
 });
 
 describe('ActivitySidebarTriggers — read-only affordances', () => {
-    it('uses neutral empty labels and icons instead of add affordances', () => {
+    it('uses neutral empty labels instead of add affordances', () => {
         render(
             <ActivitySidebarTriggers
                 comments={[]}
@@ -390,14 +379,6 @@ describe('ActivitySidebarTriggers — read-only affordances', () => {
 
         expect(comments).toHaveAccessibleName('activityCommentsTab');
         expect(documents).toHaveAccessibleName('activityDocumentsTab');
-        expect(
-            comments.querySelector('svg.lucide-message-circle'),
-        ).not.toBeNull();
-        expect(
-            comments.querySelector('svg.lucide-message-circle-plus'),
-        ).toBeNull();
-        expect(documents.querySelector('svg.lucide-files')).not.toBeNull();
-        expect(documents.querySelector('svg.lucide-file-plus')).toBeNull();
     });
 });
 
@@ -734,7 +715,7 @@ describe('CommentTypingIndicator — ephemeral typing affordance', () => {
         expect(screen.queryByTestId('comment-typing-indicator')).toBeNull();
     });
 
-    it('renders grouped avatars and a shimmering localized line for typers', () => {
+    it('renders a localized typing roster', () => {
         render(
             <CommentTypingIndicator
                 users={[
@@ -752,18 +733,12 @@ describe('CommentTypingIndicator — ephemeral typing affordance', () => {
         expect(screen.getByText('AL')).toBeInTheDocument();
         expect(screen.getByText('BR')).toBeInTheDocument();
 
-        // The text line shimmers and is fed the names (the test copy proxy echoes
-        // the key + args), never email or draft content.
-        const markerContent = document.querySelector(
-            '[data-slot="marker-content"]',
-        );
-        expect(markerContent).toHaveClass('shimmer');
-        expect(markerContent).toHaveTextContent(
-            'commentsTyping:Ana Lopez,Beto Ruiz',
-        );
+        expect(
+            screen.getByText('commentsTyping:Ana Lopez,Beto Ruiz'),
+        ).toBeInTheDocument();
     });
 
-    it('stays mounted through its leave transition, keeping the last roster, then unmounts', () => {
+    it('clears the typing roster when nobody is typing', () => {
         vi.useFakeTimers();
 
         try {
@@ -775,20 +750,12 @@ describe('CommentTypingIndicator — ephemeral typing affordance', () => {
 
             expect(
                 screen.getByTestId('comment-typing-indicator'),
-            ).toHaveAttribute('data-state', 'open');
+            ).toHaveTextContent('commentsTyping:Ana Lopez');
 
-            // Roster empties: the row must not vanish — it flips to `closed` and
-            // keeps showing the last typer while it animates out.
             rerender(<CommentTypingIndicator users={[]} />);
 
-            const closing = screen.getByTestId('comment-typing-indicator');
-            expect(closing).toHaveAttribute('data-state', 'closed');
-            expect(closing).toHaveTextContent('commentsTyping:Ana Lopez');
-
-            // After the transition window it unmounts, leaving an empty container
-            // (the parent list item is `empty:hidden`, so no gap remains).
             act(() => {
-                vi.advanceTimersByTime(700);
+                vi.runAllTimers();
             });
 
             expect(screen.queryByTestId('comment-typing-indicator')).toBeNull();

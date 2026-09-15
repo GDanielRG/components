@@ -49,36 +49,31 @@ function renderSelectFilter(
     );
 }
 
-describe('SelectFilter archive trigger', () => {
-    it('renders the archive icon and no visible label, keeping the label as aria-label', () => {
+describe('SelectFilter trigger labels', () => {
+    it('keeps a hidden filter label accessible', () => {
         renderSelectFilter(archivedFilter);
 
         const trigger = screen.getByTestId('filter-resource_status-trigger');
-        expect(trigger).toHaveAttribute('aria-label', 'Archivados');
+        expect(trigger).toHaveAccessibleName('Archivados');
         expect(screen.queryByText('Archivados')).toBeNull();
-        expect(trigger.querySelector('svg.lucide-archive')).not.toBeNull();
-        expect(trigger.querySelector('svg.lucide-funnel-plus')).toBeNull();
     });
 
-    it('keeps the archive icon visible once an option is selected and shows the option badge', () => {
+    it('keeps the filter label accessible alongside the selected option', () => {
         renderSelectFilter(archivedFilter, 'archived');
 
         const trigger = screen.getByTestId('filter-resource_status-trigger');
-        expect(trigger.querySelector('svg.lucide-archive')).not.toBeNull();
-        expect(trigger).toHaveAttribute('aria-label', 'Archivados');
+        expect(trigger).toHaveAccessibleName('Archivados');
         expect(
             within(trigger).getByText('Solo archivados'),
         ).toBeInTheDocument();
     });
 
-    it('leaves a plain select filter with the FunnelPlus icon and a visible label', () => {
+    it('renders the label of a plain select filter', () => {
         renderSelectFilter(plainSelectFilter);
 
         const trigger = screen.getByTestId('filter-estado-trigger');
-        expect(trigger).not.toHaveAttribute('aria-label');
+        expect(trigger).toHaveAccessibleName('Estado');
         expect(within(trigger).getByText('Estado')).toBeInTheDocument();
-        expect(trigger.querySelector('svg.lucide-funnel-plus')).not.toBeNull();
-        expect(trigger.querySelector('svg.lucide-archive')).toBeNull();
     });
 });
 

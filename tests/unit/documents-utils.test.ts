@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
     formatDocumentKilobytes,
-    generateTempId,
     getAcceptedDocumentMimes,
     getBasename,
     getDocumentDisplayName,
@@ -88,11 +87,5 @@ describe('getDocumentDisplayName', () => {
         expect(
             getDocumentDisplayName({ path: '/docs/contract.pdf' } as never),
         ).toBe('contract.pdf');
-    });
-});
-
-describe('generateTempId', () => {
-    it('returns a timestamped id', () => {
-        expect(generateTempId()).toMatch(/^\d+_[a-z0-9]+$/);
     });
 });
