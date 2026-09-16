@@ -35,7 +35,6 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
-import { cn } from '@/lib/utils';
 
 type CommentsDocumentsSidebarTab = 'comments' | 'documents';
 
@@ -414,7 +413,6 @@ function SidebarToggleButton({
             aria-expanded={open}
             data-test="activity-sidebar-toggle"
             onClick={onToggle}
-            className="aria-expanded:bg-transparent aria-expanded:hover:bg-muted"
         >
             {open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
         </Button>
@@ -560,7 +558,7 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
 
     return (
         <AppRightSidebar open={open} onOpenChange={onOpenChange}>
-            <SidebarHeader className="min-h-13 flex-row items-center justify-between gap-2 px-4 py-2 lg:px-0">
+            <SidebarHeader className="min-h-13 flex-row items-center justify-between">
                 <ActivityTabs
                     activeTab={resolvedActiveTab}
                     onTabChange={(tab) =>
@@ -581,11 +579,7 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
             {showActiveContent && (
                 <SidebarContent
                     data-test="activity-sidebar-content"
-                    className={cn(
-                        'm-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden lg:mx-0',
-                        resolvedActiveTab !== 'documents' &&
-                            'rounded-xl border bg-background shadow-sm lg:border-0',
-                    )}
+                    className="m-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden lg:mx-0"
                 >
                     {resolvedActiveTab === 'comments' ? (
                         <MessageScrollerProvider
@@ -617,13 +611,7 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
             )}
 
             {activeSection?.footer && (
-                <SidebarFooter
-                    data-test="activity-sidebar-footer"
-                    className={cn(
-                        'px-4 lg:px-0 lg:pb-0',
-                        showActiveContent ? 'lg:pt-4' : 'pt-0',
-                    )}
-                >
+                <SidebarFooter data-test="activity-sidebar-footer">
                     {activeSection.footer}
                 </SidebarFooter>
             )}

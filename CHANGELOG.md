@@ -13,6 +13,9 @@ release policy. Pin installs to a snapshot tag, e.g.
 - **Changed** `DialogFormLayout` to inherit title and description styles from the
   installed dialog primitives and use the secondary close-button variant. Clarified
   the caller's height, padding, and flex constraints for scrolling forms.
+- **Changed** shared activity, comment, document, search, and table controls to use
+  installed component spacing and appearance defaults. Metadata uses the standard
+  text scale, and reveal animations use standard transitions and easing.
 
 - Move nested-table `pageParam` configuration from `useSort` to `useSearchNavigation` so sorting resets only its own paginator.
 

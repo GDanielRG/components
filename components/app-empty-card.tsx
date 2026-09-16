@@ -8,7 +8,6 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from '@/components/ui/empty';
-import { cn } from '@/lib/utils';
 
 type EmptyCardProps = Omit<
     ComponentProps<typeof Empty>,
@@ -29,7 +28,7 @@ export function EmptyCard({
     ...props
 }: EmptyCardProps) {
     return (
-        <Empty className={cn('border', className)} {...props}>
+        <Empty className={className} {...props}>
             <EmptyHeader>
                 {Icon ? (
                     <EmptyMedia variant="icon">

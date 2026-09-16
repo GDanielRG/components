@@ -73,10 +73,7 @@ export function DocumentUploadStatus({
                 </>
             ) : (
                 <>
-                    <FieldError
-                        className="font-medium"
-                        data-test="sidebar-document-batch-general-error"
-                    >
+                    <FieldError data-test="sidebar-document-batch-general-error">
                         {error ?? copy.documentsReviewErrors}
                     </FieldError>
 

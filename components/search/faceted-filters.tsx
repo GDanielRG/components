@@ -93,10 +93,7 @@ export function FacetedFilters({
                                 filter.hideLabel ? filter.label : undefined
                             }
                             variant={open ? 'secondary' : 'outline'}
-                            className={cn(
-                                'max-w-full justify-start',
-                                selectedValues.length === 0 && 'border-dashed',
-                            )}
+                            className="max-w-full justify-start"
                         >
                             {showTriggerIcon && <TriggerIcon />}
                             {!filter.hideLabel && (
@@ -195,7 +192,7 @@ export function FacetedFilters({
                                                 `filter-${filter.key}-clear`,
                                                 testIdPrefix,
                                             )}
-                                            className="w-full hover:bg-destructive/20 hover:text-destructive dark:hover:bg-destructive/30"
+                                            className="w-full"
                                             variant="ghost"
                                             onClick={() =>
                                                 onFilterValueChange(

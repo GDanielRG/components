@@ -43,7 +43,6 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { Textarea } from '@/components/ui/textarea';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import { cn } from '@/lib/utils';
 
 const existingDocumentErrorFields = ['name', 'description', 'file'] as const;
 
@@ -189,14 +188,7 @@ export function DocumentsPanelItem({
 
     return (
         <div data-document-item>
-            <Attachment
-                state={attachmentState}
-                className={cn(
-                    'w-full items-start',
-                    showMetadataEditor &&
-                        'border-transparent bg-transparent focus-within:ring-0',
-                )}
-            >
+            <Attachment state={attachmentState} className="w-full items-start">
                 <AttachmentMedia>
                     {form.processing && hasPendingFile ? (
                         <Spinner />
@@ -207,7 +199,7 @@ export function DocumentsPanelItem({
 
                 <AttachmentContent>
                     {showMetadataEditor ? (
-                        <FieldGroup className="gap-2">
+                        <FieldGroup>
                             <Field
                                 data-invalid={
                                     Boolean(form.errors.name) || undefined
@@ -268,9 +260,7 @@ export function DocumentsPanelItem({
                         </FieldGroup>
                     ) : (
                         <>
-                            <AttachmentTitle
-                                className={cn(fileError && 'text-destructive')}
-                            >
+                            <AttachmentTitle>
                                 {displayName || copy.documentsFallbackName}
                             </AttachmentTitle>
 

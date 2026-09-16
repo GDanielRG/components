@@ -36,7 +36,6 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
-import { cn } from '@/lib/utils';
 
 interface DocumentItemProps {
     document: DocumentData;
@@ -134,11 +133,7 @@ export function DocumentItem({
     return (
         <Attachment
             state={hasFieldError ? 'error' : isExisting ? 'done' : 'idle'}
-            className={cn(
-                'w-full items-start',
-                isEditingMetadata &&
-                    'border-transparent bg-transparent focus-within:ring-0',
-            )}
+            className="w-full items-start"
         >
             <AttachmentMedia>
                 {hasFieldError ? (
@@ -156,7 +151,7 @@ export function DocumentItem({
                 )}
 
                 {isEditingMetadata && (
-                    <FieldGroup className="gap-2">
+                    <FieldGroup>
                         <Field data-invalid={Boolean(nameError) || undefined}>
                             <FieldLabel
                                 htmlFor={`document-name-input-${documentKey}`}

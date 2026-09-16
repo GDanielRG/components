@@ -79,10 +79,7 @@ export function RangeFilter({
                     testIdPrefix,
                 )}
                 variant={open ? 'secondary' : 'outline'}
-                className={cn(
-                    'max-w-full justify-start',
-                    !active && 'border-dashed',
-                )}
+                className="max-w-full justify-start"
             >
                 {!active && <FunnelPlusIcon />}
                 <span className="shrink-0">{filter.label}</span>
@@ -183,7 +180,7 @@ export function RangeFilter({
         }
 
         return (
-            <FieldGroup className="gap-3">
+            <FieldGroup>
                 <Field>
                     <FieldLabel htmlFor={`${filter.key}-from`}>
                         {filter.fromLabel}

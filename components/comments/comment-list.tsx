@@ -241,7 +241,7 @@ function CommentItem({
         <div data-comment-item>
             <Message
                 align={isCurrentUser ? 'end' : 'start'}
-                className="items-start px-2 py-1.5 sm:px-3"
+                className="items-start"
             >
                 <MessageAvatar className="min-w-6">
                     {authoredName ? (
@@ -264,9 +264,7 @@ function CommentItem({
                         variant={isEditing ? 'outline' : 'muted'}
                         className="max-w-full"
                     >
-                        <BubbleContent
-                            className={cn(isEditing && 'w-full p-0')}
-                        >
+                        <BubbleContent className={cn(isEditing && 'w-full')}>
                             {isEditing && updateFormAction ? (
                                 <CommentForm
                                     formAction={updateFormAction(comment.id)}
@@ -287,7 +285,7 @@ function CommentItem({
                     {!isEditing && (timestamp || commentActions) && (
                         <MessageFooter
                             className={cn(
-                                'w-full gap-1.5 px-0',
+                                'w-full',
                                 isCurrentUser && 'translate-x-8',
                             )}
                         >
@@ -355,5 +353,5 @@ export function CommentList({
         return <>{renderContainer(items)}</>;
     }
 
-    return <MessageGroup className="gap-2 py-2">{items}</MessageGroup>;
+    return <MessageGroup>{items}</MessageGroup>;
 }
