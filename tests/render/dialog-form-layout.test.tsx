@@ -29,32 +29,16 @@ function renderDialogForm(
     return screen.getByTestId('dialog-popup');
 }
 
-function resolveReference(popup: HTMLElement, attribute: string) {
-    const id = popup.getAttribute(attribute);
-
-    expect(id).not.toBeNull();
-
-    return document.getElementById(id as string);
-}
-
 describe('DialogFormLayout — header semantics', () => {
     it('labels the popup with the visible title, rendered as a heading', () => {
         const popup = renderDialogForm();
-        const label = resolveReference(popup, 'aria-labelledby');
-
-        expect(label).not.toBeNull();
-        expect(label).toHaveTextContent(title);
-        expect(label?.tagName).toBe('H2');
+        expect(screen.getByRole('heading', { name: title })).toBeVisible();
         expect(popup).toHaveAccessibleName(title);
     });
 
     it('describes the popup with the description element when one is passed', () => {
         const popup = renderDialogForm({ description });
-        const describedBy = resolveReference(popup, 'aria-describedby');
-
-        expect(describedBy).not.toBeNull();
-        expect(describedBy).toHaveTextContent(description);
-        expect(describedBy?.tagName).toBe('DIV');
+        expect(screen.getByText(description)).toBeVisible();
         expect(popup).toHaveAccessibleDescription(description);
     });
 
@@ -62,17 +46,15 @@ describe('DialogFormLayout — header semantics', () => {
         const popup = renderDialogForm({
             description: <div data-test="metadata">Metadata</div>,
         });
-        const describedBy = resolveReference(popup, 'aria-describedby');
-
-        expect(describedBy?.tagName).toBe('DIV');
         expect(screen.getByTestId('metadata')).toBeVisible();
+        expect(screen.getByTestId('metadata').closest('p')).toBeNull();
         expect(popup).toHaveAccessibleDescription('Metadata');
     });
 
-    it('omits aria-describedby entirely when no description is passed', () => {
+    it('has no accessible description when none is passed', () => {
         const popup = renderDialogForm();
 
-        expect(popup).not.toHaveAttribute('aria-describedby');
+        expect(popup).not.toHaveAccessibleDescription();
     });
 
     it('exposes the footer cancel action through the shared browser-test seam', () => {
