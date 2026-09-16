@@ -152,7 +152,7 @@ export function CommentForm({
                                                 <InputGroupButton
                                                     type="submit"
                                                     data-test="submit-comment"
-                                                    className="ml-auto size-9"
+                                                    className="ml-auto"
                                                     variant="default"
                                                     size="icon-sm"
                                                     disabled={

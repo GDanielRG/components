@@ -80,7 +80,6 @@ export function ColumnHeaderMenu({
                         data-test={triggerDataTest}
                         variant={open || isActiveSorted ? 'secondary' : 'ghost'}
                         size="sm"
-                        className="h-8"
                     />
                 }
             >
