@@ -19,6 +19,18 @@ Consumers provide:
 Locale and shell styling vary by app, so registry installs never own or overwrite
 these seams.
 
+## Dialog forms
+
+`DialogFormLayout` supplies a padded header, a scrolling body, and an optional
+footer. Its title and description inherit the installed dialog primitives' styles.
+
+The enclosing `DialogContent` needs a viewport-bounded maximum height,
+`flex flex-col overflow-hidden p-0`, and `showCloseButton={false}`. The layout owns
+section padding and its close control; outer padding would duplicate it. Any
+intervening form or wrapper needs `flex min-h-0 flex-1 flex-col` so the body can
+shrink and scroll while the header and footer stay visible. Consumers choose the
+dialog width and the fields' responsive layout.
+
 ## Injected routes
 
 Comments receive `storeCommentForm`, `updateCommentForm`, and

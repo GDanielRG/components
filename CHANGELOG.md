@@ -10,6 +10,10 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Changed** `DialogFormLayout` to inherit title and description styles from the
+  installed dialog primitives and use the secondary close-button variant. Clarified
+  the caller's height, padding, and flex constraints for scrolling forms.
+
 - Move nested-table `pageParam` configuration from `useSort` to `useSearchNavigation` so sorting resets only its own paginator.
 
 - **Fixed** export submissions preserving named range bounds independently,
