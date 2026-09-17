@@ -10,6 +10,9 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Fixed** shared empty-state outlines, unset filter cues, and compact spacing
+  in filter popovers and attachment metadata editors.
+
 - **Changed** `DialogFormLayout` to inherit title and description styles from the
   installed dialog primitives and use the secondary close-button variant. Clarified
   the caller's height, padding, and flex constraints for scrolling forms.

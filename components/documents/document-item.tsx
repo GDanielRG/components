@@ -151,7 +151,7 @@ export function DocumentItem({
                 )}
 
                 {isEditingMetadata && (
-                    <FieldGroup>
+                    <FieldGroup className="gap-2">
                         <Field data-invalid={Boolean(nameError) || undefined}>
                             <FieldLabel
                                 htmlFor={`document-name-input-${documentKey}`}

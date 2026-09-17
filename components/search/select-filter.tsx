@@ -19,6 +19,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
+import { cn } from '@/lib/utils';
 
 function resolveTestId(base: string, prefix?: string): string {
     return prefix ? `${prefix}-${base}` : base;
@@ -69,7 +70,10 @@ export function SelectFilter({
                 )}
                 aria-label={filter.hideLabel ? filter.label : undefined}
                 variant={open ? 'secondary' : 'outline'}
-                className="max-w-full justify-start"
+                className={cn(
+                    'max-w-full justify-start',
+                    !selectedOption && 'border-dashed',
+                )}
             >
                 {showTriggerIcon && <TriggerIcon />}
                 {!filter.hideLabel && (
@@ -96,7 +100,7 @@ export function SelectFilter({
         <Popover open={open} onOpenChange={onOpenChange}>
             <PopoverTrigger render={(props) => renderTrigger(props)} />
             <PopoverContent className="w-60" align="start">
-                <FieldGroup>
+                <FieldGroup className="gap-3">
                     <RadioGroup
                         value={value}
                         onValueChange={(next) =>

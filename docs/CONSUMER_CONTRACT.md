@@ -31,6 +31,17 @@ intervening form or wrapper needs `flex min-h-0 flex-1 flex-col` so the body can
 shrink and scroll while the header and footer stay visible. Consumers choose the
 dialog width and the fields' responsive layout.
 
+## Compact editors and state cues
+
+`EmptyCard` adds the outline width that the installed `Empty` leaves to its caller.
+Unset filter triggers use a dashed border. Range/select popovers use `gap-3`;
+attachment metadata editors use `gap-2`. These are scoped composition contracts,
+not changes to full-form spacing. Consumers enforcing `shadcn/no-restyle` permit
+these exact utilities only in the owning component files.
+
+Clear-filter and column-reset actions retain the neutral ghost variant: they
+reset a reversible view and do not delete application data.
+
 ## Injected routes
 
 Comments receive `storeCommentForm`, `updateCommentForm`, and

@@ -199,7 +199,7 @@ export function DocumentsPanelItem({
 
                 <AttachmentContent>
                     {showMetadataEditor ? (
-                        <FieldGroup>
+                        <FieldGroup className="gap-2">
                             <Field
                                 data-invalid={
                                     Boolean(form.errors.name) || undefined

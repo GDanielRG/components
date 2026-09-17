@@ -93,7 +93,10 @@ export function FacetedFilters({
                                 filter.hideLabel ? filter.label : undefined
                             }
                             variant={open ? 'secondary' : 'outline'}
-                            className="max-w-full justify-start"
+                            className={cn(
+                                'max-w-full justify-start',
+                                selectedValues.length === 0 && 'border-dashed',
+                            )}
                         >
                             {showTriggerIcon && <TriggerIcon />}
                             {!filter.hideLabel && (
