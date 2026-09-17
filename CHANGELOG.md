@@ -10,6 +10,8 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Fixed** sidebar menu triggers retaining their open-state cue with Base UI popups.
+
 - **Fixed** shared empty-state outlines, unset filter cues, and compact spacing
   in filter popovers and attachment metadata editors.
 
