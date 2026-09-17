@@ -24,12 +24,20 @@ these seams.
 `DialogFormLayout` supplies a padded header, a scrolling body, and an optional
 footer. Its title and description inherit the installed dialog primitives' styles.
 
-The enclosing `DialogContent` needs a viewport-bounded maximum height,
-`flex flex-col overflow-hidden p-0`, and `showCloseButton={false}`. The layout owns
-section padding and its close control; outer padding would duplicate it. Any
-intervening form or wrapper needs `flex min-h-0 flex-1 flex-col` so the body can
-shrink and scroll while the header and footer stay visible. Consumers choose the
-dialog width and the fields' responsive layout.
+Use `DialogFormContent` around the form. It owns the viewport height bound,
+flex column, clipped outer overflow, zero outer padding, and omission of the
+primitive's duplicate close button. `DialogFormLayout` owns section padding and
+the visible close action. Consumers choose width through `className` and keep
+normal dialog props, refs, focus handling, and callbacks.
+
+Any intervening form or wrapper still needs `flex min-h-0 flex-1 flex-col` so the
+body can shrink and scroll while the header and footer stay visible. Plain dialogs,
+settings shells, and other compositions keep `DialogContent` when they need its
+padding or default close control.
+
+Consumers enforcing design lint allow `max-h-[calc(100dvh-2rem)]` only in
+`dialog-form-content.tsx`; it reserves one rem above and below the popup. Keep
+layout checking enabled elsewhere.
 
 ## Design lint contracts
 
