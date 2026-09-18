@@ -35,6 +35,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 import { useIsSidebarSheet } from '@/hooks/use-sidebar-sheet';
+import { cn } from '@/lib/utils';
 
 type CommentsDocumentsSidebarTab = 'comments' | 'documents';
 
@@ -558,7 +559,7 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
 
     return (
         <AppRightSidebar open={open} onOpenChange={onOpenChange}>
-            <SidebarHeader className="min-h-13 flex-row items-center justify-between">
+            <SidebarHeader className="min-h-13 flex-row items-center justify-between px-4 lg:px-0">
                 <ActivityTabs
                     activeTab={resolvedActiveTab}
                     onTabChange={(tab) =>
@@ -579,7 +580,11 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
             {showActiveContent && (
                 <SidebarContent
                     data-test="activity-sidebar-content"
-                    className="m-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden lg:mx-0"
+                    className={cn(
+                        'mx-4 min-h-0 flex-initial overflow-hidden lg:mx-0',
+                        resolvedActiveTab !== 'documents' &&
+                            'rounded-xl border bg-background shadow-sm lg:border-0',
+                    )}
                 >
                     {resolvedActiveTab === 'comments' ? (
                         <MessageScrollerProvider
@@ -611,7 +616,13 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
             )}
 
             {activeSection?.footer && (
-                <SidebarFooter data-test="activity-sidebar-footer">
+                <SidebarFooter
+                    data-test="activity-sidebar-footer"
+                    className={cn(
+                        'px-4 lg:px-0 lg:pb-0',
+                        showActiveContent ? 'lg:pt-4' : 'pt-0',
+                    )}
+                >
                     {activeSection.footer}
                 </SidebarFooter>
             )}

@@ -31,6 +31,14 @@ intervening form or wrapper needs `flex min-h-0 flex-1 flex-col` so the body can
 shrink and scroll while the header and footer stay visible. Consumers choose the
 dialog width and the fields' responsive layout.
 
+## Design lint contracts
+
+Install `design-lint`, import `./shared-component-lint.json` in `vite.config.ts`,
+and include that object in `lint.extends`. It owns only file-scoped allowances for registry compositions;
+keep rule severity, app-specific contracts, and global design policy in the app.
+Update the config with the components that need it. Oxlint rule options replace
+rather than merge, so an app override for the same file must retain its shared contract.
+
 ## Compact editors and state cues
 
 `EmptyCard` adds the outline width that the installed `Empty` leaves to its caller.
