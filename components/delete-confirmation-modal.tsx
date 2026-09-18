@@ -49,7 +49,7 @@ export function DeleteConfirmationModal({
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogMedia className="bg-destructive/10">
+                    <AlertDialogMedia>
                         <Trash2 className="stroke-destructive" />
                     </AlertDialogMedia>
                     <AlertDialogTitle>{title}</AlertDialogTitle>

@@ -56,11 +56,7 @@ export function ColumnVisibilityMenu<Key extends string>({
                                         : undefined
                                 }
                                 disabled={!canHide}
-                                className={
-                                    isVisible
-                                        ? '[&_[data-slot=dropdown-menu-checkbox-item-indicator]]:hidden'
-                                        : 'text-destructive [&_[data-slot=dropdown-menu-checkbox-item-indicator]]:hidden'
-                                }
+                                className="[&_[data-slot=dropdown-menu-checkbox-item-indicator]]:hidden"
                                 checked={isVisible}
                                 onCheckedChange={(checked) => {
                                     controller.setVisible(

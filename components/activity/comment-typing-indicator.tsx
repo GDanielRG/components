@@ -87,7 +87,7 @@ export function CommentTypingIndicator({
             className="grid grid-rows-[1fr] opacity-100 transition-[grid-template-rows,opacity] duration-300 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0 motion-reduce:transition-none starting:grid-rows-[0fr] starting:opacity-0"
         >
             <div className="overflow-hidden">
-                <Marker className="px-3 py-1">
+                <Marker>
                     <MarkerIcon className="h-6 w-auto">
                         <AvatarGroup>
                             {visibleUsers.map((user) => (
@@ -110,7 +110,7 @@ export function CommentTypingIndicator({
                             ) : null}
                         </AvatarGroup>
                     </MarkerIcon>
-                    <MarkerContent className="shimmer text-xs">
+                    <MarkerContent className="shimmer">
                         {copy.commentsTyping(
                             displayUsers.map((user) => user.name),
                         )}

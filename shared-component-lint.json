@@ -1,0 +1,104 @@
+{
+    "overrides": [
+        {
+            "files": [
+                "resources/js/components/activity/comments-documents-sidebar.tsx"
+            ],
+            "rules": {
+                "shadcn/no-restyle": [
+                    "error",
+                    {
+                        "allow": ["layout"],
+                        "contracts": [
+                            {
+                                "pattern": "^SidebarHeader$",
+                                "allow": ["layout", "px-4", "lg:px-0"]
+                            },
+                            {
+                                "pattern": "^SidebarContent$",
+                                "allow": [
+                                    "layout",
+                                    "rounded-xl",
+                                    "border",
+                                    "bg-background",
+                                    "shadow-sm",
+                                    "lg:border-0"
+                                ]
+                            },
+                            {
+                                "pattern": "^SidebarFooter$",
+                                "allow": [
+                                    "layout",
+                                    "px-4",
+                                    "lg:px-0",
+                                    "lg:pb-0",
+                                    "lg:pt-4",
+                                    "pt-0"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["resources/js/components/app-empty-card.tsx"],
+            "rules": {
+                "shadcn/no-restyle": [
+                    "error",
+                    {
+                        "allow": ["layout"],
+                        "contracts": [
+                            {
+                                "pattern": "^Empty$",
+                                "allow": ["layout", "border"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": [
+                "resources/js/components/search/{faceted-filters,range-filter,select-filter}.tsx"
+            ],
+            "rules": {
+                "shadcn/no-restyle": [
+                    "error",
+                    {
+                        "allow": ["layout"],
+                        "contracts": [
+                            {
+                                "pattern": "^Button$",
+                                "allow": ["layout", "border-dashed"]
+                            },
+                            {
+                                "pattern": "^FieldGroup$",
+                                "allow": ["layout", "gap-3"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": [
+                "resources/js/components/documents/{document-item,documents-panel-item}.tsx"
+            ],
+            "rules": {
+                "shadcn/no-restyle": [
+                    "error",
+                    {
+                        "allow": ["layout"],
+                        "contracts": [
+                            {
+                                "pattern": "^FieldGroup$",
+                                "allow": ["layout", "gap-2"]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

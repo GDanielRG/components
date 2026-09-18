@@ -184,10 +184,7 @@ export function SearchAppliedFilters(props: SearchAppliedFiltersProps) {
                                 orientation="vertical"
                                 className="h-full w-px"
                             />
-                            <Badge
-                                variant="secondary"
-                                className="max-w-64 rounded-sm px-1 font-normal"
-                            >
+                            <Badge variant="secondary" className="max-w-64">
                                 <span className="truncate">{searchValue}</span>
                             </Badge>
                         </Button>
@@ -263,7 +260,7 @@ export function SearchAppliedFiltersDisclosure({
         (popoverState?.openFilterKey ?? null) !== null
     ) {
         return (
-            <div className="transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none starting:-translate-y-1 starting:opacity-0">
+            <div className="transition duration-200 ease-out motion-reduce:transition-none starting:-translate-y-1 starting:opacity-0">
                 <SearchAppliedFilters
                     appliedFilters={appliedFilters}
                     popoverState={popoverState}

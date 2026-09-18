@@ -82,7 +82,7 @@ export function OptionalAddButton({
             open={isOpen}
             onOpenChange={handleOpenChange}
             className={cn(
-                closedLabel && 'flex flex-col items-start gap-3',
+                closedLabel && 'flex flex-col items-start',
                 className,
             )}
         >
@@ -104,6 +104,7 @@ export function OptionalAddButton({
 
             <CollapsibleContent
                 render={<div ref={contentRef} tabIndex={-1} />}
+                // oxlint-disable-next-line shadcn/require-static-classes -- Public layout class slot; consumers supply its static values.
                 className={cn(closedLabel && 'w-full', contentClassName)}
             >
                 {children}

@@ -139,7 +139,7 @@ export function SelectFilter({
                                 testIdPrefix,
                             )}
                             variant="ghost"
-                            className="w-full hover:bg-destructive/20 hover:text-destructive dark:hover:bg-destructive/30"
+                            className="w-full"
                             onClick={() => onValueChange(null)}
                         >
                             <FunnelXIcon />

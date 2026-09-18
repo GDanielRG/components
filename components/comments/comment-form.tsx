@@ -62,13 +62,7 @@ export function CommentForm({
             {({ errors, processing, resetAndClearErrors, isDirty }) => {
                 return (
                     <>
-                        <InputGroup
-                            className={
-                                isEditing
-                                    ? 'rounded-lg border-0 bg-transparent p-1.5 pb-0 shadow-none lg:border-0'
-                                    : 'rounded-xl border-0 bg-background! p-2 pb-0 shadow-sm lg:border-0'
-                            }
-                        >
+                        <InputGroup>
                             <InputGroupTextarea
                                 name="content"
                                 placeholder={
@@ -158,7 +152,7 @@ export function CommentForm({
                                                 <InputGroupButton
                                                     type="submit"
                                                     data-test="submit-comment"
-                                                    className="ml-auto size-9 rounded-full"
+                                                    className="ml-auto"
                                                     variant="default"
                                                     size="icon-sm"
                                                     disabled={

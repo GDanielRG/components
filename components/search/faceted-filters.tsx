@@ -195,7 +195,7 @@ export function FacetedFilters({
                                                 `filter-${filter.key}-clear`,
                                                 testIdPrefix,
                                             )}
-                                            className="w-full hover:bg-destructive/20 hover:text-destructive dark:hover:bg-destructive/30"
+                                            className="w-full"
                                             variant="ghost"
                                             onClick={() =>
                                                 onFilterValueChange(
