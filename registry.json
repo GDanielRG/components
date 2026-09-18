@@ -113,6 +113,11 @@
                     "target": "@components/destroy-confirmation-form.tsx"
                 },
                 {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
                     "path": "components/dialog-form-layout.tsx",
                     "type": "registry:component",
                     "target": "@components/dialog-form-layout.tsx"

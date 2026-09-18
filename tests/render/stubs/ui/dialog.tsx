@@ -23,12 +23,19 @@ function DialogOverlay({ ...props }: DialogPrimitive.Backdrop.Props) {
     return <DialogPrimitive.Backdrop data-slot="dialog-overlay" {...props} />;
 }
 
-function DialogContent({ children, ...props }: DialogPrimitive.Popup.Props) {
+function DialogContent({
+    children,
+    showCloseButton = true,
+    ...props
+}: DialogPrimitive.Popup.Props & { showCloseButton?: boolean }) {
     return (
         <DialogPortal>
             <DialogOverlay />
             <DialogPrimitive.Popup data-slot="dialog-content" {...props}>
                 {children}
+                {showCloseButton && (
+                    <DialogPrimitive.Close aria-label="Close" />
+                )}
             </DialogPrimitive.Popup>
         </DialogPortal>
     );

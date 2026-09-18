@@ -2,7 +2,8 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DialogFormLayout } from '@/components/dialog-form-layout';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { DialogFormContent } from '@/components/dialog-form-content';
+import { Dialog } from '@/components/ui/dialog';
 
 afterEach(cleanup);
 
@@ -14,7 +15,7 @@ function renderDialogForm(
 ) {
     render(
         <Dialog open={true}>
-            <DialogContent data-test="dialog-popup">
+            <DialogFormContent data-test="dialog-popup">
                 <DialogFormLayout
                     title={title}
                     description={props.description}
@@ -22,7 +23,7 @@ function renderDialogForm(
                 >
                     <input aria-label="Nombre" />
                 </DialogFormLayout>
-            </DialogContent>
+            </DialogFormContent>
         </Dialog>,
     );
 
@@ -34,6 +35,7 @@ describe('DialogFormLayout — header semantics', () => {
         const popup = renderDialogForm();
         expect(screen.getByRole('heading', { name: title })).toBeVisible();
         expect(popup).toHaveAccessibleName(title);
+        expect(screen.getAllByRole('button')).toHaveLength(1);
     });
 
     it('describes the popup with the description element when one is passed', () => {

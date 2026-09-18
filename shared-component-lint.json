@@ -1,6 +1,30 @@
 {
     "overrides": [
         {
+            "files": ["resources/js/components/dialog-form-content.tsx"],
+            "rules": {
+                "shadcn/no-restyle": [
+                    "error",
+                    {
+                        "allow": ["layout"],
+                        "contracts": [
+                            {
+                                "pattern": "^DialogContent$",
+                                "allow": ["layout", "p-0"]
+                            }
+                        ]
+                    }
+                ],
+                "shadcn/no-arbitrary-values": [
+                    "error",
+                    {
+                        "scanAllStrings": true,
+                        "allow": ["max-h-[calc(100dvh-2rem)]"]
+                    }
+                ]
+            }
+        },
+        {
             "files": [
                 "resources/js/components/activity/comments-documents-sidebar.tsx"
             ],

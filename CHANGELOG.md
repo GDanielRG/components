@@ -16,6 +16,9 @@ release policy. Pin installs to a snapshot tag, e.g.
 - **Fixed** the activity sidebar's responsive header and footer insets and the
   comment surface boundary so comments retain their spacing on desktop and mobile.
 
+- **Added** `DialogFormContent` to own bounded form-dialog composition while
+  retaining caller widths, focus handling, and form behavior.
+
 - **Fixed** sidebar menu triggers retaining their open-state cue with Base UI popups.
 
 - **Fixed** shared empty-state outlines, unset filter cues, and compact spacing
