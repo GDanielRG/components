@@ -35,9 +35,9 @@ body can shrink and scroll while the header and footer stay visible. Plain dialo
 settings shells, and other compositions keep `DialogContent` when they need its
 padding or default close control.
 
-Consumers enforcing design lint allow `max-h-[calc(100dvh-2rem)]` only in
-`dialog-form-content.tsx`; it reserves one rem above and below the popup. Keep
-layout checking enabled elsewhere.
+The `design-lint` registry item allows `max-h-[calc(100dvh-2rem)]` only in
+`dialog-form-content.tsx`; it reserves one rem above and below the popup. Install
+its updated config with the component. Layout checking stays enabled elsewhere.
 
 ## Design lint contracts
 

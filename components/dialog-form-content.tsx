@@ -15,7 +15,6 @@ export function DialogFormContent({
         <DialogContent
             {...props}
             showCloseButton={false}
-            // oxlint-disable-next-line shadcn/require-static-classes -- Consumers choose width; this composition owns the viewport and section padding.
             className={cn(
                 'flex max-h-[calc(100dvh-2rem)] flex-col overflow-hidden p-0',
                 className,
