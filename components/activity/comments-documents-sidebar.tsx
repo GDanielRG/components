@@ -583,7 +583,7 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
                     className={cn(
                         'mx-4 min-h-0 flex-initial overflow-hidden lg:mx-0',
                         resolvedActiveTab !== 'documents' &&
-                            'rounded-xl border bg-background shadow-sm lg:border-0',
+                            'bg-background rounded-xl border shadow-sm lg:border-0',
                     )}
                 >
                     {resolvedActiveTab === 'comments' ? (
