@@ -10,6 +10,12 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Added** `design-lint`, an installable `shared-component-lint.json` containing
+  the owning-file lint contracts for shared UI. Consumers keep their rule policy
+  and application-specific exceptions in their Vite configuration.
+- **Fixed** the activity sidebar's responsive header and footer insets and the
+  comment surface boundary so comments retain their spacing on desktop and mobile.
+
 - **Fixed** sidebar menu triggers retaining their open-state cue with Base UI popups.
 
 - **Fixed** shared empty-state outlines, unset filter cues, and compact spacing
