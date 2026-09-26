@@ -97,16 +97,50 @@ or tag set to Inertia; the registry owns no tag vocabulary or invalidation polic
 ## Live comment updates
 
 The activity sidebar owns the comments/documents shell and accepts
-`renderCommentLiveUpdates({ enabled, visible })`. Consumers keep broadcast clients,
-generated channel helpers, and Echo/Reverb hooks app-owned. The sidebar passes
-`enabled=false` while a comment draft is being created or edited, or a comment
-deletion is in flight, so a remote reload cannot replace local input; an edit whose
-row disappears from `comments` is dropped so updates never stay paused without an
-editor. `visible` is true while the sidebar is open on the comments tab, letting
-consumers scope periodic reads to the visible surface while a subscription stays
-mounted. Pass `readOnly` for archived or otherwise immutable resources; the
+`renderCommentLiveUpdates({ enabled, visible })`; render `RealtimeUpdates` from the
+`realtime` item there with that state spread onto it. The sidebar does not depend on
+the realtime item. It passes `enabled=false` while a comment draft is being created
+or edited, or a comment delete request is in flight, so a remote reload cannot
+replace local input; an edit whose row disappears from `comments` is dropped so
+updates never stay paused without an editor. `visible` is true while the sidebar is
+open on the comments tab, letting consumers scope periodic reads to the visible
+surface while a subscription stays mounted. Pass `readOnly` for archived or otherwise immutable resources; the
 sidebar then withholds comment/document mutations, upload controls, typing presence,
 and live-update subscriptions while retaining download access.
+
+## Realtime client
+
+Install `realtime` beside `foundations` to share the live-update client:
+`configureRealtimeEcho`, `useRealtimeFeature`, `RealtimeUpdates`, and
+`useCommentTypingPresence`. It is opt-in and adds `@laravel/echo-react`,
+`laravel-echo`, and `pusher-js` when the app does not already declare them.
+
+The client reads the app's shared `realtime` prop and `auth.user.id` through the
+Wayfinder-generated `InertiaConfig['sharedPageProps']` declaration.
+`realtime.connection` is `{ key, host, port, scheme }` or `null`; each
+`realtime.features` entry is `{ transport, pollIntervalMs }`, where `transport` is
+`reverb`, `poll`, or `manual`. Typing presence requires a `comments` feature. The
+backend that serves this prop, authorizes channels, and broadcasts events stays
+app-owned.
+
+Call `configureRealtimeEcho(page.props.realtime.connection)` once when creating the
+Inertia app; a `null` connection configures Echo's null broadcaster.
+
+Registry files never import generated Wayfinder modules, because ShadCN rewrites
+`@/wayfinder/*` imports into unresolvable paths. `RealtimeUpdates` and
+`useCommentTypingPresence` therefore accept channel, event, and cache-tag strings.
+Build those values from the generated `BroadcastChannels` and `BroadcastEvents` and
+the app's closed cache tags in an app-owned seam, such as a map of commentable
+resources, so the closed sets stay typed where they are chosen. Channel names omit
+Echo's `private-` and `presence-` prefixes. Presence authorization returns `user_id`,
+`name`, and `avatar`; other member fields are ignored.
+
+`RealtimeUpdates` reloads `only` after a broadcast, a successful Reverb subscription,
+or a return to the visible tab, and polls every `pollIntervalMs` while it is not
+subscribed to Reverb, `enabled`, and `visible`. Reads are debounced and never
+overlap. When `enabled` becomes false, an in-flight read is cancelled and replayed
+once it is true again. `invalidateCacheTags` are flushed after a read that changes
+the `snapshot` result, or after every read when no snapshot is given.
 
 ## Additional activity sections
 

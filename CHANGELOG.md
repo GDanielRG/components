@@ -10,6 +10,12 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Added** `realtime`, the shared live-update client: Echo configuration,
+  `RealtimeUpdates`, `useRealtimeFeature`, and `useCommentTypingPresence`. It is
+  held out of `foundations`. Generated channels, events, and cache tags stay in
+  app-owned seams and reach the client as strings; the typing presence payload no
+  longer carries the unused `employeeId`.
+
 - **Fixed** `onDeleteProcessingChange` following the comment delete visit's
   `onStart`/`onFinish` lifecycle, so the activity sidebar keeps live updates paused
   until the request finishes even when the deleted row unmounts first. This matches

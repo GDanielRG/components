@@ -6,13 +6,18 @@ import { defineConfig } from 'vitest/config';
 const root = dirname(fileURLToPath(import.meta.url));
 const stubs = resolve(root, 'tests/render/stubs');
 
-// Resolve consumer-owned contracts and stock shadcn primitives to test doubles;
-// registry-owned modules continue to resolve from the working tree.
+// Resolve consumer-owned contracts, the consumer's Echo client, and stock shadcn
+// primitives to test doubles; registry-owned modules continue to resolve from the
+// working tree.
 function resolveAtAlias(): import('vite').Plugin {
     return {
         name: 'registry-at-alias',
         enforce: 'pre',
         resolveId(id) {
+            if (id === '@laravel/echo-react') {
+                return resolve(stubs, 'echo-react.ts');
+            }
+
             if (!id.startsWith('@/')) {
                 return null;
             }
