@@ -207,7 +207,10 @@ function inline(item) {
 registry.items = registry.items.map(inline);
 fs.writeFileSync(
     registryPath,
-    await prettier.format(JSON.stringify(registry), { parser: 'json' }),
+    await prettier.format(JSON.stringify(registry), {
+        ...(await prettier.resolveConfig(registryPath)),
+        parser: 'json',
+    }),
 );
 
 run('bun', ['run', 'registry:validate']);
