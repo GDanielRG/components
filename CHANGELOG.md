@@ -10,6 +10,13 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Changed** `registry:release` to inline internal dependencies into each released
+  item, so a release commit installs reproducibly by its full SHA as well as by tag,
+  and added `--pin` for pending commits. Consumers record `componentsRegistry` in
+  `package.json`.
+- **Added** `registry:drift`, which compares a consumer's installed registry files
+  with a ref after applying the consumer's formatter.
+
 - **Added** `realtime`, the shared live-update client: Echo configuration,
   `RealtimeUpdates`, `useRealtimeFeature`, and `useCommentTypingPresence`. It is
   held out of `foundations`. Generated channels, events, and cache tags stay in

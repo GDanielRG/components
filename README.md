@@ -9,22 +9,19 @@ Use this registry in a Laravel/Inertia React app that has been migrated to Base 
 the [frontend baseline](docs/CONSUMER_CONTRACT.md):
 
 ```sh
-bunx --bun shadcn@latest add GDanielRG/components/foundations#v1.0.0
+bunx --bun shadcn@latest add GDanielRG/components/foundations#<release-commit-sha>
 ```
 
-Always pin to a **release ref** — a published tag (or that tag's commit SHA), never a branch and
-never a bare `main` SHA. ShadCN does not inherit a ref across registry dependencies, so each release
-pins every internal bundle to one immutable ref: `#v1.0.0` resolves all of that release's bundles at
-that ref. A bare `main` commit SHA is _not_ a safe pin — on `main` the internal deps carry no ref, so
-the nested bundles would resolve against the default branch instead of your SHA.
+Always pin to the full commit SHA of a **release commit** — a published tag's commit or a
+pending pin — never a branch and never a `main` SHA. ShadCN does not inherit a ref across
+registry dependencies, so a release commit inlines every internal dependency: all of an
+item's files come from that commit. On `main` the internal dependencies carry no ref, so a
+`main` SHA would resolve nested bundles against the default branch instead of your SHA.
 
 The fleet is pre-production, so the latest shared state is published as a dated, immutable **snapshot
 tag** rather than a semantic version (see [the maintenance guide](docs/MAINTAINING.md) for the
-two-phase release policy). Install the most recent one — for example:
-
-```sh
-bunx --bun shadcn@latest add GDanielRG/components/foundations#snapshot-20260623-<short-sha>
-```
+two-phase release policy). Install the most recent one by its commit SHA
+(`git rev-parse 'snapshot-…^{commit}'`). Record the pin as described in [the consumer contract](docs/CONSUMER_CONTRACT.md#registry-pin).
 
 The consumer also provides two intentionally app-owned files:
 
@@ -59,8 +56,8 @@ there rather than trusting the prose if the two ever disagree.
 Inspect before installing or updating:
 
 ```sh
-bunx --bun shadcn@latest view GDanielRG/components/foundations#v1.0.0
-bunx --bun shadcn@latest add GDanielRG/components/foundations#v1.0.0 --dry-run
+bunx --bun shadcn@latest view GDanielRG/components/foundations#<release-commit-sha>
+bunx --bun shadcn@latest add GDanielRG/components/foundations#<release-commit-sha> --dry-run
 ```
 
 ## Maintain

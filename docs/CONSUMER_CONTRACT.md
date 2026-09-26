@@ -19,6 +19,24 @@ Consumers provide:
 Locale and shell styling vary by app, so registry installs never own or overwrite
 these seams.
 
+## Registry pin
+
+Record the installed release in `package.json`:
+
+```json
+"componentsRegistry": {
+    "ref": "<full release commit SHA>",
+    "items": ["foundations", "realtime", "design-lint"],
+    "local": []
+}
+```
+
+`ref` is the release commit every item was installed from; `items` are the items
+installed at it. `local` lists registry-owned files the app intentionally adapts, by
+path from the app root; `bun run registry:drift` reports them without failing. Update
+the record with every reinstall. `components.json` cannot hold it: ShadCN rejects
+unknown keys there, and its `registries` accept only URL templates serving built items.
+
 ## Dialog forms
 
 `DialogFormLayout` supplies a padded header, a scrolling body, and an optional
