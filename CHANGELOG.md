@@ -16,7 +16,10 @@ release policy. Pin installs to a snapshot tag, e.g.
 - **Fixed** the activity sidebar's responsive header and footer insets and the
   comment surface boundary so comments retain their spacing on desktop and mobile.
 
-- **Fixed** sidebar menu triggers retaining their open-state cue with Base UI popups.
+- **Fixed** sidebar menu buttons, menu actions, and sub-actions keeping their
+  open-state fill while their Base UI popup is open.
+- **Fixed** `OptionalAddButton` spacing between its closed label and add button, and
+  the icon-only comment submit's accessible name (`commentsSend`).
 
 - **Fixed** shared empty-state outlines, unset filter cues, and compact spacing
   in filter popovers and attachment metadata editors.

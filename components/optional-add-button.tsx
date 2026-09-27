@@ -94,7 +94,10 @@ export function OptionalAddButton({
                         type="button"
                         variant="outline"
                         data-test={dataTest}
-                        className="data-panel-open:hidden"
+                        className={cn(
+                            'data-panel-open:hidden',
+                            closedLabel && 'mt-3',
+                        )}
                     />
                 }
             >

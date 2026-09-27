@@ -151,6 +151,9 @@ export function CommentForm({
                                             render={
                                                 <InputGroupButton
                                                     type="submit"
+                                                    aria-label={
+                                                        copy.commentsSend
+                                                    }
                                                     data-test="submit-comment"
                                                     className="ml-auto"
                                                     variant="default"
