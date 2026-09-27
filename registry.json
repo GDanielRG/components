@@ -149,7 +149,7 @@
                 }
             ],
             "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
         },
         {
             "name": "archive",
@@ -181,7 +181,7 @@
             ],
             "docs": "Requires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Archive validation errors surface through Sonner because the fieldless confirmation modal has no inline error anchor. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.",
             "dependencies": [
-                "@inertiajs/react@^3.3.1",
+                "@inertiajs/react@^3.7.1",
                 "lucide-react@^1.17.0",
                 "sonner@^2.0.7"
             ]
@@ -213,7 +213,7 @@
                 }
             ],
             "docs": "Requires `HistoryCopy` keys in the app-owned `useSharedComponentCopy` hook (including `historyDetailShow(count)`/`historyDetailHide`). Pass `employeeHref={(id) => showEmployee(id).url}` to link viewable causers to their detail page — registry files never import app Wayfinder routes; omit it to render every causer as plain text. Timestamps and values arrive server-formatted (no client date formatting).",
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
         },
         {
             "name": "sidebar",
@@ -331,8 +331,8 @@
             ],
             "dependencies": [
                 "@base-ui/react@^1.7.0",
-                "@inertiajs/core@^3.3.1",
-                "@inertiajs/react@^3.3.1",
+                "@inertiajs/core@^3.7.1",
+                "@inertiajs/react@^3.7.1",
                 "date-fns@^4.4.0",
                 "lucide-react@^1.17.0",
                 "react-day-picker@^10.0.1"
@@ -377,7 +377,7 @@
                     "target": "@components/table/use-sort.ts"
                 }
             ],
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
         },
         {
             "name": "comments",
@@ -422,7 +422,7 @@
                 }
             ],
             "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
-            "dependencies": ["@inertiajs/react@^3.3.1", "lucide-react@^1.17.0"]
+            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
         },
         {
             "name": "documents",
@@ -519,8 +519,8 @@
             ],
             "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
             "dependencies": [
-                "@inertiajs/core@^3.3.1",
-                "@inertiajs/react@^3.3.1",
+                "@inertiajs/core@^3.7.1",
+                "@inertiajs/react@^3.7.1",
                 "lucide-react@^1.17.0"
             ]
         },
