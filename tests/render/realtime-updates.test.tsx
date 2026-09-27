@@ -12,6 +12,8 @@ const inertia = vi.hoisted(() => ({
 
 const reverb = vi.hoisted(() => ({
     onSubscribed: (): void => {},
+    onError: (): void => {},
+    onConnectionChange: (_status: string): void => {},
 }));
 
 vi.mock('@inertiajs/react', () => ({
@@ -42,13 +44,23 @@ vi.mock('@laravel/echo-react', () => {
 
             return channel;
         },
-        error: () => channel,
+        error: (callback: () => void) => {
+            reverb.onError = callback;
+
+            return channel;
+        },
     };
 
     return {
         echo: () => ({
             private: () => channel,
-            connector: { onConnectionChange: () => () => {} },
+            connector: {
+                onConnectionChange: (callback: (status: string) => void) => {
+                    reverb.onConnectionChange = callback;
+
+                    return () => {};
+                },
+            },
             leaveChannel: vi.fn(),
         }),
     };
@@ -64,6 +76,7 @@ beforeEach(() => {
 afterEach(() => {
     cleanup();
     vi.useRealTimers();
+    vi.restoreAllMocks();
 });
 
 function Updates({ enabled }: { enabled: boolean }) {
@@ -114,5 +127,24 @@ describe('RealtimeUpdates', () => {
         act(() => reverb.onSubscribed());
 
         expect([...inertia.activePollIntervals]).toEqual([60000]);
+    });
+
+    it('stays stopped when subscription callbacks arrive after unmount', () => {
+        inertia.plan = { transport: 'reverb', pollIntervalMs: 15000 };
+        const { unmount } = render(<Updates enabled />);
+
+        unmount();
+        vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+        document.dispatchEvent(new Event('visibilitychange'));
+
+        act(() => {
+            reverb.onSubscribed();
+            reverb.onConnectionChange('disconnected');
+            reverb.onError();
+            vi.advanceTimersByTime(120_000);
+        });
+
+        expect(inertia.activePollIntervals.size).toBe(0);
+        expect(inertia.reloads).toHaveLength(0);
     });
 });

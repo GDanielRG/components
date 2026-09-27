@@ -572,8 +572,8 @@
             "title": "Realtime Client",
             "description": "Echo configuration, live resource refreshes with polling fallback, and comment typing presence driven by the app's shared realtime plan.",
             "dependencies": [
-                "@inertiajs/core@^3.3.1",
-                "@inertiajs/react@^3.3.1",
+                "@inertiajs/core@^3.7.1",
+                "@inertiajs/react@^3.7.1",
                 "@laravel/echo-react@^2.4.0",
                 "laravel-echo@^2.4.0",
                 "pusher-js@^8.6.0"

@@ -247,6 +247,10 @@ function createRefreshCoordinator({
     );
 
     const applyPolicy = (): void => {
+        if (disposed) {
+            return;
+        }
+
         let nextPoll: Poll | null = null;
 
         if (tabVisible && enabled && visible) {

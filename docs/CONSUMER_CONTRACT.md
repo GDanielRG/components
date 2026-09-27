@@ -112,19 +112,32 @@ and live-update subscriptions while retaining download access.
 
 Install `realtime` beside `foundations` to share the live-update client:
 `configureRealtimeEcho`, `useRealtimeFeature`, `RealtimeUpdates`, and
-`useCommentTypingPresence`. It is opt-in and adds `@laravel/echo-react`,
-`laravel-echo`, and `pusher-js` when the app does not already declare them.
+`useCommentTypingPresence`. It is opt-in and declares versioned `@laravel/echo-react`,
+`laravel-echo`, `pusher-js`, and `@inertiajs/*` ranges. ShadCN writes versioned ranges
+into `package.json` even when the app already declares the package, so review the
+manifest after every install and keep any higher floor the app has adopted.
 
 The client reads the app's shared `realtime` prop and `auth.user.id` through the
 Wayfinder-generated `InertiaConfig['sharedPageProps']` declaration.
 `realtime.connection` is `{ key, host, port, scheme }` or `null`; each
 `realtime.features` entry is `{ transport, pollIntervalMs }`, where `transport` is
-`reverb`, `poll`, or `manual`. Typing presence requires a `comments` feature. The
+`reverb`, `poll`, or `manual`, and `pollIntervalMs` is milliseconds or `null`. A
+`manual` transport or a `null` interval disables automatic refresh: `RealtimeUpdates`
+renders nothing. Typing presence requires a `comments` feature. The
 backend that serves this prop, authorizes channels, and broadcasts events stays
 app-owned.
 
-Call `configureRealtimeEcho(page.props.realtime.connection)` once when creating the
-Inertia app; a `null` connection configures Echo's null broadcaster.
+Call `configureRealtimeEcho` once when creating the Inertia app. Error responses can
+omit shared props, so read the connection defensively:
+
+```tsx
+withApp(app, { page }) {
+    configureRealtimeEcho(page.props.realtime?.connection ?? null);
+    // ...
+}
+```
+
+A `null` connection configures Echo's null broadcaster.
 
 Registry files never import generated Wayfinder modules, because ShadCN rewrites
 `@/wayfinder/*` imports into unresolvable paths. `RealtimeUpdates` and
