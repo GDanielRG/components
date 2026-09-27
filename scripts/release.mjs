@@ -224,10 +224,10 @@ if (pin) {
     );
     console.log('Next, commit this pin on the current release branch:');
     console.log(`  git add registry.json && git commit -m "release ${name}"`);
-    console.log(`  git push origin HEAD:refs/heads/release/${name}`);
+    console.log(`  git push origin HEAD:refs/heads/claude/registry-${name}`);
     console.log('  git switch -');
     console.log(
-        '\nConsumers install and record the full SHA of that commit (`git rev-parse release/' +
+        '\nConsumers install and record the full SHA of that commit (`git rev-parse claude/registry-' +
             name +
             '`).',
     );

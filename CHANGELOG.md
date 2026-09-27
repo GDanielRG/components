@@ -3,8 +3,8 @@
 The sibling workspace is **pre-production**. Shared waves now ship as immutable, dated **snapshot
 tags** (`snapshot-YYYYMMDD-<short-sha>`); strict semantic versioning resumes at the
 production cutover. See [docs/MAINTAINING.md](docs/MAINTAINING.md) for the two-phase
-release policy. Pin installs to a snapshot tag, e.g.
-`…/foundations#snapshot-20260623-<sha>`.
+release policy. Pin installs to the full 40-character SHA of a release commit, e.g.
+`…/foundations#<release-commit-sha>`; tag names label releases but are not pins.
 
 ## Snapshots (pre-production)
 

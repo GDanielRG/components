@@ -43,12 +43,13 @@ route contracts.
 - `documents` — polymorphic document and upload UI
 - `activity` — combined comments/documents activity UI
 - `chat-display` — chat message rendering primitives
-- `chat` — virtualized message scroller (held out of `foundations`: it depends
-  on the pre-1.0 `@shadcn/react` package)
+- `chat` — virtualized message scroller; it depends on the pre-1.0 `@shadcn/react`
+  package, which `activity` therefore pulls in
 - `realtime` — Echo configuration, live resource refreshes with polling fallback,
   and comment typing presence (held out of `foundations`: it requires the app's
   shared realtime plan and Echo packages)
-- `foundations` — installs every bundle except `chat` and `realtime`
+- `foundations` — installs every bundle except `realtime` and `design-lint`,
+  including `chat` and `@shadcn/react` through `activity`
 
 `registry.json` is the live inventory; this list is a reading aid, so check it
 there rather than trusting the prose if the two ever disagree.

@@ -54,19 +54,21 @@ ShadCN uses directly without resolving a ref.
 Unmerged work that consumers must install gets a pin commit instead of a tag:
 
 ```sh
-git switch -c release/pin-1a2b3c4 1a2b3c4
+git switch -c claude/registry-pin-1a2b3c4 1a2b3c4
 bun run registry:release -- --pin
 git add registry.json
 git commit -m "release pin-1a2b3c4"
-git push origin release/pin-1a2b3c4
+git push origin claude/registry-pin-1a2b3c4
 git switch -
 ```
 
 Keep the pin branch until no consumer records its SHA. When the source merges, cut a
 snapshot from the merged default branch. Then run
-`bun run registry:drift -- --ref <snapshot-commit-sha> <consumer>...`. A consumer
-with no drift only updates its recorded ref; any other consumer reinstalls at the
-snapshot and reviews the result.
+`bun run registry:drift -- --ref <snapshot-commit-sha> <consumer>...`. Drift compares
+file bytes only, so also diff `registry.json` between the two refs for each recorded
+item's package dependencies, stock ShadCN dependencies, and removed files. A consumer
+with no drift and none of those changes only updates its recorded ref; any other
+consumer reinstalls at the snapshot, or applies those changes, and reviews the result.
 
 ### Pre-production snapshots
 
