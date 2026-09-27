@@ -136,11 +136,13 @@ Echo's `private-` and `presence-` prefixes. Presence authorization returns `user
 `name`, and `avatar`; other member fields are ignored.
 
 `RealtimeUpdates` reloads `only` after a broadcast, a successful Reverb subscription,
-or a return to the visible tab, and polls every `pollIntervalMs` while it is not
-subscribed to Reverb, `enabled`, and `visible`. Reads are debounced and never
-overlap. When `enabled` becomes false, an in-flight read is cancelled and replayed
-once it is true again. `invalidateCacheTags` are flushed after a read that changes
-the `snapshot` result, or after every read when no snapshot is given.
+or a return to the visible tab. While `enabled` and `visible`, it polls every
+`pollIntervalMs` until it is subscribed to Reverb, then reconciles every minute (or
+every `pollIntervalMs`, if longer), so a change whose broadcast was never published
+still appears. Reads are debounced and never overlap. When `enabled` becomes false,
+an in-flight read is cancelled and replayed once it is true again.
+`invalidateCacheTags` are flushed after a read that changes the `snapshot` result,
+or after every read when no snapshot is given.
 
 ## Additional activity sections
 

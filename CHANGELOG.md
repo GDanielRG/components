@@ -14,7 +14,8 @@ release policy. Pin installs to a snapshot tag, e.g.
   `RealtimeUpdates`, `useRealtimeFeature`, and `useCommentTypingPresence`. It is
   held out of `foundations`. Generated channels, events, and cache tags stay in
   app-owned seams and reach the client as strings; the typing presence payload no
-  longer carries the unused `employeeId`.
+  longer carries the unused `employeeId`. A subscribed `RealtimeUpdates` keeps
+  reconciling on a slower cadence, so an unpublished broadcast cannot leave it stale.
 
 - **Fixed** `onDeleteProcessingChange` following the comment delete visit's
   `onStart`/`onFinish` lifecycle, so the activity sidebar keeps live updates paused

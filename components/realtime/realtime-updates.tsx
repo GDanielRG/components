@@ -8,6 +8,12 @@ import type { RealtimeFeature, RealtimePlan } from '@/lib/realtime';
 /** Collapse a burst of refresh signals into one owned read. */
 const REFRESH_DEBOUNCE_MS = 250;
 
+/**
+ * A healthy subscription still misses changes whose broadcast was never published, so a
+ * subscribed resource keeps reconciling, never more often than its fallback poll.
+ */
+const SUBSCRIBED_RECONCILE_INTERVAL_MS = 60_000;
+
 export interface RealtimeUpdatesProps {
     feature: RealtimeFeature;
     /** A generated private channel name, without Echo's `private-` prefix. */
@@ -125,6 +131,8 @@ interface RefreshCoordinator {
     dispose: () => void;
 }
 
+type Poll = ReturnType<typeof router.poll>;
+
 interface RefreshCoordinatorOptions {
     transport: AutomaticTransport;
     pollIntervalMs: number;
@@ -153,7 +161,7 @@ function createRefreshCoordinator({
     let inFlight: CancelToken | null = null;
     let pending = false;
     let debounce: ReturnType<typeof setTimeout> | null = null;
-    let polling = false;
+    let activePoll: Poll | null = null;
 
     const isEligible = (): boolean => tabVisible && enabled;
 
@@ -214,34 +222,44 @@ function createRefreshCoordinator({
         }, REFRESH_DEBOUNCE_MS);
     };
 
-    const poll = router.poll(
-        pollIntervalMs,
-        () => {
-            if (isEligible() && inFlight === null && debounce === null) {
-                return readOptions();
-            }
+    const createPoll = (intervalMs: number): Poll => {
+        const poll = router.poll(
+            intervalMs,
+            () => {
+                if (isEligible() && inFlight === null && debounce === null) {
+                    return readOptions();
+                }
 
-            // A skipped tick must not end rest mode.
-            poll.start();
+                // A skipped tick must not end rest mode.
+                poll.start();
 
-            return { onBefore: () => false };
-        },
-        { autoStart: false, keepAlive: true, mode: 'rest' },
+                return { onBefore: () => false };
+            },
+            { autoStart: false, keepAlive: true, mode: 'rest' },
+        );
+
+        return poll;
+    };
+
+    const fallbackPoll = createPoll(pollIntervalMs);
+    const reconcilePoll = createPoll(
+        Math.max(pollIntervalMs, SUBSCRIBED_RECONCILE_INTERVAL_MS),
     );
 
     const applyPolicy = (): void => {
-        const shouldPoll =
-            tabVisible &&
-            enabled &&
-            visible &&
-            !(transport === 'reverb' && subscribed);
+        let nextPoll: Poll | null = null;
 
-        if (shouldPoll && !polling) {
-            polling = true;
-            poll.start();
-        } else if (!shouldPoll && polling) {
-            polling = false;
-            poll.stop();
+        if (tabVisible && enabled && visible) {
+            nextPoll =
+                transport === 'reverb' && subscribed
+                    ? reconcilePoll
+                    : fallbackPoll;
+        }
+
+        if (nextPoll !== activePoll) {
+            activePoll?.stop();
+            activePoll = nextPoll;
+            activePoll?.start();
         }
     };
 
@@ -324,7 +342,8 @@ function createRefreshCoordinator({
                 debounce = null;
             }
 
-            poll.destroy();
+            fallbackPoll.destroy();
+            reconcilePoll.destroy();
             inFlight?.cancel();
             inFlight = null;
             leaveSubscription();

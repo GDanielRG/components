@@ -6,6 +6,12 @@ import { RealtimeUpdates } from '@/components/realtime/realtime-updates';
 
 const inertia = vi.hoisted(() => ({
     reloads: [] as ReloadOptions[],
+    plan: { transport: 'poll', pollIntervalMs: 60000 },
+    activePollIntervals: new Set<number>(),
+}));
+
+const reverb = vi.hoisted(() => ({
+    onSubscribed: (): void => {},
 }));
 
 vi.mock('@inertiajs/react', () => ({
@@ -13,22 +19,46 @@ vi.mock('@inertiajs/react', () => ({
         props: {
             realtime: {
                 connection: null,
-                features: {
-                    comments: { transport: 'poll', pollIntervalMs: 60000 },
-                },
+                features: { comments: inertia.plan },
             },
         },
     }),
     router: {
         reload: (options: ReloadOptions) => inertia.reloads.push(options),
-        poll: () => ({ start: vi.fn(), stop: vi.fn(), destroy: vi.fn() }),
+        poll: (interval: number) => ({
+            start: () => inertia.activePollIntervals.add(interval),
+            stop: () => inertia.activePollIntervals.delete(interval),
+            destroy: () => inertia.activePollIntervals.delete(interval),
+        }),
         flushByCacheTags: vi.fn(),
     },
 }));
 
+vi.mock('@laravel/echo-react', () => {
+    const channel = {
+        listen: () => channel,
+        subscribed: (callback: () => void) => {
+            reverb.onSubscribed = callback;
+
+            return channel;
+        },
+        error: () => channel,
+    };
+
+    return {
+        echo: () => ({
+            private: () => channel,
+            connector: { onConnectionChange: () => () => {} },
+            leaveChannel: vi.fn(),
+        }),
+    };
+});
+
 beforeEach(() => {
     vi.useFakeTimers();
     inertia.reloads = [];
+    inertia.plan = { transport: 'poll', pollIntervalMs: 60000 };
+    inertia.activePollIntervals.clear();
 });
 
 afterEach(() => {
@@ -73,5 +103,16 @@ describe('RealtimeUpdates', () => {
 
         expect(inertia.reloads).toHaveLength(2);
         expect(inertia.reloads[1].only).toEqual(['comments']);
+    });
+
+    it('keeps reconciling on a slower cadence while subscribed to Reverb', () => {
+        inertia.plan = { transport: 'reverb', pollIntervalMs: 15000 };
+        render(<Updates enabled />);
+
+        expect([...inertia.activePollIntervals]).toEqual([15000]);
+
+        act(() => reverb.onSubscribed());
+
+        expect([...inertia.activePollIntervals]).toEqual([60000]);
     });
 });
