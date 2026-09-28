@@ -46,6 +46,8 @@ release policy. Pin installs to a snapshot tag, e.g.
 - **Fixed** `useInitials` handling whitespace and Unicode code points consistently.
 - **Added** pull-request checks for unit tests, registry validation, and the real
   consumer install/typecheck smoke test.
+- **Changed** registry items to require `@inertiajs/core` and `@inertiajs/react`
+  `^3.7.1`, so a reinstall never lowers a consumer's patched Inertia floor.
 
 ### snapshot-20260907-8185e8d — 2026-09-07
 
