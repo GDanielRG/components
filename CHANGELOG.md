@@ -3,12 +3,19 @@
 The sibling workspace is **pre-production**. Shared waves now ship as immutable, dated **snapshot
 tags** (`snapshot-YYYYMMDD-<short-sha>`); strict semantic versioning resumes at the
 production cutover. See [docs/MAINTAINING.md](docs/MAINTAINING.md) for the two-phase
-release policy. Pin installs to a snapshot tag, e.g.
-`…/foundations#snapshot-20260623-<sha>`.
+release policy. Pin installs to the full 40-character SHA of a release commit, e.g.
+`…/foundations#<release-commit-sha>`; tag names label releases but are not pins.
 
 ## Snapshots (pre-production)
 
 ### Unreleased
+
+- **Changed** `registry:release` to inline internal dependencies into each released
+  item, so a release commit installs reproducibly by its full SHA as well as by tag,
+  and added `--pin` for pending commits. Consumers record `componentsRegistry` in
+  `package.json`.
+- **Added** `registry:drift`, which compares a consumer's installed registry files
+  with a ref after applying the consumer's formatter.
 
 - **Added** `realtime`, the shared live-update client: Echo configuration,
   `RealtimeUpdates`, `useRealtimeFeature`, and `useCommentTypingPresence`. It is
