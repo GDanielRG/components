@@ -48,7 +48,10 @@ route contracts.
 - `chat-display` — chat message rendering primitives
 - `chat` — virtualized message scroller (held out of `foundations`: it depends
   on the pre-1.0 `@shadcn/react` package)
-- `foundations` — installs every bundle except `chat`
+- `realtime` — Echo configuration, live resource refreshes with polling fallback,
+  and comment typing presence (held out of `foundations`: it requires the app's
+  shared realtime plan and Echo packages)
+- `foundations` — installs every bundle except `chat` and `realtime`
 
 `registry.json` is the live inventory; this list is a reading aid, so check it
 there rather than trusting the prose if the two ever disagree.

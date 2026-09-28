@@ -54,14 +54,10 @@ try {
     );
 
     run('bun', ['install', '--ignore-scripts'], consumer);
-    run(SHADCN, [
-        'add',
-        path.join(registry, 'foundations.json'),
-        '--overwrite',
-        '--yes',
-        '--cwd',
-        consumer,
-    ]);
+    const items = ['foundations', 'realtime'].map((item) =>
+        path.join(registry, `${item}.json`),
+    );
+    run(SHADCN, ['add', ...items, '--overwrite', '--yes', '--cwd', consumer]);
     run('bun', ['run', 'types:check'], consumer);
 
     const snapshot = () => {
@@ -104,14 +100,7 @@ try {
             'installed ui/spinner.tsx does not match the registry-vendored source (resolved from upstream instead of the registry)',
         );
 
-    run(SHADCN, [
-        'add',
-        path.join(registry, 'foundations.json'),
-        '--overwrite',
-        '--yes',
-        '--cwd',
-        consumer,
-    ]);
+    run(SHADCN, ['add', ...items, '--overwrite', '--yes', '--cwd', consumer]);
     run('bun', ['run', 'types:check'], consumer);
     const reinstalled = snapshot();
     const changed = [

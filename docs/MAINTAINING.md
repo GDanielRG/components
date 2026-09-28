@@ -4,10 +4,12 @@
 
 `registry.json` owns the install graph and file targets. `package.json` owns tooling,
 dependency versions, and verification commands. Registry production code lives under
-`components/`, `hooks/`, and `types/`; test substitutes live only under `tests/`.
+`components/`, `hooks/`, `lib/`, and `types/`; test substitutes live only under `tests/`.
 
-ShadCN rewrites unregistered `@/types/*` and some relative type imports incorrectly,
-so installed shared types use `@/components/*`. It also collapses a type and component
+ShadCN rewrites imports that resolve outside the configured aliases, such as
+`@/types/*` and `@/wayfinder/*`, and some relative type imports incorrectly, so
+installed shared types use `@/components/*` and registry files never import a
+consumer's generated Wayfinder modules. It also collapses a type and component
 with the same basename in one install, producing a circular import alias. Distinct
 names such as `types/edit-history-entry.ts` avoid that external rewriter behavior.
 

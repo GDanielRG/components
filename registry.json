@@ -563,8 +563,44 @@
                     "target": "@components/activity/index.ts"
                 }
             ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Live comment reloads stay app-owned and are injected through `renderCommentLiveUpdates`. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
+            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Render live comment reloads through `renderCommentLiveUpdates`, with the `realtime` item or an app-owned client. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
             "dependencies": ["lucide-react@^1.17.0"]
+        },
+        {
+            "name": "realtime",
+            "type": "registry:item",
+            "title": "Realtime Client",
+            "description": "Echo configuration, live resource refreshes with polling fallback, and comment typing presence driven by the app's shared realtime plan.",
+            "dependencies": [
+                "@inertiajs/core@^3.7.1",
+                "@inertiajs/react@^3.7.1",
+                "@laravel/echo-react@^2.4.0",
+                "laravel-echo@^2.4.0",
+                "pusher-js@^8.6.0"
+            ],
+            "files": [
+                {
+                    "path": "lib/realtime.ts",
+                    "type": "registry:lib",
+                    "target": "@lib/realtime.ts"
+                },
+                {
+                    "path": "hooks/use-realtime-feature.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-realtime-feature.ts"
+                },
+                {
+                    "path": "hooks/use-comment-typing-presence.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-comment-typing-presence.ts"
+                },
+                {
+                    "path": "components/realtime/realtime-updates.tsx",
+                    "type": "registry:component",
+                    "target": "@components/realtime/realtime-updates.tsx"
+                }
+            ],
+            "docs": "Requires the app-owned shared `realtime` plan and `auth.user.id` in Wayfinder-generated shared props. Pass channel, event, and cache-tag names built from generated helpers in an app-owned seam. See docs/CONSUMER_CONTRACT.md."
         },
         {
             "name": "chat-display",
