@@ -1,6 +1,6 @@
 import { Form } from '@inertiajs/react';
 import { MoreHorizontalIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { ActionsDropdownMenu } from '@/components/actions-dropdown-menu';
 import { TimestampWithReveal } from '@/components/chat/timestamp-with-reveal';
@@ -76,56 +76,22 @@ function CommentDeleteDialog({
             action={destroyRoute}
             options={{ preserveScroll: true }}
             invalidateCacheTags={invalidateCacheTags}
+            onStart={() => onProcessingChange?.(true)}
+            onFinish={() => onProcessingChange?.(false)}
             disableWhileProcessing
         >
             {({ processing, submit }) => (
-                <>
-                    <DeleteProcessingReporter
-                        processing={processing}
-                        onProcessingChange={onProcessingChange}
-                    />
-                    <DeleteConfirmationModal
-                        open={isOpen || processing}
-                        onOpenChange={setIsOpen}
-                        title={copy.commentsDeleteTitle}
-                        description={copy.commentsDeleteDescription}
-                        processing={processing}
-                        onDestroy={submit}
-                    />
-                </>
+                <DeleteConfirmationModal
+                    open={isOpen || processing}
+                    onOpenChange={setIsOpen}
+                    title={copy.commentsDeleteTitle}
+                    description={copy.commentsDeleteDescription}
+                    processing={processing}
+                    onDestroy={submit}
+                />
             )}
         </Form>
     );
-}
-
-function DeleteProcessingReporter({
-    processing,
-    onProcessingChange,
-}: {
-    processing: boolean;
-    onProcessingChange?: (processing: boolean) => void;
-}) {
-    // The callback is read through a ref so an unstable consumer callback
-    // cannot re-run the effect; every `true` is paired with a `false` on
-    // completion or unmount.
-    const onProcessingChangeRef = useRef(onProcessingChange);
-    useEffect(() => {
-        onProcessingChangeRef.current = onProcessingChange;
-    });
-
-    useEffect(() => {
-        if (!processing) {
-            return;
-        }
-
-        onProcessingChangeRef.current?.(true);
-
-        return () => {
-            onProcessingChangeRef.current?.(false);
-        };
-    }, [processing]);
-
-    return null;
 }
 
 function getInitials(name: string): string {

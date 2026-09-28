@@ -27,7 +27,9 @@ import { Attachment } from '@/components/ui/attachment';
 import { ClipboardListIcon } from 'lucide-react';
 
 const sidebarSheetState = vi.hoisted(() => ({ current: false }));
-const formState = vi.hoisted(() => ({ processing: false }));
+const visit = vi.hoisted(() => ({
+    finish: undefined as (() => void) | undefined,
+}));
 
 vi.mock('@/hooks/use-sidebar-sheet', () => ({
     useIsSidebarSheet: () => sidebarSheetState.current,
@@ -37,7 +39,11 @@ vi.mock('@inertiajs/react', async (importOriginal) => ({
     ...(await importOriginal<typeof import('@inertiajs/react')>()),
     Form: ({
         children,
+        onStart,
+        onFinish,
     }: {
+        onStart?: () => void;
+        onFinish?: () => void;
         children: (state: {
             errors: Record<string, string>;
             processing: boolean;
@@ -46,21 +52,24 @@ vi.mock('@inertiajs/react', async (importOriginal) => ({
             resetAndClearErrors: () => void;
         }) => ReactNode;
     }) => (
-        <form>
+        <>
             {children({
                 errors: {},
-                processing: formState.processing,
+                processing: false,
                 isDirty: true,
-                submit: () => {},
+                submit: () => {
+                    onStart?.();
+                    visit.finish = onFinish;
+                },
                 resetAndClearErrors: () => {},
             })}
-        </form>
+        </>
     ),
 }));
 
 afterEach(() => {
     sidebarSheetState.current = false;
-    formState.processing = false;
+    visit.finish = undefined;
     cleanup();
 });
 
@@ -564,50 +573,28 @@ describe('useCommentsDocumentsSidebar — live comment updates', () => {
         expect(screen.getByTestId('edit-comment')).toBeInTheDocument();
     });
 
-    it('pauses while a comment deletion is in flight', () => {
-        const { rerender } = render(
+    it('pauses until the deletion visit finishes, even after its row leaves the props', () => {
+        const { container, rerender } = render(
             <LiveUpdatesHarness comments={[makeComment()]} />,
         );
+        const liveUpdates = () => screen.getByTestId('live-updates');
 
-        expect(screen.getByTestId('live-updates')).toHaveAttribute(
-            'data-enabled',
-            'true',
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'true');
+
+        fireEvent.click(
+            container.querySelector('[data-slot="alert-dialog-action"]')!,
         );
 
-        formState.processing = true;
-        rerender(<LiveUpdatesHarness comments={[makeComment()]} />);
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'false');
 
-        expect(screen.getByTestId('live-updates')).toHaveAttribute(
-            'data-enabled',
-            'false',
-        );
-
-        formState.processing = false;
-        rerender(<LiveUpdatesHarness comments={[makeComment()]} />);
-
-        expect(screen.getByTestId('live-updates')).toHaveAttribute(
-            'data-enabled',
-            'true',
-        );
-    });
-
-    it('releases a deletion pause when the deleted row leaves the props', () => {
-        formState.processing = true;
-        const { rerender } = render(
-            <LiveUpdatesHarness comments={[makeComment()]} />,
-        );
-
-        expect(screen.getByTestId('live-updates')).toHaveAttribute(
-            'data-enabled',
-            'false',
-        );
-
+        // Inertia swaps in the page without the deleted row before the visit finishes.
         rerender(<LiveUpdatesHarness comments={[]} />);
 
-        expect(screen.getByTestId('live-updates')).toHaveAttribute(
-            'data-enabled',
-            'true',
-        );
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'false');
+
+        act(() => visit.finish?.());
+
+        expect(liveUpdates()).toHaveAttribute('data-enabled', 'true');
     });
 });
 

@@ -10,6 +10,11 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Fixed** `onDeleteProcessingChange` following the comment delete visit's
+  `onStart`/`onFinish` lifecycle, so the activity sidebar keeps live updates paused
+  until the request finishes even when the deleted row unmounts first. This matches
+  the shape consumers already install.
+
 - **Added** `design-lint`, an installable `shared-component-lint.json` containing
   the owning-file lint contracts for shared UI. Consumers keep their rule policy
   and application-specific exceptions in their Vite configuration.
