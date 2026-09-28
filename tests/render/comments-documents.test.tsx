@@ -707,6 +707,18 @@ describe('CommentForm — typing hook callbacks', () => {
     });
 });
 
+describe('CommentForm — icon-only submit', () => {
+    it('names the send button for assistive technology', () => {
+        render(
+            <CommentForm formAction={route('post') as never} mode="create" />,
+        );
+
+        expect(
+            screen.getByRole('button', { name: 'commentsSend' }),
+        ).toHaveAttribute('type', 'submit');
+    });
+});
+
 describe('CommentTypingIndicator — ephemeral typing affordance', () => {
     it('renders no DOM for an empty user list', () => {
         const { container } = render(<CommentTypingIndicator users={[]} />);

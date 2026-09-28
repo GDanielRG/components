@@ -175,7 +175,7 @@ export function SearchControls({
             {(filtersAreDisclosed || unsetFilters.length === 1) && (
                 <div
                     className={cn(
-                        'transition-[opacity,translate] duration-200 ease-out motion-reduce:transition-none',
+                        'transition duration-200 ease-out motion-reduce:transition-none',
                         filtersAreDisclosed &&
                             'starting:-translate-y-1 starting:opacity-0',
                     )}

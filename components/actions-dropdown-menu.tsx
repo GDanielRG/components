@@ -47,6 +47,7 @@ export function ActionsDropdownMenu({
             <DropdownMenuTrigger render={triggerElement} />
             <DropdownMenuContent
                 align={align}
+                // oxlint-disable-next-line shadcn/require-static-classes -- Public layout class slot; consumers supply its static values.
                 className={cn('w-fit', contentClassName)}
             >
                 {children}

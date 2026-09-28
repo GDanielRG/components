@@ -70,7 +70,7 @@ export function EditHistoryPopover({
                 />
                 <TooltipContent>{copy.historyTooltip}</TooltipContent>
             </Tooltip>
-            <PopoverContent align="end" className="w-80 p-3">
+            <PopoverContent align="end" className="w-80">
                 <div className="flex flex-col gap-3">
                     <div className="border-b pb-2">
                         <h2 className="text-sm font-semibold">
@@ -106,9 +106,7 @@ function EditHistoryItem({
     return (
         <div className="flex items-start gap-2">
             <Avatar className="size-7 shrink-0">
-                <AvatarFallback className="text-[10px]">
-                    {entry.causer?.initials ?? '?'}
-                </AvatarFallback>
+                <AvatarFallback>{entry.causer?.initials ?? '?'}</AvatarFallback>
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex items-baseline justify-between gap-2 text-xs">
@@ -118,7 +116,7 @@ function EditHistoryItem({
                         employeeHref={employeeHref}
                         employeeCacheTags={employeeCacheTags}
                     />
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                         {entry.formatted_at}
                     </span>
                 </div>
@@ -200,10 +198,7 @@ function EditHistoryChangeLine({
     return (
         <p className="flex flex-wrap items-baseline gap-1">
             {change.locale ? (
-                <Badge
-                    variant="secondary"
-                    className="h-4 px-1 font-mono text-[9px] tracking-wide uppercase"
-                >
+                <Badge variant="secondary" className="h-4">
                     {change.locale}
                 </Badge>
             ) : null}
@@ -257,7 +252,7 @@ function EditHistoryStructuredChange({
                         render={
                             <button
                                 type="button"
-                                className="flex w-fit items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                                className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-1 text-xs font-medium"
                             />
                         }
                     >
@@ -268,7 +263,7 @@ function EditHistoryStructuredChange({
                             ? copy.historyDetailHide
                             : copy.historyDetailShow(details.length)}
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-1 flex flex-col gap-0.5 border-l pl-2">
+                    <CollapsibleContent className="mt-1 flex flex-col">
                         {details.map((detail, index) => (
                             <EditHistoryDetailLine
                                 key={`${detail.label}-${index}`}
@@ -291,7 +286,7 @@ function EditHistoryDetailLine({
     formatOptions: FormatEditHistoryValueOptions;
 }) {
     return (
-        <p className="flex flex-wrap items-baseline gap-1 text-[11px]">
+        <p className="flex flex-wrap items-baseline gap-1 text-xs">
             <span className="font-medium">{detail.label}:</span>
             <em className="text-muted-foreground line-through decoration-muted-foreground/50">
                 {formatEditHistoryValue(

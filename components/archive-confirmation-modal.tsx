@@ -52,7 +52,7 @@ export function ArchiveConfirmationModal({
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogMedia className="bg-destructive/10">
+                    <AlertDialogMedia>
                         <ArchiveIcon className="stroke-destructive" />
                     </AlertDialogMedia>
                     <AlertDialogTitle>{title}</AlertDialogTitle>

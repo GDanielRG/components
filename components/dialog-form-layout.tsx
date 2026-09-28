@@ -32,28 +32,17 @@ export function DialogFormLayout({
     return (
         <>
             <div className="grid shrink-0 auto-rows-min grid-cols-[1fr_auto] items-start gap-1.5 border-b px-6 pt-5 pb-6">
-                <DialogTitle className="font-heading text-base leading-normal font-medium tracking-normal">
-                    {title}
-                </DialogTitle>
+                <DialogTitle>{title}</DialogTitle>
                 {description ? (
                     /* Base UI defaults to p, but callers may provide structured metadata. */
-                    <DialogDescription
-                        render={<div />}
-                        className="text-sm leading-snug text-muted-foreground"
-                    >
+                    <DialogDescription render={<div />}>
                         {description}
                     </DialogDescription>
                 ) : null}
                 <div className="col-start-2 row-span-2 row-start-1 flex items-center gap-1 self-start justify-self-end pt-0.5">
                     {headerAction}
                     <DialogClose
-                        render={
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                className="bg-muted"
-                            />
-                        }
+                        render={<Button variant="secondary" size="icon-sm" />}
                     >
                         <XIcon />
                         <span className="sr-only">{copy.dialogClose}</span>

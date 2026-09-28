@@ -99,7 +99,7 @@ export function CommentsListPopover({
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger render={triggerElement} />
-            <PopoverContent className="w-xs overflow-y-auto p-0">
+            <PopoverContent className="w-xs overflow-y-auto">
                 <ScrollArea className="max-h-72">
                     <CommentList
                         comments={comments}

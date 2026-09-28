@@ -635,6 +635,19 @@
                 "GDanielRG/components/chat-display"
             ],
             "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
+        },
+        {
+            "name": "design-lint",
+            "type": "registry:item",
+            "title": "Shared component lint contracts",
+            "description": "Scoped Oxlint overrides for the registry-owned compositions. Application-wide design rules remain consumer-owned.",
+            "files": [
+                {
+                    "path": "shared-component-lint.json",
+                    "type": "registry:file",
+                    "target": "shared-component-lint.json"
+                }
+            ]
         }
     ]
 }

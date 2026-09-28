@@ -19,6 +19,37 @@ Consumers provide:
 Locale and shell styling vary by app, so registry installs never own or overwrite
 these seams.
 
+## Dialog forms
+
+`DialogFormLayout` supplies a padded header, a scrolling body, and an optional
+footer. Its title and description inherit the installed dialog primitives' styles.
+
+The enclosing `DialogContent` needs a viewport-bounded maximum height,
+`flex flex-col overflow-hidden p-0`, and `showCloseButton={false}`. The layout owns
+section padding and its close control; outer padding would duplicate it. Any
+intervening form or wrapper needs `flex min-h-0 flex-1 flex-col` so the body can
+shrink and scroll while the header and footer stay visible. Consumers choose the
+dialog width and the fields' responsive layout.
+
+## Design lint contracts
+
+Install `design-lint`, import `./shared-component-lint.json` in `vite.config.ts`,
+and include that object in `lint.extends`. It owns only file-scoped allowances for registry compositions;
+keep rule severity, app-specific contracts, and global design policy in the app.
+Update the config with the components that need it. Oxlint rule options replace
+rather than merge, so an app override for the same file must retain its shared contract.
+
+## Compact editors and state cues
+
+`EmptyCard` adds the outline width that the installed `Empty` leaves to its caller.
+Unset filter triggers use a dashed border. Range/select popovers use `gap-3`;
+attachment metadata editors use `gap-2`. These are scoped composition contracts,
+not changes to full-form spacing. Consumers enforcing `shadcn/no-restyle` permit
+these exact utilities only in the owning component files.
+
+Clear-filter and column-reset actions retain the neutral ghost variant: they
+reset a reversible view and do not delete application data.
+
 ## Injected routes
 
 Comments receive `storeCommentForm`, `updateCommentForm`, and

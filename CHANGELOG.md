@@ -10,6 +10,27 @@ release policy. Pin installs to a snapshot tag, e.g.
 
 ### Unreleased
 
+- **Added** `design-lint`, an installable `shared-component-lint.json` containing
+  the owning-file lint contracts for shared UI. Consumers keep their rule policy
+  and application-specific exceptions in their Vite configuration.
+- **Fixed** the activity sidebar's responsive header and footer insets and the
+  comment surface boundary so comments retain their spacing on desktop and mobile.
+
+- **Fixed** sidebar menu buttons, menu actions, and sub-actions keeping their
+  open-state fill while their Base UI popup is open.
+- **Fixed** `OptionalAddButton` spacing between its closed label and add button, and
+  the icon-only comment submit's accessible name (`commentsSend`).
+
+- **Fixed** shared empty-state outlines, unset filter cues, and compact spacing
+  in filter popovers and attachment metadata editors.
+
+- **Changed** `DialogFormLayout` to inherit title and description styles from the
+  installed dialog primitives and use the secondary close-button variant. Clarified
+  the caller's height, padding, and flex constraints for scrolling forms.
+- **Changed** shared activity, comment, document, search, and table controls to use
+  installed component spacing and appearance defaults. Metadata uses the standard
+  text scale, and reveal animations use standard transitions and easing.
+
 - Move nested-table `pageParam` configuration from `useSort` to `useSearchNavigation` so sorting resets only its own paginator.
 
 - **Fixed** export submissions preserving named range bounds independently,

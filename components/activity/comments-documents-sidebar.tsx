@@ -414,7 +414,6 @@ function SidebarToggleButton({
             aria-expanded={open}
             data-test="activity-sidebar-toggle"
             onClick={onToggle}
-            className="aria-expanded:bg-transparent aria-expanded:hover:bg-muted"
         >
             {open ? <PanelRightCloseIcon /> : <PanelRightOpenIcon />}
         </Button>
@@ -560,7 +559,7 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
 
     return (
         <AppRightSidebar open={open} onOpenChange={onOpenChange}>
-            <SidebarHeader className="min-h-13 flex-row items-center justify-between gap-2 px-4 py-2 lg:px-0">
+            <SidebarHeader className="min-h-13 flex-row items-center justify-between px-4 lg:px-0">
                 <ActivityTabs
                     activeTab={resolvedActiveTab}
                     onTabChange={(tab) =>
@@ -582,9 +581,9 @@ function CommentsDocumentsSidebar<AdditionalId extends string>({
                 <SidebarContent
                     data-test="activity-sidebar-content"
                     className={cn(
-                        'm-4 mt-0 mb-0 min-h-0 flex-initial overflow-hidden lg:mx-0',
+                        'mx-4 min-h-0 flex-initial overflow-hidden lg:mx-0',
                         resolvedActiveTab !== 'documents' &&
-                            'rounded-xl border bg-background shadow-sm lg:border-0',
+                            'bg-background rounded-xl border shadow-sm lg:border-0',
                     )}
                 >
                     {resolvedActiveTab === 'comments' ? (

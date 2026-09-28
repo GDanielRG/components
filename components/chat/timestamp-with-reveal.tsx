@@ -51,7 +51,7 @@ export function TimestampWithReveal({
                 <PopoverContent
                     side="top"
                     align="start"
-                    className="w-fit max-w-[14rem] p-2 text-xs"
+                    className="w-fit max-w-56"
                 >
                     <p>{absoluteLabel}</p>
                 </PopoverContent>
