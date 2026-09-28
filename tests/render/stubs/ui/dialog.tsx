@@ -1,10 +1,5 @@
-// Test double for the consumer-owned `ui/dialog.tsx`. Unlike the generic
-// forwarding hosts in `../primitives`, this one wraps the REAL Base UI Dialog
-// primitives and keeps the fleet's export surface: the behaviour under test —
-// Base UI deriving the popup's `aria-labelledby` / `aria-describedby` from
-// `Dialog.Title` / `Dialog.Description`, and their default `h2` / `p` elements —
-// lives in Base UI, so a forwarding stub would prove nothing. Styling is
-// dropped; only structure and semantics matter to the render gate.
+// Real Base UI semantics let the registry's layout tests observe the accessible
+// name and description supplied by its title and optional description.
 import * as React from 'react';
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 
