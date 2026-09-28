@@ -8,7 +8,7 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20260927-46fe2e6 — 2026-09-27
 
 - **Changed** `registry:release` to inline internal dependencies into each released
   item, so a release commit installs reproducibly by its full SHA as well as by tag,
