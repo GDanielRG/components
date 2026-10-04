@@ -12,8 +12,8 @@
 //      details (the analisis superset folded into the registry component);
 //   5. NO client date formatting — a raw ISO date passes through untouched
 //      (server-formatted-value contract).
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EditHistoryPopover } from '@/components/edit-history';
 import type { EditHistoryEntry } from '@/components/types/edit-history-entry';
 
@@ -45,8 +45,84 @@ function makeEntry(
 
 describe('EditHistoryPopover — graduated registry component', () => {
     it('renders nothing for an empty history', () => {
-        const { container } = render(<EditHistoryPopover history={[]} />);
+        const { container } = render(
+            <EditHistoryPopover
+                history={[]}
+                footer={<button>More history</button>}
+            />,
+        );
         expect(container).toBeEmptyDOMElement();
+    });
+
+    it('renders a consumer-owned footer action after the history and preserves its callback', () => {
+        const loadMore = vi.fn();
+        render(
+            <EditHistoryPopover
+                history={[makeEntry()]}
+                footer={<button onClick={loadMore}>More history</button>}
+            />,
+        );
+
+        const footerAction = screen.getByRole('button', {
+            name: 'More history',
+        });
+        expect(
+            screen.getByText('New').compareDocumentPosition(footerAction),
+        ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+        fireEvent.click(footerAction);
+        expect(loadMore).toHaveBeenCalledOnce();
+    });
+
+    it('renders changed history props including current actor visibility', () => {
+        const employeeHref = (id: number) => `/employees/${id}`;
+        const { rerender } = render(
+            <EditHistoryPopover
+                history={[makeEntry()]}
+                employeeHref={employeeHref}
+            />,
+        );
+        expect(screen.getByRole('link', { name: 'Ada' })).toHaveAttribute(
+            'href',
+            '/employees/42',
+        );
+
+        rerender(
+            <EditHistoryPopover
+                history={[
+                    makeEntry({
+                        causer: {
+                            id: 7,
+                            name: 'Grace Hopper',
+                            initials: 'GH',
+                            action: 'updated',
+                            can_be_viewed: false,
+                        },
+                        formatted_at: '4 de enero, 11:00 a. m.',
+                        changes: [
+                            {
+                                field: 'name',
+                                locale: null,
+                                from: 'Before',
+                                to: 'After',
+                            },
+                        ],
+                    }),
+                ]}
+                employeeHref={employeeHref}
+            />,
+        );
+
+        expect(screen.queryByText('Ada')).not.toBeInTheDocument();
+        expect(screen.queryByRole('link')).not.toBeInTheDocument();
+        expect(screen.getByText('Grace')).toBeInTheDocument();
+        expect(
+            screen.queryByText('3 de enero, 10:00 a. m.'),
+        ).not.toBeInTheDocument();
+        expect(screen.getByText('4 de enero, 11:00 a. m.')).toBeInTheDocument();
+        expect(screen.queryByText('Old')).not.toBeInTheDocument();
+        expect(screen.queryByText('New')).not.toBeInTheDocument();
+        expect(screen.getByText('Before')).toBeInTheDocument();
+        expect(screen.getByText('After')).toBeInTheDocument();
     });
 
     it('renders the timeline with the server-formatted timestamp and a from→to diff', () => {
