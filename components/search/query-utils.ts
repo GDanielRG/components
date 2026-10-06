@@ -21,6 +21,23 @@ function isSearchNavigationData(
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+// URL-controlled segments with these names would reach Object.prototype through
+// plain-object reads and writes, so the parser never navigates through them.
+const inheritedKeys = new Set(['__proto__', 'constructor', 'prototype']);
+
+function isQueryKey(segment: string | undefined): segment is string {
+    return (
+        segment !== undefined && segment !== '' && !inheritedKeys.has(segment)
+    );
+}
+
+function ownValue(
+    data: SearchNavigationData,
+    segment: string,
+): SearchNavigationPrimitive | SearchNavigationData | undefined {
+    return Object.hasOwn(data, segment) ? data[segment] : undefined;
+}
+
 function cloneQueryData(data: SearchNavigationData): SearchNavigationData {
     return Object.fromEntries(
         Object.entries(data).map(([key, value]) => [
@@ -74,12 +91,12 @@ function appendQueryValue(
 
     const [segment, ...rest] = path;
 
-    if (!segment) {
+    if (!isQueryKey(segment)) {
         return;
     }
 
     if (rest.length === 0) {
-        const existingValue = data[segment];
+        const existingValue = ownValue(data, segment);
 
         if (existingValue === undefined) {
             data[segment] = isArray ? [value] : value;
@@ -106,7 +123,7 @@ function appendQueryValue(
         return;
     }
 
-    const existingValue = data[segment];
+    const existingValue = ownValue(data, segment);
     const nextData = isSearchNavigationData(existingValue) ? existingValue : {};
 
     data[segment] = nextData;
@@ -125,7 +142,7 @@ function getNestedValue(
             return undefined;
         }
 
-        current = current[segment];
+        current = ownValue(current, segment);
     }
 
     return current;
@@ -134,7 +151,7 @@ function getNestedValue(
 function deleteNestedValue(data: SearchNavigationData, path: string[]): void {
     const [segment, ...rest] = path;
 
-    if (!segment) {
+    if (!isQueryKey(segment)) {
         return;
     }
 
@@ -144,7 +161,7 @@ function deleteNestedValue(data: SearchNavigationData, path: string[]): void {
         return;
     }
 
-    const value = data[segment];
+    const value = ownValue(data, segment);
 
     if (!isSearchNavigationData(value)) {
         return;
@@ -164,12 +181,12 @@ function applyPatchValue(
 ): void {
     const [segment, ...rest] = path;
 
-    if (!segment) {
+    if (!isQueryKey(segment)) {
         return;
     }
 
     if (rest.length > 0) {
-        const nextValue = data[segment];
+        const nextValue = ownValue(data, segment);
         const nextData = isSearchNavigationData(nextValue) ? nextValue : {};
 
         data[segment] = nextData;
@@ -203,7 +220,7 @@ function applyPatchValue(
     }
 
     if (typeof value === 'object') {
-        const nextValue = data[segment];
+        const nextValue = ownValue(data, segment);
         const nextData = isSearchNavigationData(nextValue) ? nextValue : {};
 
         for (const [subKey, subValue] of Object.entries(value)) {

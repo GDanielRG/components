@@ -40,6 +40,23 @@ describe('parseCurrentQuery', () => {
     it('drops empty values', () => {
         expect(parseCurrentQuery('filter[search]=')).toEqual({});
     });
+
+    it('ignores inherited object keys instead of reaching the prototype', () => {
+        const data = parseCurrentQuery(
+            '__proto__[filter][search]=x&constructor[prototype][x]=y&sort=name',
+        );
+
+        expect(data).toEqual({ sort: 'name' });
+        expect(Object.hasOwn(Object.prototype, 'filter')).toBe(false);
+        expect(Object.hasOwn(Object.prototype, 'x')).toBe(false);
+        expect(getQueryValue(data, 'constructor.prototype.x')).toBeNull();
+        expect(
+            getQueryValue(
+                Object.create({ filter: { search: 'x' } }),
+                'filter.search',
+            ),
+        ).toBeNull();
+    });
 });
 
 describe('getQueryValue / getQueryValues', () => {
