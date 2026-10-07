@@ -31,6 +31,12 @@ function isQueryKey(segment: string | undefined): segment is string {
     );
 }
 
+// A path is checked whole before any write so a rejected tail cannot leave a
+// half-built ancestor behind.
+function isQueryPath(path: string[]): path is [string, ...string[]] {
+    return path.length > 0 && path.every(isQueryKey);
+}
+
 function ownValue(
     data: SearchNavigationData,
     segment: string,
@@ -85,15 +91,11 @@ function appendQueryValue(
     value: string,
     isArray: boolean,
 ): void {
-    if (value === '') {
+    if (value === '' || !isQueryPath(path)) {
         return;
     }
 
     const [segment, ...rest] = path;
-
-    if (!isQueryKey(segment)) {
-        return;
-    }
 
     if (rest.length === 0) {
         const existingValue = ownValue(data, segment);
@@ -149,11 +151,11 @@ function getNestedValue(
 }
 
 function deleteNestedValue(data: SearchNavigationData, path: string[]): void {
-    const [segment, ...rest] = path;
-
-    if (!isQueryKey(segment)) {
+    if (!isQueryPath(path)) {
         return;
     }
+
+    const [segment, ...rest] = path;
 
     if (rest.length === 0) {
         delete data[segment];
@@ -179,11 +181,11 @@ function applyPatchValue(
     path: string[],
     value: SearchNavigationPatchValue,
 ): void {
-    const [segment, ...rest] = path;
-
-    if (!isQueryKey(segment)) {
+    if (!isQueryPath(path)) {
         return;
     }
+
+    const [segment, ...rest] = path;
 
     if (rest.length > 0) {
         const nextValue = ownValue(data, segment);
@@ -220,10 +222,18 @@ function applyPatchValue(
     }
 
     if (typeof value === 'object') {
+        const entries = Object.entries(value).filter(([subKey]) =>
+            isQueryKey(subKey),
+        );
+
+        if (entries.length === 0 && Object.keys(value).length > 0) {
+            return;
+        }
+
         const nextValue = ownValue(data, segment);
         const nextData = isSearchNavigationData(nextValue) ? nextValue : {};
 
-        for (const [subKey, subValue] of Object.entries(value)) {
+        for (const [subKey, subValue] of entries) {
             applyPatchValue(nextData, [subKey], subValue);
         }
 

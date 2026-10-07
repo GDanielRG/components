@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     buildClearAllPatch,
     buildPathPatch,
+    buildQueryDataFromCurrent,
     clearedFilterValues,
     getQueryValue,
     getQueryValues,
@@ -56,6 +57,38 @@ describe('parseCurrentQuery', () => {
                 'filter.search',
             ),
         ).toBeNull();
+    });
+
+    it('keeps valid values when a rejected path shares their ancestors', () => {
+        expect(
+            parseCurrentQuery(
+                'filter[search]=keep&filter[search][__proto__][x]=y&filter[role][]=1&filter[role][constructor]=z',
+            ),
+        ).toEqual({ filter: { search: 'keep', role: ['1'] } });
+        expect(Object.hasOwn(Object.prototype, 'x')).toBe(false);
+    });
+});
+
+describe('buildQueryDataFromCurrent', () => {
+    it('leaves ancestors untouched when every nested patch change is rejected', () => {
+        const current = { filter: { search: 'keep' }, sort: 'name' };
+
+        expect(
+            buildQueryDataFromCurrent(current, {
+                filter: { __proto__: { x: 'y' } },
+                sort: { prototype: 'z' },
+                constructor: 'w',
+            } as never),
+        ).toEqual(current);
+        expect(Object.hasOwn(Object.prototype, 'x')).toBe(false);
+    });
+
+    it('still applies the accepted siblings of a rejected nested key', () => {
+        expect(
+            buildQueryDataFromCurrent({ filter: { search: 'keep' } }, {
+                filter: { __proto__: { x: 'y' }, status: 'open' },
+            } as never),
+        ).toEqual({ filter: { search: 'keep', status: 'open' } });
     });
 });
 
