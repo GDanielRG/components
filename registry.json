@@ -8,6 +8,7 @@
             "type": "registry:item",
             "title": "Core Foundation",
             "description": "Shared types, hooks, and generic UI primitives every other bundle builds on.",
+            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"],
             "registryDependencies": [
                 "alert-dialog",
                 "button",
@@ -148,21 +149,159 @@
                     "target": "@components/form-actions.tsx"
                 }
             ],
-            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
-            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`."
         },
         {
             "name": "archive",
             "type": "registry:item",
             "title": "Archive",
             "description": "Archive status badge and confirmation modal for soft-delete-backed archive flows.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "sonner@^2.0.7"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/core",
                 "alert-dialog",
+                "button",
+                "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty",
                 "badge",
                 "tooltip"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
                 {
                     "path": "components/archive-confirmation-modal.tsx",
                     "type": "registry:component",
@@ -179,28 +318,157 @@
                     "target": "@components/archived-status-badge.tsx"
                 }
             ],
-            "docs": "Requires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Archive validation errors surface through Sonner because the fieldless confirmation modal has no inline error anchor. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.",
-            "dependencies": [
-                "@inertiajs/react@^3.7.1",
-                "lucide-react@^1.17.0",
-                "sonner@^2.0.7"
-            ]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nRequires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Archive validation errors surface through Sonner because the fieldless confirmation modal has no inline error anchor. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`."
         },
         {
             "name": "edit-history",
             "type": "registry:item",
             "title": "Edit History",
             "description": "Discoverable per-model edit-history popover with a locale-aware from→to diff and server-driven structured-field summaries.",
+            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"],
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "avatar",
-                "badge",
+                "alert-dialog",
                 "button",
                 "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty",
+                "avatar",
+                "badge",
                 "popover",
                 "tooltip"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
                 {
                     "path": "types/edit-history-entry.ts",
                     "type": "registry:file",
@@ -212,14 +480,18 @@
                     "target": "@components/edit-history.tsx"
                 }
             ],
-            "docs": "Requires `HistoryCopy` keys in the app-owned `useSharedComponentCopy` hook (including `historyDetailShow(count)`/`historyDetailHide`). Pass `employeeHref={(id) => showEmployee(id).url}` to link viewable causers to their detail page — registry files never import app Wayfinder routes; omit it to render every causer as plain text. Timestamps and values arrive server-formatted (no client date formatting).",
-            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nRequires `HistoryCopy` keys in the app-owned `useSharedComponentCopy` hook (including `historyDetailShow(count)`/`historyDetailHide`). Pass `employeeHref={(id) => showEmployee(id).url}` to link viewable causers to their detail page — registry files never import app Wayfinder routes; omit it to render every causer as plain text. Timestamps and values arrive server-formatted (no client date formatting)."
         },
         {
             "name": "sidebar",
             "type": "registry:item",
             "title": "Sidebar",
             "description": "Shared sidebar primitives: provider with keyboard-shortcut and mobile overrides, sheet-based mobile rendering, and the menu/rail/inset family.",
+            "dependencies": [
+                "@base-ui/react@^1.7.0",
+                "class-variance-authority@^0.7.1",
+                "lucide-react@^1.17.0"
+            ],
             "registryDependencies": [
                 "button",
                 "input",
@@ -240,27 +512,32 @@
                     "target": "@hooks/use-mobile.ts"
                 }
             ],
-            "docs": "Visible/sr-only copy is prop-overridable (SidebarTrigger/SidebarRail `label`, Sidebar `sheetTitle`/`sheetDescription`; English defaults). Radius is themeable via the `--sidebar-radius` and `--sidebar-surface-radius` CSS hooks (default `--radius-xl`/`--radius-2xl`).",
-            "dependencies": [
-                "@base-ui/react@^1.7.0",
-                "class-variance-authority@^0.7.1",
-                "lucide-react@^1.17.0"
-            ]
+            "docs": "Visible/sr-only copy is prop-overridable (SidebarTrigger/SidebarRail `label`, Sidebar `sheetTitle`/`sheetDescription`; English defaults). Radius is themeable via the `--sidebar-radius` and `--sidebar-surface-radius` CSS hooks (default `--radius-xl`/`--radius-2xl`)."
         },
         {
             "name": "search",
             "type": "registry:item",
             "title": "Search",
             "description": "Server-driven search controls: useSearch, filters, applied filters, and the export dialog.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "@inertiajs/core@^3.7.1",
+                "date-fns@^4.4.0",
+                "react-day-picker@^10.0.1"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/core",
                 "alert-dialog",
-                "badge",
                 "button",
+                "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty",
+                "badge",
                 "button-group",
                 "calendar",
                 "combobox",
-                "dropdown-menu",
                 "field",
                 "input",
                 "popover",
@@ -268,6 +545,136 @@
                 "separator"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
                 {
                     "path": "components/ui/slider.tsx",
                     "type": "registry:ui",
@@ -329,28 +736,230 @@
                     "target": "@components/export-dialog.tsx"
                 }
             ],
-            "dependencies": [
-                "@base-ui/react@^1.7.0",
-                "@inertiajs/core@^3.7.1",
-                "@inertiajs/react@^3.7.1",
-                "date-fns@^4.4.0",
-                "lucide-react@^1.17.0",
-                "react-day-picker@^10.0.1"
-            ]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`."
         },
         {
             "name": "table",
             "type": "registry:item",
             "title": "Table",
             "description": "Column header/visibility menus, row actions, and sort/visibility hooks for index tables.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "@inertiajs/core@^3.7.1",
+                "date-fns@^4.4.0",
+                "react-day-picker@^10.0.1"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/search",
-                "GDanielRG/components/core",
+                "alert-dialog",
                 "button",
+                "collapsible",
+                "dialog",
                 "dropdown-menu",
+                "empty",
+                "badge",
+                "button-group",
+                "calendar",
+                "combobox",
+                "field",
+                "input",
+                "popover",
+                "radio-group",
+                "separator",
                 "table"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
+                {
+                    "path": "components/ui/slider.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/slider.tsx"
+                },
+                {
+                    "path": "components/search/query-utils.ts",
+                    "type": "registry:lib",
+                    "target": "@components/search/query-utils.ts"
+                },
+                {
+                    "path": "components/search/use-search-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@components/search/use-search-navigation.ts"
+                },
+                {
+                    "path": "components/search/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/search/types.ts"
+                },
+                {
+                    "path": "components/search/faceted-filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/faceted-filters.tsx"
+                },
+                {
+                    "path": "components/search/select-filter.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/select-filter.tsx"
+                },
+                {
+                    "path": "components/search/range-filter.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/range-filter.tsx"
+                },
+                {
+                    "path": "components/search/filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/filters.tsx"
+                },
+                {
+                    "path": "components/search/search-applied-filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/search-applied-filters.tsx"
+                },
+                {
+                    "path": "components/search/search.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/search.tsx"
+                },
+                {
+                    "path": "components/search/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/search/index.ts"
+                },
+                {
+                    "path": "components/export-dialog.tsx",
+                    "type": "registry:component",
+                    "target": "@components/export-dialog.tsx"
+                },
                 {
                     "path": "components/table/column-header-menu.tsx",
                     "type": "registry:component",
@@ -377,24 +986,179 @@
                     "target": "@components/table/use-sort.ts"
                 }
             ],
-            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`."
         },
         {
             "name": "comments",
             "type": "registry:item",
             "title": "Comments",
             "description": "Polymorphic comment list, form, and inline triggers.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "class-variance-authority@^0.7.1"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/chat-display",
-                "avatar",
+                "alert-dialog",
                 "button",
+                "collapsible",
+                "dialog",
                 "dropdown-menu",
-                "input-group",
+                "empty",
+                "bubble",
+                "message",
                 "popover",
-                "tooltip"
+                "tooltip",
+                "avatar",
+                "input-group"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
+                {
+                    "path": "components/ui/attachment.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/attachment.tsx"
+                },
+                {
+                    "path": "components/ui/marker.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/marker.tsx"
+                },
+                {
+                    "path": "components/chat/timestamp-with-reveal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/timestamp-with-reveal.tsx"
+                },
                 {
                     "path": "components/comments/comment-form.tsx",
                     "type": "registry:component",
@@ -421,26 +1185,183 @@
                     "target": "@components/comments/types.ts"
                 }
             ],
-            "docs": "Inject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
-            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nInject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages."
         },
         {
             "name": "documents",
             "type": "registry:item",
             "title": "Documents",
             "description": "Polymorphic document list, upload panel, and inline triggers.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "class-variance-authority@^0.7.1",
+                "@inertiajs/core@^3.7.1"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/chat-display",
-                "badge",
+                "alert-dialog",
                 "button",
+                "collapsible",
+                "dialog",
                 "dropdown-menu",
+                "empty",
+                "bubble",
+                "message",
+                "popover",
+                "tooltip",
+                "badge",
                 "field",
                 "input",
                 "progress",
                 "textarea"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
+                {
+                    "path": "components/ui/attachment.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/attachment.tsx"
+                },
+                {
+                    "path": "components/ui/marker.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/marker.tsx"
+                },
+                {
+                    "path": "components/chat/timestamp-with-reveal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/timestamp-with-reveal.tsx"
+                },
                 {
                     "path": "components/ui/spinner.tsx",
                     "type": "registry:ui",
@@ -517,31 +1438,311 @@
                     "target": "@components/documents/index.ts"
                 }
             ],
-            "docs": "Inject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.",
-            "dependencies": [
-                "@inertiajs/core@^3.7.1",
-                "@inertiajs/react@^3.7.1",
-                "lucide-react@^1.17.0"
-            ]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nInject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages."
         },
         {
             "name": "activity",
             "type": "registry:item",
             "title": "Activity",
             "description": "Combined comments + documents right-sidebar and inline activity triggers.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "class-variance-authority@^0.7.1",
+                "@inertiajs/core@^3.7.1",
+                "@shadcn/react@0.1.0"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/comments",
-                "GDanielRG/components/documents",
-                "GDanielRG/components/core",
-                "GDanielRG/components/sidebar",
-                "GDanielRG/components/chat",
-                "avatar",
-                "badge",
+                "alert-dialog",
                 "button",
+                "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty",
+                "bubble",
+                "message",
+                "popover",
+                "tooltip",
+                "avatar",
+                "input-group",
+                "badge",
+                "field",
+                "input",
+                "progress",
+                "textarea",
+                "separator",
+                "sheet",
+                "skeleton",
                 "button-group",
                 "tabs"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
+                {
+                    "path": "components/ui/attachment.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/attachment.tsx"
+                },
+                {
+                    "path": "components/ui/marker.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/marker.tsx"
+                },
+                {
+                    "path": "components/chat/timestamp-with-reveal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/timestamp-with-reveal.tsx"
+                },
+                {
+                    "path": "components/comments/comment-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-form.tsx"
+                },
+                {
+                    "path": "components/comments/comment-list.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-list.tsx"
+                },
+                {
+                    "path": "components/comments/comment-triggers.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-triggers.tsx"
+                },
+                {
+                    "path": "components/comments/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/comments/index.ts"
+                },
+                {
+                    "path": "components/comments/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/comments/types.ts"
+                },
+                {
+                    "path": "components/ui/spinner.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/spinner.tsx"
+                },
+                {
+                    "path": "components/documents/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/documents/types.ts"
+                },
+                {
+                    "path": "components/documents/utils.ts",
+                    "type": "registry:lib",
+                    "target": "@components/documents/utils.ts"
+                },
+                {
+                    "path": "components/documents/document-file-icon.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-file-icon.tsx"
+                },
+                {
+                    "path": "components/documents/document-error-messages.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-error-messages.tsx"
+                },
+                {
+                    "path": "components/documents/document-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-item.tsx"
+                },
+                {
+                    "path": "components/documents/documents-toggle-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-toggle-button.tsx"
+                },
+                {
+                    "path": "components/documents/documents-list.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-list.tsx"
+                },
+                {
+                    "path": "components/documents/documents-form-section.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-form-section.tsx"
+                },
+                {
+                    "path": "components/documents/documents-panel-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-panel-item.tsx"
+                },
+                {
+                    "path": "components/documents/document-upload-status.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-upload-status.tsx"
+                },
+                {
+                    "path": "components/documents/pending-document-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/pending-document-item.tsx"
+                },
+                {
+                    "path": "components/documents/use-pending-documents-upload.ts",
+                    "type": "registry:hook",
+                    "target": "@components/documents/use-pending-documents-upload.ts"
+                },
+                {
+                    "path": "components/documents/documents-panel.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-panel.tsx"
+                },
+                {
+                    "path": "components/documents/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/documents/index.ts"
+                },
+                {
+                    "path": "components/ui/sidebar.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/sidebar.tsx"
+                },
+                {
+                    "path": "hooks/use-mobile.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile.ts"
+                },
+                {
+                    "path": "components/chat/message-scroller.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/message-scroller.tsx"
+                },
+                {
+                    "path": "components/chat/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/chat/index.ts"
+                },
                 {
                     "path": "components/activity/activity-triggers.tsx",
                     "type": "registry:component",
@@ -563,8 +1764,7 @@
                     "target": "@components/activity/index.ts"
                 }
             ],
-            "docs": "Expects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Render live comment reloads through `renderCommentLiveUpdates`, with the `realtime` item or an app-owned client. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.",
-            "dependencies": ["lucide-react@^1.17.0"]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nInject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.\n\nInject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.\n\nVisible/sr-only copy is prop-overridable (SidebarTrigger/SidebarRail `label`, Sidebar `sheetTitle`/`sheetDescription`; English defaults). Radius is themeable via the `--sidebar-radius` and `--sidebar-surface-radius` CSS hooks (default `--radius-xl`/`--radius-2xl`).\n\nOwns the scroller boundary that pulls pre-1.0 `@shadcn/react`. `activity` depends on it for the comments sidebar; display-only consumers can install `chat-display` without this dependency.\n\nExpects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Render live comment reloads through `renderCommentLiveUpdates`, with the `realtime` item or an app-owned client. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates."
         },
         {
             "name": "realtime",
@@ -607,15 +1807,155 @@
             "type": "registry:item",
             "title": "Chat Display",
             "description": "Shared chat display primitives — attachment and marker — plus a timestamp-with-reveal, composed on stock shadcn message/bubble. No @shadcn/react; folded into foundations so comments/documents can build on them.",
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "class-variance-authority@^0.7.1"
+            ],
             "registryDependencies": [
-                "GDanielRG/components/core",
-                "bubble",
+                "alert-dialog",
                 "button",
+                "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty",
+                "bubble",
                 "message",
                 "popover",
                 "tooltip"
             ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
                 {
                     "path": "components/ui/attachment.tsx",
                     "type": "registry:ui",
@@ -632,18 +1972,157 @@
                     "target": "@components/chat/timestamp-with-reveal.tsx"
                 }
             ],
-            "dependencies": [
-                "@base-ui/react@^1.7.0",
-                "class-variance-authority@^0.7.1"
-            ]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`."
         },
         {
             "name": "chat",
             "type": "registry:item",
             "title": "Chat",
             "description": "The virtualized, stick-to-bottom message scroller. The only bundle that pulls the pre-1.0 @shadcn/react.",
-            "registryDependencies": ["GDanielRG/components/core", "button"],
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@shadcn/react@0.1.0"
+            ],
+            "registryDependencies": [
+                "alert-dialog",
+                "button",
+                "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty"
+            ],
             "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
                 {
                     "path": "components/chat/message-scroller.tsx",
                     "type": "registry:component",
@@ -655,27 +2134,450 @@
                     "target": "@components/chat/index.ts"
                 }
             ],
-            "docs": "Owns the scroller boundary that pulls pre-1.0 `@shadcn/react`. `activity` depends on it for the comments sidebar; display-only consumers can install `chat-display` without this dependency.",
-            "dependencies": ["@shadcn/react@0.1.0", "lucide-react@^1.17.0"]
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nOwns the scroller boundary that pulls pre-1.0 `@shadcn/react`. `activity` depends on it for the comments sidebar; display-only consumers can install `chat-display` without this dependency."
         },
         {
             "name": "foundations",
             "type": "registry:item",
             "title": "Foundations",
             "description": "Installs the full shared Laravel/Inertia component foundation.",
-            "registryDependencies": [
-                "GDanielRG/components/core",
-                "GDanielRG/components/sidebar",
-                "GDanielRG/components/search",
-                "GDanielRG/components/table",
-                "GDanielRG/components/comments",
-                "GDanielRG/components/documents",
-                "GDanielRG/components/activity",
-                "GDanielRG/components/archive",
-                "GDanielRG/components/edit-history",
-                "GDanielRG/components/chat-display"
+            "dependencies": [
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0",
+                "@base-ui/react@^1.7.0",
+                "class-variance-authority@^0.7.1",
+                "@inertiajs/core@^3.7.1",
+                "date-fns@^4.4.0",
+                "react-day-picker@^10.0.1",
+                "@shadcn/react@0.1.0",
+                "sonner@^2.0.7"
             ],
-            "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
+            "registryDependencies": [
+                "alert-dialog",
+                "button",
+                "collapsible",
+                "dialog",
+                "dropdown-menu",
+                "empty",
+                "input",
+                "separator",
+                "sheet",
+                "skeleton",
+                "tooltip",
+                "badge",
+                "button-group",
+                "calendar",
+                "combobox",
+                "field",
+                "popover",
+                "radio-group",
+                "table",
+                "bubble",
+                "message",
+                "avatar",
+                "input-group",
+                "progress",
+                "textarea",
+                "tabs"
+            ],
+            "files": [
+                {
+                    "path": "types/options.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/options.ts"
+                },
+                {
+                    "path": "types/paginated-data.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/paginated-data.ts"
+                },
+                {
+                    "path": "types/server-search.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/server-search.ts"
+                },
+                {
+                    "path": "types/shared-component-copy.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/shared-component-copy.ts"
+                },
+                {
+                    "path": "types/wayfinder.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/wayfinder.ts"
+                },
+                {
+                    "path": "hooks/use-sidebar-sheet.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-sidebar-sheet.ts"
+                },
+                {
+                    "path": "hooks/use-mobile-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile-navigation.ts"
+                },
+                {
+                    "path": "hooks/use-clipboard.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-clipboard.ts"
+                },
+                {
+                    "path": "hooks/use-current-url.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-current-url.ts"
+                },
+                {
+                    "path": "hooks/use-initials.tsx",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-initials.tsx"
+                },
+                {
+                    "path": "components/ui/active-trigger-icon.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/active-trigger-icon.tsx"
+                },
+                {
+                    "path": "components/ui/pagination.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/pagination.tsx"
+                },
+                {
+                    "path": "components/ui/scroll-area.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/scroll-area.tsx"
+                },
+                {
+                    "path": "components/actions-dropdown-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/actions-dropdown-menu.tsx"
+                },
+                {
+                    "path": "components/app-container.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-container.tsx"
+                },
+                {
+                    "path": "components/app-empty-card.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-empty-card.tsx"
+                },
+                {
+                    "path": "components/app-pagination.tsx",
+                    "type": "registry:component",
+                    "target": "@components/app-pagination.tsx"
+                },
+                {
+                    "path": "components/delete-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/delete-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/destroy-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/destroy-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/dialog-form-content.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-content.tsx"
+                },
+                {
+                    "path": "components/dialog-form-layout.tsx",
+                    "type": "registry:component",
+                    "target": "@components/dialog-form-layout.tsx"
+                },
+                {
+                    "path": "components/loading-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/loading-button.tsx"
+                },
+                {
+                    "path": "components/optional-add-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-add-button.tsx"
+                },
+                {
+                    "path": "components/optional-label.tsx",
+                    "type": "registry:component",
+                    "target": "@components/optional-label.tsx"
+                },
+                {
+                    "path": "components/save-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/save-button.tsx"
+                },
+                {
+                    "path": "components/form-actions.tsx",
+                    "type": "registry:component",
+                    "target": "@components/form-actions.tsx"
+                },
+                {
+                    "path": "components/ui/sidebar.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/sidebar.tsx"
+                },
+                {
+                    "path": "hooks/use-mobile.ts",
+                    "type": "registry:hook",
+                    "target": "@hooks/use-mobile.ts"
+                },
+                {
+                    "path": "components/ui/slider.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/slider.tsx"
+                },
+                {
+                    "path": "components/search/query-utils.ts",
+                    "type": "registry:lib",
+                    "target": "@components/search/query-utils.ts"
+                },
+                {
+                    "path": "components/search/use-search-navigation.ts",
+                    "type": "registry:hook",
+                    "target": "@components/search/use-search-navigation.ts"
+                },
+                {
+                    "path": "components/search/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/search/types.ts"
+                },
+                {
+                    "path": "components/search/faceted-filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/faceted-filters.tsx"
+                },
+                {
+                    "path": "components/search/select-filter.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/select-filter.tsx"
+                },
+                {
+                    "path": "components/search/range-filter.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/range-filter.tsx"
+                },
+                {
+                    "path": "components/search/filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/filters.tsx"
+                },
+                {
+                    "path": "components/search/search-applied-filters.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/search-applied-filters.tsx"
+                },
+                {
+                    "path": "components/search/search.tsx",
+                    "type": "registry:component",
+                    "target": "@components/search/search.tsx"
+                },
+                {
+                    "path": "components/search/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/search/index.ts"
+                },
+                {
+                    "path": "components/export-dialog.tsx",
+                    "type": "registry:component",
+                    "target": "@components/export-dialog.tsx"
+                },
+                {
+                    "path": "components/table/column-header-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/table/column-header-menu.tsx"
+                },
+                {
+                    "path": "components/table/column-visibility-menu.tsx",
+                    "type": "registry:component",
+                    "target": "@components/table/column-visibility-menu.tsx"
+                },
+                {
+                    "path": "components/table/row-actions-cell.tsx",
+                    "type": "registry:component",
+                    "target": "@components/table/row-actions-cell.tsx"
+                },
+                {
+                    "path": "components/table/use-column-visibility.ts",
+                    "type": "registry:hook",
+                    "target": "@components/table/use-column-visibility.ts"
+                },
+                {
+                    "path": "components/table/use-sort.ts",
+                    "type": "registry:hook",
+                    "target": "@components/table/use-sort.ts"
+                },
+                {
+                    "path": "components/ui/attachment.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/attachment.tsx"
+                },
+                {
+                    "path": "components/ui/marker.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/marker.tsx"
+                },
+                {
+                    "path": "components/chat/timestamp-with-reveal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/timestamp-with-reveal.tsx"
+                },
+                {
+                    "path": "components/comments/comment-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-form.tsx"
+                },
+                {
+                    "path": "components/comments/comment-list.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-list.tsx"
+                },
+                {
+                    "path": "components/comments/comment-triggers.tsx",
+                    "type": "registry:component",
+                    "target": "@components/comments/comment-triggers.tsx"
+                },
+                {
+                    "path": "components/comments/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/comments/index.ts"
+                },
+                {
+                    "path": "components/comments/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/comments/types.ts"
+                },
+                {
+                    "path": "components/ui/spinner.tsx",
+                    "type": "registry:ui",
+                    "target": "@ui/spinner.tsx"
+                },
+                {
+                    "path": "components/documents/types.ts",
+                    "type": "registry:file",
+                    "target": "@components/documents/types.ts"
+                },
+                {
+                    "path": "components/documents/utils.ts",
+                    "type": "registry:lib",
+                    "target": "@components/documents/utils.ts"
+                },
+                {
+                    "path": "components/documents/document-file-icon.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-file-icon.tsx"
+                },
+                {
+                    "path": "components/documents/document-error-messages.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-error-messages.tsx"
+                },
+                {
+                    "path": "components/documents/document-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-item.tsx"
+                },
+                {
+                    "path": "components/documents/documents-toggle-button.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-toggle-button.tsx"
+                },
+                {
+                    "path": "components/documents/documents-list.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-list.tsx"
+                },
+                {
+                    "path": "components/documents/documents-form-section.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-form-section.tsx"
+                },
+                {
+                    "path": "components/documents/documents-panel-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-panel-item.tsx"
+                },
+                {
+                    "path": "components/documents/document-upload-status.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/document-upload-status.tsx"
+                },
+                {
+                    "path": "components/documents/pending-document-item.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/pending-document-item.tsx"
+                },
+                {
+                    "path": "components/documents/use-pending-documents-upload.ts",
+                    "type": "registry:hook",
+                    "target": "@components/documents/use-pending-documents-upload.ts"
+                },
+                {
+                    "path": "components/documents/documents-panel.tsx",
+                    "type": "registry:component",
+                    "target": "@components/documents/documents-panel.tsx"
+                },
+                {
+                    "path": "components/documents/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/documents/index.ts"
+                },
+                {
+                    "path": "components/chat/message-scroller.tsx",
+                    "type": "registry:component",
+                    "target": "@components/chat/message-scroller.tsx"
+                },
+                {
+                    "path": "components/chat/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/chat/index.ts"
+                },
+                {
+                    "path": "components/activity/activity-triggers.tsx",
+                    "type": "registry:component",
+                    "target": "@components/activity/activity-triggers.tsx"
+                },
+                {
+                    "path": "components/activity/comment-typing-indicator.tsx",
+                    "type": "registry:component",
+                    "target": "@components/activity/comment-typing-indicator.tsx"
+                },
+                {
+                    "path": "components/activity/comments-documents-sidebar.tsx",
+                    "type": "registry:component",
+                    "target": "@components/activity/comments-documents-sidebar.tsx"
+                },
+                {
+                    "path": "components/activity/index.ts",
+                    "type": "registry:file",
+                    "target": "@components/activity/index.ts"
+                },
+                {
+                    "path": "components/archive-confirmation-modal.tsx",
+                    "type": "registry:component",
+                    "target": "@components/archive-confirmation-modal.tsx"
+                },
+                {
+                    "path": "components/archive-confirmation-form.tsx",
+                    "type": "registry:component",
+                    "target": "@components/archive-confirmation-form.tsx"
+                },
+                {
+                    "path": "components/archived-status-badge.tsx",
+                    "type": "registry:component",
+                    "target": "@components/archived-status-badge.tsx"
+                },
+                {
+                    "path": "types/edit-history-entry.ts",
+                    "type": "registry:file",
+                    "target": "@components/types/edit-history-entry.ts"
+                },
+                {
+                    "path": "components/edit-history.tsx",
+                    "type": "registry:component",
+                    "target": "@components/edit-history.tsx"
+                }
+            ],
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.\n\nVisible/sr-only copy is prop-overridable (SidebarTrigger/SidebarRail `label`, Sidebar `sheetTitle`/`sheetDescription`; English defaults). Radius is themeable via the `--sidebar-radius` and `--sidebar-surface-radius` CSS hooks (default `--radius-xl`/`--radius-2xl`).\n\nInject `storeCommentForm`/`updateCommentForm`/`destroyCommentForm` Wayfinder route factories. Comments expose the canonical `author` shape. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.\n\nInject `storeDocumentAction`/`updateDocumentAction`/`destroyDocumentAction`/`showDocumentAction` route factories. Pass app-owned `invalidateCacheTags` when these writes can stale tagged prefetched pages.\n\nOwns the scroller boundary that pulls pre-1.0 `@shadcn/react`. `activity` depends on it for the comments sidebar; display-only consumers can install `chat-display` without this dependency.\n\nExpects an app-owned `@/components/app-right-sidebar` shell (kept app-owned for per-theme divergence). Render live comment reloads through `renderCommentLiveUpdates`, with the `realtime` item or an app-owned client. Pass app-owned `invalidateCacheTags` for writes that can stale tagged prefetched pages. Pass `readOnly` for immutable resources to retain viewing/downloads while suppressing comment/document mutations, typing presence, and live updates.\n\nRequires `ArchiveCopy` keys in the app-owned `useSharedComponentCopy` hook. Archive validation errors surface through Sonner because the fieldless confirmation modal has no inline error anchor. Use for archive/soft-delete flows only; keep true hard deletes on `DeleteConfirmationModal`.\n\nRequires `HistoryCopy` keys in the app-owned `useSharedComponentCopy` hook (including `historyDetailShow(count)`/`historyDetailHide`). Pass `employeeHref={(id) => showEmployee(id).url}` to link viewable causers to their detail page — registry files never import app Wayfinder routes; omit it to render every causer as plain text. Timestamps and values arrive server-formatted (no client date formatting).\n\nRequires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
         },
         {
             "name": "design-lint",
