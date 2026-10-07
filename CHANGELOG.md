@@ -8,6 +8,12 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Added** an optional `footer` to `EditHistoryPopover`, rendered after the entries
+  for app-owned controls such as loading older history. The history list now scrolls
+  past `max-h-96`.
+
 ### snapshot-20260927-46fe2e6 — 2026-09-27
 
 - **Changed** `registry:release` to inline internal dependencies into each released

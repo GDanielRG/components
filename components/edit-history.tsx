@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { ChevronDownIcon, HistoryIcon } from 'lucide-react';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import type { EditHistoryEntry } from '@/components/types/edit-history-entry';
 import type { HistoryCopy } from '@/components/types/shared-component-copy';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -30,6 +30,7 @@ type EditHistoryPopoverProps = {
     dataTestPrefix?: string;
     employeeHref?: EmployeeHref;
     employeeCacheTags?: string | string[];
+    footer?: ReactNode;
 };
 
 export function EditHistoryPopover({
@@ -37,6 +38,7 @@ export function EditHistoryPopover({
     dataTestPrefix,
     employeeHref,
     employeeCacheTags,
+    footer,
 }: EditHistoryPopoverProps) {
     const copy: HistoryCopy = useSharedComponentCopy();
 
@@ -71,7 +73,7 @@ export function EditHistoryPopover({
                 <TooltipContent>{copy.historyTooltip}</TooltipContent>
             </Tooltip>
             <PopoverContent align="end" className="w-80">
-                <div className="flex flex-col gap-3">
+                <div className="flex max-h-96 flex-col gap-3 overflow-y-auto">
                     <div className="border-b pb-2">
                         <h2 className="text-sm font-semibold">
                             {copy.historyTitle}
@@ -85,6 +87,7 @@ export function EditHistoryPopover({
                             employeeCacheTags={employeeCacheTags}
                         />
                     ))}
+                    {footer}
                 </div>
             </PopoverContent>
         </Popover>

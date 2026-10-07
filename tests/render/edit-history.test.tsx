@@ -11,7 +11,9 @@
 //   4. a structured change renders its server `summary` + expandable per-leaf
 //      details (the analisis superset folded into the registry component);
 //   5. NO client date formatting — a raw ISO date passes through untouched
-//      (server-formatted-value contract).
+//      (server-formatted-value contract);
+//   6. a consumer-owned `footer` renders after the entries, and never forces an
+//      empty history to render.
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { EditHistoryPopover } from '@/components/edit-history';
@@ -45,8 +47,30 @@ function makeEntry(
 
 describe('EditHistoryPopover — graduated registry component', () => {
     it('renders nothing for an empty history', () => {
-        const { container } = render(<EditHistoryPopover history={[]} />);
+        const { container } = render(
+            <EditHistoryPopover
+                history={[]}
+                footer={<button>More history</button>}
+            />,
+        );
         expect(container).toBeEmptyDOMElement();
+    });
+
+    it('renders a consumer-owned footer after the history', () => {
+        render(
+            <EditHistoryPopover
+                history={[makeEntry()]}
+                footer={<button>More history</button>}
+            />,
+        );
+
+        expect(
+            screen
+                .getByText('New')
+                .compareDocumentPosition(
+                    screen.getByRole('button', { name: 'More history' }),
+                ),
+        ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     });
 
     it('renders the timeline with the server-formatted timestamp and a from→to diff', () => {
