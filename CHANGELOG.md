@@ -8,7 +8,7 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20261006-373fc5c — 2026-10-06
 
 - **Added** an optional `footer` to `EditHistoryPopover`, rendered after the entries
   for app-owned controls such as loading older history. The history list now scrolls
