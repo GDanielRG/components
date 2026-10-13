@@ -8,6 +8,15 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ## Snapshots (pre-production)
 
+### snapshot-20261006-373fc5c — 2026-10-06
+
+- **Added** an optional `footer` to `EditHistoryPopover`, rendered after the entries
+  for app-owned controls such as loading older history. The history list now scrolls
+  past `max-h-96`.
+- **Fixed** search query parsing ignoring `__proto__`, `constructor`, and `prototype`
+  segments and reading nested values only from own properties, so a crafted URL can
+  no longer write to `Object.prototype` or surface inherited values as search state.
+
 ### snapshot-20260927-46fe2e6 — 2026-09-27
 
 - **Changed** `registry:release` to inline internal dependencies into each released
