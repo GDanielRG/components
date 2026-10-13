@@ -68,6 +68,11 @@
                     "target": "@hooks/use-initials.tsx"
                 },
                 {
+                    "path": "lib/prefetch-guard.ts",
+                    "type": "registry:lib",
+                    "target": "@lib/prefetch-guard.ts"
+                },
+                {
                     "path": "components/ui/active-trigger-icon.tsx",
                     "type": "registry:ui",
                     "target": "@ui/active-trigger-icon.tsx"
@@ -148,7 +153,7 @@
                     "target": "@components/form-actions.tsx"
                 }
             ],
-            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`.",
+            "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`. Call `suppressPrefetchesDuringVisits()` from `@/lib/prefetch-guard` once in `app.tsx`.",
             "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
         },
         {
@@ -675,13 +680,20 @@
                 "GDanielRG/components/edit-history",
                 "GDanielRG/components/chat-display"
             ],
-            "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. See docs/CONSUMER_CONTRACT.md."
+            "files": [
+                {
+                    "path": "lib/foundations.css",
+                    "type": "registry:file",
+                    "target": "resources/css/foundations.css"
+                }
+            ],
+            "docs": "Requires app-owned `@/hooks/use-shared-component-copy` and `@/components/app-right-sidebar`, plus injected comment/document route factories. Import `./foundations.css` from `resources/css/app.css`. See docs/CONSUMER_CONTRACT.md."
         },
         {
             "name": "design-lint",
             "type": "registry:item",
-            "title": "Shared component lint contracts",
-            "description": "Scoped Oxlint overrides for the registry-owned compositions. Application-wide design rules remain consumer-owned.",
+            "title": "Shared design lint baseline",
+            "description": "Shared Oxlint baseline enabling the six @shadcn/lint rules, with scoped allowances for registry-owned compositions. Application-specific contracts and exceptions remain consumer-owned.",
             "files": [
                 {
                     "path": "shared-component-lint.json",

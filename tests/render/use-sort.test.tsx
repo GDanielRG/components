@@ -1,8 +1,20 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import type { ActiveVisit, Page } from '@inertiajs/core';
+import {
+    act,
+    cleanup,
+    fireEvent,
+    render,
+    renderHook,
+    screen,
+} from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { SearchNavigationData } from '@/components/search/query-utils';
 import { useSearchNavigation } from '@/components/search/use-search-navigation';
+import type {
+    SearchNavigationOptions,
+    SearchVisitOptions,
+} from '@/components/search/use-search-navigation';
 import { useSort } from '@/components/table/use-sort';
 import type {
     RouteDefinition,
@@ -12,27 +24,23 @@ import type {
 
 const { page, visits } = vi.hoisted(() => ({
     page: { url: '/things' },
-    visits: [] as { url: string; method: string; only?: string[] }[],
+    visits: [] as {
+        href: RouteDefinition<'get'>;
+        options: SearchVisitOptions;
+    }[],
 }));
 
 vi.mock('@inertiajs/react', () => ({
     usePage: () => ({ url: page.url }),
     router: {
-        visit: (
-            href: { url: string; method: string },
-            options: { only?: string[] },
-        ) => {
-            visits.push({
-                url: href.url,
-                method: href.method,
-                only: options.only,
-            });
+        visit: (href: RouteDefinition<'get'>, options: SearchVisitOptions) => {
+            visits.push({ href, options });
         },
     },
 }));
 
 function visitedUrls(): string[] {
-    return visits.map((visit) => visit.url);
+    return visits.map((visit) => visit.href.url);
 }
 
 function serializeQuery(query: SearchNavigationData, prefix = ''): string[] {
@@ -146,11 +154,14 @@ describe('useSort — shared navigation controller', () => {
         fireEvent.click(screen.getByTestId('apply-filter'));
         fireEvent.click(screen.getByTestId('sort-name-asc'));
 
-        expect(visits.map((visit) => visit.only)).toEqual([
+        expect(visits.map((visit) => visit.options.only)).toEqual([
             ['things'],
             ['things'],
         ]);
-        expect(visits.map((visit) => visit.method)).toEqual(['get', 'get']);
+        expect(visits.map((visit) => visit.href.method)).toEqual([
+            'get',
+            'get',
+        ]);
     });
 
     it('builds from the page url when no visit is pending', () => {
@@ -213,5 +224,130 @@ describe('useSort — sortPath and pageParam', () => {
         fireEvent.click(screen.getByTestId('sort-name-asc'));
 
         expect(visitedUrls()).toEqual(['/things']);
+    });
+});
+
+describe('useSearchNavigation — request-scoped visit options', () => {
+    function renderNavigation(
+        visitOptions: SearchNavigationOptions['visitOptions'],
+    ) {
+        return renderHook(() => {
+            const navigation = useSearchNavigation(thingsRoute, {
+                only: ['things'],
+                visitOptions,
+            });
+
+            return { navigation, sort: useSort({ navigation }) };
+        });
+    }
+
+    const loadedPage = { url: '/things' } as Page;
+
+    function finished(index: number): ActiveVisit {
+        return {
+            url: new URL(visits[index].href.url, 'http://localhost'),
+        } as ActiveVisit;
+    }
+
+    it('binds factory options to each exact resolved route while rapid filter and sort visits compose', () => {
+        const routes: RouteDefinition<'get'>[] = [];
+        const { result } = renderNavigation((route) => {
+            routes.push(route);
+
+            return {
+                preserveScroll: false,
+                headers: { 'X-Search-Route': route.url },
+            };
+        });
+
+        act(() =>
+            result.current.navigation.visit({ filter: { status: 'active' } }),
+        );
+        act(() => result.current.sort.handleSort('name', 'asc'));
+
+        expect(visitedUrls()).toEqual([
+            '/things?filter[status]=active',
+            '/things?filter[status]=active&sort=name',
+        ]);
+        expect(routes).toHaveLength(2);
+        visits.forEach((visit, index) => {
+            expect(visit.href).toBe(routes[index]);
+            expect(visit.options).toMatchObject({
+                only: ['things'],
+                preserveState: true,
+                replace: true,
+                preserveScroll: false,
+                headers: { 'X-Search-Route': routes[index].url },
+            });
+        });
+    });
+
+    it('lets per-call options override the factory and keeps native success and finish callbacks', () => {
+        const factorySuccess = vi.fn();
+        const factoryFinish = vi.fn();
+        const callFinish = vi.fn();
+        const { result } = renderNavigation(() => ({
+            preserveScroll: false,
+            onSuccess: factorySuccess,
+            onFinish: factoryFinish,
+        }));
+
+        act(() => result.current.navigation.visit({ sort: 'name' }));
+        expect(result.current.sort.sort).toBe('name');
+        act(() => {
+            visits[0].options.onSuccess?.(loadedPage);
+            visits[0].options.onFinish?.(finished(0));
+        });
+
+        expect(factorySuccess).toHaveBeenCalledWith(loadedPage);
+        expect(factoryFinish).toHaveBeenCalledWith(finished(0));
+        expect(result.current.sort.sort).toBeNull();
+
+        act(() =>
+            result.current.navigation.visit(
+                { sort: '-name' },
+                { preserveScroll: true, onFinish: callFinish },
+            ),
+        );
+        expect(visits[1].options.preserveScroll).toBe(true);
+        expect(result.current.sort.order).toBe('desc');
+        act(() => {
+            visits[1].options.onSuccess?.(loadedPage);
+            visits[1].options.onFinish?.(finished(1));
+        });
+
+        expect(factorySuccess).toHaveBeenCalledTimes(2);
+        expect(callFinish).toHaveBeenCalledWith(finished(1));
+        expect(factoryFinish).toHaveBeenCalledTimes(1);
+        expect(result.current.sort.sort).toBeNull();
+    });
+
+    it('keeps the newer pending query when a superseded visit is cancelled', () => {
+        const factoryCancel = vi.fn();
+        const factoryFinish = vi.fn();
+        const { result } = renderNavigation(() => ({
+            onCancel: factoryCancel,
+            onFinish: factoryFinish,
+        }));
+
+        act(() =>
+            result.current.navigation.visit({ filter: { status: 'active' } }),
+        );
+        act(() => result.current.sort.handleSort('name', 'asc'));
+        act(() => {
+            visits[0].options.onCancel?.();
+            visits[0].options.onFinish?.(finished(0));
+        });
+
+        expect(factoryCancel).toHaveBeenCalledOnce();
+        expect(factoryFinish).toHaveBeenCalledWith(finished(0));
+        expect(result.current.navigation.effectiveQuery).toEqual({
+            filter: { status: 'active' },
+            sort: 'name',
+        });
+
+        act(() => visits[1].options.onFinish?.(finished(1)));
+
+        expect(result.current.navigation.effectiveQuery).toEqual({});
     });
 });

@@ -8,13 +8,14 @@ versions and bundle contents.
 
 Consumers provide:
 
-- `components.json` aliases for `@/components`, `@/components/ui`, `@/hooks`, and
-  `@/lib/utils`;
+- `components.json` aliases for `@/components`, `@/components/ui`, `@/hooks`,
+  `@/lib`, and `@/lib/utils`;
 - a TypeScript `@/*` alias resolving to `resources/js/*`;
 - `@/lib/utils` exports for stock ShadCN `cn` and the fleet's `toUrl(href)` resolver;
 - `@/hooks/use-shared-component-copy`, returning the installed
-  `SharedComponentCopy` contract; and
-- the controlled `AppRightSidebar` export at `@/components/app-right-sidebar`.
+  `SharedComponentCopy` contract;
+- the controlled `AppRightSidebar` export at `@/components/app-right-sidebar`; and
+- the `resources/css/app.css` Tailwind entry and its theme.
 
 Locale and shell styling vary by app, so registry installs never own or overwrite
 these seams.
@@ -57,24 +58,70 @@ The `design-lint` registry item allows `max-h-[calc(100dvh-2rem)]` only in
 `dialog-form-content.tsx`; it reserves one rem above and below the popup. Install
 its updated config with the component. Layout checking stays enabled elsewhere.
 
-## Design lint contracts
+## Design lint baseline
 
 Install `design-lint`, import `./shared-component-lint.json` in `vite.config.ts`,
-and include that object in `lint.extends`. It owns only file-scoped allowances for registry compositions;
-keep rule severity, app-specific contracts, and global design policy in the app.
-Update the config with the components that need it. Oxlint rule options replace
-rather than merge, so an app override for the same file must retain its shared contract.
+and include that object in `lint.extends`. The baseline enables the six
+`@shadcn/lint` rules: `no-restyle` with layout-only defaults, `no-raw-colors` and
+`no-arbitrary-values` with full-string scanning, `no-inline-styles`,
+`no-unknown-classes`, and `require-static-classes`. Installed primitives under
+`components/ui/**` are exempt from the restyle, arbitrary-value, and static-class
+checks. Registry compositions that need an allowance get it only in their owning
+file, such as `DialogFormLayout`'s grid columns, the typing indicator's shimmer and
+reveal transition, and the message scroller's containment.
+
+Keep the plugin plumbing in the app: `plugins`, `jsPlugins: ['@shadcn/lint']`,
+`options`, and `ignorePatterns`. Also keep app-specific component contracts, class
+allowances, selector hooks emitted by the app shell or by primitives the app
+installs, and artwork exceptions. Delete local copies of the shared rules and
+registry allowances.
+
+Oxlint rule options replace rather than merge, and the app's config is applied over
+the baseline:
+
+- an app rule in `lint.rules` replaces that rule's shared options everywhere
+  outside the baseline's file overrides, so restate `allow: ['layout']` or
+  `scanAllStrings: true` when adding app entries;
+- the baseline's file overrides still apply to their own files under the app's rules;
+- an app override for a shared file replaces that file's shared options, so it must
+  retain the full shared option list; and
+- `'off'` in the app disables a shared rule; reserve it for a documented decision.
+
+Update the config with the components that need it.
 
 ## Compact editors and state cues
 
 `EmptyCard` adds the outline width that the installed `Empty` leaves to its caller.
 Unset filter triggers use a dashed border. Range/select popovers use `gap-3`;
 attachment metadata editors use `gap-2`. These are scoped composition contracts,
-not changes to full-form spacing. Consumers enforcing `shadcn/no-restyle` permit
-these exact utilities only in the owning component files.
+not changes to full-form spacing. The `design-lint` baseline permits these exact
+utilities only in the owning component files.
 
 Clear-filter and column-reset actions retain the neutral ghost variant: they
 reset a reversible view and do not delete application data.
+
+## Document typography
+
+`foundations` installs `resources/css/foundations.css`, the shared typography for
+bare `h1`–`h6`, `p`, `blockquote`, `code`, and `small` elements. Import it from
+`resources/css/app.css` beside the other imports, and remove the app's copy of
+those rules:
+
+```css
+@import 'tailwindcss';
+@import './foundations.css';
+```
+
+Its rules skip elements with `data-slot`, which installed primitives render, and
+inline code uses the theme's `muted` color. Palettes, radius, fonts, `html` and
+`body` styles, and local utilities stay in the app.
+
+## Prefetch guard
+
+`core` installs `suppressPrefetchesDuringVisits()` at `@/lib/prefetch-guard`. Call it
+once in `app.tsx`, before `createInertiaApp`. It cancels hover prefetches for a URL
+whose visit is still loading, so a late prefetch response cannot remount the page
+the visit already showed. It returns a function that removes its router listeners.
 
 ## Injected routes
 
@@ -97,6 +144,16 @@ Pass the same `SearchNavigationState` instance to `useSort`; it owns the effecti
 query while an Inertia visit is pending. Both navigation hooks return this state.
 A hand-built navigation state must expose `effectiveQuery` and `only`, and apply
 `only` in `visit`.
+
+Both hooks accept an optional `visitOptions(route)` factory for request-scoped
+native visit options. Each visit resolves its route once and passes that route to
+the factory, so callbacks can record exactly what was requested, such as the route a
+retry should revisit. Visits merge the defaults (`only`, preserved state and
+scroll, and `replace`), then the factory's options, then the per-call options, key
+by key. The controller clears its pending query before invoking the effective
+`onFinish`. Shared clear actions pass their own `onFinish`, so keep request-scoped
+recovery in other callbacks, such as `onSuccess`, `onNetworkError`, or
+`onHttpException`.
 
 `SearchAppliedFilters` accepts `additionalAppliedCount` for app-owned filters. The
 app renders those chips and includes their removal through `useSearch`'s

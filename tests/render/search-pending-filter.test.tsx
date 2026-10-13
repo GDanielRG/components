@@ -5,6 +5,10 @@ import { SearchFilterControls, useSearch } from '@/components/search/search';
 import type { SearchNavigationData } from '@/components/search/query-utils';
 import { useSearchNavigation } from '@/components/search/use-search-navigation';
 import type {
+    SearchNavigationOptions,
+    SearchVisitOptions,
+} from '@/components/search/use-search-navigation';
+import type {
     ServerSearchChoiceFilter,
     ServerSearchFilter,
     ServerSearchRangeFilter,
@@ -14,9 +18,10 @@ import type {
     RouteResolver,
 } from '@/components/types/wayfinder';
 
-const { page, visits } = vi.hoisted(() => ({
+const { page, visits, visitOptions } = vi.hoisted(() => ({
     page: { url: '/things' },
     visits: [] as string[],
+    visitOptions: [] as SearchVisitOptions[],
 }));
 
 vi.mock('@inertiajs/react', async (importOriginal) => {
@@ -27,8 +32,12 @@ vi.mock('@inertiajs/react', async (importOriginal) => {
         usePage: () => page,
         router: {
             ...original.router,
-            visit: (route: RouteDefinition<'get'>) => {
+            visit: (
+                route: RouteDefinition<'get'>,
+                options: SearchVisitOptions,
+            ) => {
                 visits.push(route.url);
+                visitOptions.push(options);
             },
         },
     };
@@ -84,12 +93,15 @@ const thingsRoute: RouteResolver<'get'> = (
 
 function SearchHarness({
     filters = [statusFilter],
+    visitOptions,
 }: {
     filters?: ServerSearchFilter[];
+    visitOptions?: SearchNavigationOptions['visitOptions'];
 }) {
     const search = useSearch(thingsRoute, {
         filters,
         only: ['things'],
+        visitOptions,
     });
 
     return (
@@ -133,6 +145,7 @@ function SameTickVisitHarness() {
 beforeEach(() => {
     page.url = '/things';
     visits.length = 0;
+    visitOptions.length = 0;
 });
 
 afterEach(() => {
@@ -221,8 +234,17 @@ describe('useSearch pending filter query', () => {
         },
     );
 
-    it('keeps rapid selections from one multiselect in its URL and controlled state', () => {
-        render(<SearchHarness />);
+    it('keeps rapid selections from one multiselect in its URL, controlled state and request-scoped options', () => {
+        const routes: string[] = [];
+        render(
+            <SearchHarness
+                visitOptions={(route) => {
+                    routes.push(route.url);
+
+                    return { headers: { 'X-Search-Route': route.url } };
+                }}
+            />,
+        );
 
         fireEvent.click(screen.getByTestId('filter-status-trigger'));
         fireEvent.click(screen.getByTestId('filter-status-option-active'));
@@ -237,6 +259,10 @@ describe('useSearch pending filter query', () => {
             '/things?filter%5Bstatus%5D%5B%5D=active',
             '/things?filter%5Bstatus%5D%5B%5D=active&filter%5Bstatus%5D%5B%5D=pending',
         ]);
+        expect(routes).toEqual(visits);
+        expect(visitOptions.map((options) => options.headers)).toEqual(
+            visits.map((url) => ({ 'X-Search-Route': url })),
+        );
         expect(screen.getByTestId('selected-values')).toHaveTextContent(
             'active,pending',
         );

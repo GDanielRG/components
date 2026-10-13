@@ -22,9 +22,14 @@ export interface SearchNavigationOptions {
     only: string[];
     /** Pagination key owned by this surface. */
     pageParam?: string;
+    /** Options for the exact route a visit resolves; per-call options override them. */
+    visitOptions?: (route: RouteDefinition<'get'>) => SearchVisitOptions;
 }
 
-export interface SearchNavigationController extends SearchNavigationOptions {
+export interface SearchNavigationController extends Omit<
+    SearchNavigationOptions,
+    'visitOptions'
+> {
     buildRoute: (patch: SearchNavigationPatch) => RouteDefinition<'get'>;
     visit: (patch: SearchNavigationPatch, options?: SearchVisitOptions) => void;
 }
@@ -68,7 +73,7 @@ function resolveBaseQuery(
 
 export function useSearchNavigation(
     routeFn: RouteResolver<'get'>,
-    { only, pageParam = 'page' }: SearchNavigationOptions,
+    { only, pageParam = 'page', visitOptions }: SearchNavigationOptions,
 ): SearchNavigationState {
     const { url } = usePage();
     const currentQuery = useMemo(
@@ -130,7 +135,10 @@ export function useSearchNavigation(
         const nextQuery = buildNextQuery(patch);
         const nextRoute = routeFn({ query: nextQuery });
         const visitId = ++nextVisitId.current;
-        const { onFinish, ...visitOptions } = options;
+        const { onFinish, ...requestOptions } = {
+            ...visitOptions?.(nextRoute),
+            ...options,
+        };
 
         trackPendingVisit({
             id: visitId,
@@ -142,7 +150,7 @@ export function useSearchNavigation(
         router.visit(nextRoute, {
             only,
             ...defaultVisitOptions,
-            ...visitOptions,
+            ...requestOptions,
             onFinish: (visit) => {
                 if (pendingVisitRef.current?.id === visitId) {
                     trackPendingVisit(null);

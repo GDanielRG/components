@@ -5,6 +5,9 @@
 `registry.json` owns the install graph and file targets. `package.json` owns tooling,
 dependency versions, and verification commands. Registry production code lives under
 `components/`, `hooks/`, `lib/`, and `types/`; test substitutes live only under `tests/`.
+`shared-component-lint.json` owns the shared design-lint baseline. When a registry
+composition needs a lint allowance, add an override for its owning file with the
+rule's full option list; never widen the baseline's global rules for it.
 
 ShadCN rewrites imports that resolve outside the configured aliases, such as
 `@/types/*` and `@/wayfinder/*`, and some relative type imports incorrectly, so
@@ -27,11 +30,18 @@ bun run registry:check
 bun run smoke
 ```
 
-The smoke test installs the working tree into the aligned fixture, retains stock
-ShadCN files and package dependencies, checks app-owned seams, runs `tsc --noEmit`, and
-proves a reinstall is byte-identical. This is the repository's real type check;
-Vitest transpiles TypeScript without checking it. Wayfinder compatibility declarations
-therefore live in `tests/fixture-consumer/resources/js/wayfinder-contract.ts`.
+`registry:check` starts with `scripts/check-bun-dependencies.mjs`, which runs
+`bun audit` with that script's single expiring advisory exception and needs network
+access.
+
+The smoke test installs `foundations`, `realtime`, and `design-lint` from the working
+tree into the aligned fixture, retains stock ShadCN files and package dependencies,
+checks app-owned seams, runs `tsc --noEmit` and the fixture's `vp check`, and proves
+a reinstall is byte-identical. This is the repository's real type check; Vitest
+transpiles TypeScript without checking it. Wayfinder compatibility declarations
+therefore live in `tests/fixture-consumer/resources/js/wayfinder-contract.ts`. The
+fixture's `vp check` applies the installed lint baseline with the consumers' plugin
+plumbing and skips formatting, which consumers apply to installed files themselves.
 
 ## Release
 

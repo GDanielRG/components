@@ -2,7 +2,8 @@
 //
 // Installs the working-tree registry into the supported baseline,
 // retaining stock shadcn dependencies and versioned package dependencies, then
-// type-checks the complete installed result.
+// type-checks and runs the consumer's design-lint check on the complete
+// installed result.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -46,6 +47,7 @@ try {
         recursive: true,
     });
     const contracts = [
+        'resources/css/app.css',
         'resources/js/hooks/use-shared-component-copy.ts',
         'resources/js/components/app-right-sidebar.tsx',
     ];
@@ -54,11 +56,12 @@ try {
     );
 
     run('bun', ['install', '--ignore-scripts'], consumer);
-    const items = ['foundations', 'realtime'].map((item) =>
+    const items = ['foundations', 'realtime', 'design-lint'].map((item) =>
         path.join(registry, `${item}.json`),
     );
     run(SHADCN, ['add', ...items, '--overwrite', '--yes', '--cwd', consumer]);
     run('bun', ['run', 'types:check'], consumer);
+    run('bun', ['run', 'check'], consumer);
 
     const snapshot = () => {
         const files = {};
@@ -75,9 +78,13 @@ try {
                     );
             }
         };
-        walk(path.join(consumer, 'resources/js'));
+        walk(path.join(consumer, 'resources'));
         if (fs.existsSync(path.join(consumer, 'tests')))
             walk(path.join(consumer, 'tests'));
+        files['shared-component-lint.json'] = fs.readFileSync(
+            path.join(consumer, 'shared-component-lint.json'),
+            'utf8',
+        );
         return files;
     };
     const installed = snapshot();
@@ -136,7 +143,7 @@ try {
         );
 
     console.log(
-        '\n✓ aligned baseline resolves dependencies, preserves contracts, type-checks, and reinstalls byte-identically',
+        '\n✓ aligned baseline resolves dependencies, preserves contracts, type-checks, passes design lint, and reinstalls byte-identically',
     );
 } finally {
     fs.rmSync(work, { recursive: true, force: true });

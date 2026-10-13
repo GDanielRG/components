@@ -1,5 +1,36 @@
 {
+    "rules": {
+        "shadcn/no-restyle": [
+            "error",
+            {
+                "allow": ["layout"]
+            }
+        ],
+        "shadcn/no-raw-colors": [
+            "error",
+            {
+                "scanAllStrings": true
+            }
+        ],
+        "shadcn/no-arbitrary-values": [
+            "error",
+            {
+                "scanAllStrings": true
+            }
+        ],
+        "shadcn/no-inline-styles": "error",
+        "shadcn/no-unknown-classes": "error",
+        "shadcn/require-static-classes": "error"
+    },
     "overrides": [
+        {
+            "files": ["resources/js/components/ui/**"],
+            "rules": {
+                "shadcn/no-restyle": "off",
+                "shadcn/no-arbitrary-values": "off",
+                "shadcn/require-static-classes": "off"
+            }
+        },
         {
             "files": ["resources/js/components/dialog-form-content.tsx"],
             "rules": {
@@ -20,6 +51,63 @@
                     {
                         "scanAllStrings": true,
                         "allow": ["max-h-[calc(100dvh-2rem)]"]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["resources/js/components/dialog-form-layout.tsx"],
+            "rules": {
+                "shadcn/no-arbitrary-values": [
+                    "error",
+                    {
+                        "scanAllStrings": true,
+                        "allow": ["grid-cols-[1fr_auto]"]
+                    }
+                ]
+            }
+        },
+        {
+            "files": [
+                "resources/js/components/activity/comment-typing-indicator.tsx"
+            ],
+            "rules": {
+                "shadcn/no-restyle": [
+                    "error",
+                    {
+                        "allow": ["layout"],
+                        "contracts": [
+                            {
+                                "pattern": "^MarkerContent$",
+                                "allow": ["layout", "shimmer"]
+                            }
+                        ]
+                    }
+                ],
+                "shadcn/no-arbitrary-values": [
+                    "error",
+                    {
+                        "scanAllStrings": true,
+                        "allow": [
+                            "grid-rows-[0fr]",
+                            "grid-rows-[1fr]",
+                            "transition-[grid-template-rows,opacity]"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "files": ["resources/js/components/chat/message-scroller.tsx"],
+            "rules": {
+                "shadcn/no-arbitrary-values": [
+                    "error",
+                    {
+                        "scanAllStrings": true,
+                        "allow": [
+                            "[content-visibility:auto]",
+                            "[contain-intrinsic-size:auto_10rem]"
+                        ]
                     }
                 ]
             }
