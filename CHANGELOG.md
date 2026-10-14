@@ -29,6 +29,8 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
   `EditHistoryPopover`'s `employeeCacheTags`. Page links and causer links no longer
   prefetch; they load on click. The comments, documents, activity, and realtime
   surfaces keep forwarding app-owned `invalidateCacheTags`.
+- **Changed** the edit-history detail toggle into a small ghost `Button` with the
+  same copy. It stays a native button whose `aria-expanded` follows the collapsible.
 - **Added** `suppressPrefetchesDuringVisits()` to `core` at `@/lib/prefetch-guard`.
   Called once at app boot, it cancels hover prefetches for a URL whose visit is still
   loading, so a late prefetch cannot remount the arrived page.

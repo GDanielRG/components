@@ -243,14 +243,16 @@ function EditHistoryStructuredChange({
                 <Collapsible open={open} onOpenChange={setOpen}>
                     <CollapsibleTrigger
                         render={
-                            <button
-                                type="button"
-                                className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-1 text-xs font-medium"
-                            />
+                            <Button type="button" variant="ghost" size="xs" />
                         }
                     >
                         <ChevronDownIcon
-                            className={`size-3 transition-transform ${open ? 'rotate-180' : ''}`}
+                            data-icon="inline-start"
+                            className={
+                                open
+                                    ? 'rotate-180 transition-transform'
+                                    : 'transition-transform'
+                            }
                         />
                         {open
                             ? copy.historyDetailHide
