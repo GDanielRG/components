@@ -24,7 +24,9 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
   `data-slot` elements. Inline code uses the standard `px-1 py-0.5` padding.
   Consumers import it from `app.css` and remove their copy.
 - **Changed** the install smoke test to install `design-lint` and run the fixture's
-  `vp check` with the consumers' Vite+ and `@shadcn/lint` tooling.
+  `vp check` with the consumers' Vite+ and `@shadcn/lint` 0.2.1 tooling. 0.2.1 judges
+  classes on a Base UI `render` element against the wrapping component and needs no
+  baseline or allowance changes.
 - **Removed** `AppPagination`'s `prefetch` and `cacheTags` props and
   `EditHistoryPopover`'s `employeeCacheTags`. Page links and causer links no longer
   prefetch; they load on click. The comments, documents, activity, and realtime
