@@ -32,6 +32,11 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
   `useSearch` for request-scoped native visit options bound to each visit's resolved
   route. Per-call options still take precedence, and pending-query cleanup still
   runs before the effective `onFinish`.
+- **Added** an optional `visitOptions(route)` factory to `AppPagination`. Each page
+  link passes its `{ url, method: 'get' }` route to the factory and receives the
+  returned native `<Link>` visit options, so request-scoped recovery covers page
+  changes as well as search visits. `core` now declares `@inertiajs/core@^3.7.1`
+  for the `<Link>` option type.
 
 ### snapshot-20261006-373fc5c — 2026-10-06
 

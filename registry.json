@@ -154,7 +154,11 @@
                 }
             ],
             "docs": "Requires the app-owned `useSharedComponentCopy` hook at `@/hooks/use-shared-component-copy`. Call `suppressPrefetchesDuringVisits()` from `@/lib/prefetch-guard` once in `app.tsx`.",
-            "dependencies": ["@inertiajs/react@^3.7.1", "lucide-react@^1.17.0"]
+            "dependencies": [
+                "@inertiajs/core@^3.7.1",
+                "@inertiajs/react@^3.7.1",
+                "lucide-react@^1.17.0"
+            ]
         },
         {
             "name": "archive",

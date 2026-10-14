@@ -1,6 +1,8 @@
+import type { LinkComponentBaseProps } from '@inertiajs/core';
 import { Link } from '@inertiajs/react';
 import type { ComponentProps } from 'react';
 import type { PaginatedData } from '@/components/types/paginated-data';
+import type { RouteDefinition } from '@/components/types/wayfinder';
 import {
     Pagination,
     PaginationContent,
@@ -17,20 +19,38 @@ type PaginationPrefetchProps = Pick<
     'prefetch' | 'cacheTags'
 >;
 
+type PaginationVisitOptions = Omit<
+    LinkComponentBaseProps,
+    'href' | 'method' | 'data' | 'prefetch' | 'cacheFor' | 'cacheTags'
+>;
+
 interface AppPaginationProps<T> extends PaginationPrefetchProps {
     paginatedData: PaginatedData<T>;
+    /** Native `<Link>` visit options for the exact page route each link visits. */
+    visitOptions?: (route: RouteDefinition<'get'>) => PaginationVisitOptions;
 }
 
 export function AppPagination<T>({
     paginatedData,
     prefetch,
     cacheTags,
+    visitOptions,
 }: AppPaginationProps<T>) {
     const { paginationNextLabel, paginationPreviousLabel } =
         useSharedComponentCopy();
 
-    function prefetchProps(url: string | null): PaginationPrefetchProps {
-        return url ? { prefetch, cacheTags } : {};
+    function linkProps(
+        url: string | null,
+    ): PaginationVisitOptions & PaginationPrefetchProps {
+        if (!url) {
+            return {};
+        }
+
+        return {
+            ...visitOptions?.({ url, method: 'get' }),
+            prefetch,
+            cacheTags,
+        };
     }
 
     return (
@@ -38,7 +58,7 @@ export function AppPagination<T>({
             <PaginationContent>
                 <PaginationItem>
                     <PaginationPrevious
-                        {...prefetchProps(paginatedData.prev_page_url)}
+                        {...linkProps(paginatedData.prev_page_url)}
                         disabled={!paginatedData.prev_page_url}
                         href={paginatedData.prev_page_url ?? '#'}
                         text={paginationPreviousLabel}
@@ -50,7 +70,7 @@ export function AppPagination<T>({
                             <PaginationEllipsis />
                         ) : (
                             <PaginationLink
-                                {...prefetchProps(link.url)}
+                                {...linkProps(link.url)}
                                 href={link.url ?? '#'}
                                 isActive={link.active}
                             >
@@ -61,7 +81,7 @@ export function AppPagination<T>({
                 ))}
                 <PaginationItem>
                     <PaginationNext
-                        {...prefetchProps(paginatedData.next_page_url)}
+                        {...linkProps(paginatedData.next_page_url)}
                         disabled={!paginatedData.next_page_url}
                         href={paginatedData.next_page_url ?? '#'}
                         text={paginationNextLabel}

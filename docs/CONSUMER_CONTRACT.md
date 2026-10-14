@@ -155,6 +155,16 @@ by key. The controller clears its pending query before invoking the effective
 recovery in other callbacks, such as `onSuccess`, `onNetworkError`, or
 `onHttpException`.
 
+`AppPagination` accepts the same optional `visitOptions(route)` factory. Each page
+link with a URL passes its `{ url, method: 'get' }` route to the factory and spreads
+the returned native `<Link>` visit options onto that link, so page changes reach the
+same recovery as search visits. The pagination keeps the link's URL, method, and
+prefetch props; a hover prefetch carries the same request options as the visit.
+Options the factory leaves out keep `<Link>`'s defaults: every prop reloads, and
+state and scroll are not preserved. `<Link>` applies a subset of visit options, so
+share a search factory only when it returns callbacks or other keys `<Link>`
+accepts; keys such as `showProgress` or `invalidateCacheTags` never reach the visit.
+
 `SearchAppliedFilters` accepts `additionalAppliedCount` for app-owned filters. The
 app renders those chips and includes their removal through `useSearch`'s
 `viewControls` (or its own `clearAllPatch`); the
