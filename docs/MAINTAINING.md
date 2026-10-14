@@ -19,6 +19,9 @@ names such as `types/edit-history-entry.ts` avoid that external rewriter behavio
 Consumer-owned seams and injected routes are defined in
 [`CONSUMER_CONTRACT.md`](CONSUMER_CONTRACT.md).
 
+Remove `lib/prefetch-guard.ts` once a consumer journey that reproduces the late
+hover-prefetch race passes without it on the installed Inertia version.
+
 ## Verify
 
 ```sh
