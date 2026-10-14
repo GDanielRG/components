@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # dependency audit, formatting, schema, and build
+      # formatting, schema, and build, then the dependency audit
       - name: Registry check
         run: bun run registry:check
 

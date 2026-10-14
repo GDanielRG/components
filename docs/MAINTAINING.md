@@ -30,9 +30,9 @@ bun run registry:check
 bun run smoke
 ```
 
-`registry:check` starts with `scripts/check-bun-dependencies.mjs`, which runs
-`bun audit` with that script's single expiring advisory exception and needs network
-access.
+`registry:check` checks formatting, validates and builds the registry, then ends
+with `scripts/check-bun-dependencies.mjs`, which runs `bun audit` with that script's
+single expiring advisory exception and needs network access.
 
 The smoke test installs `foundations`, `realtime`, and `design-lint` from the working
 tree into the aligned fixture, retains stock ShadCN files and package dependencies,

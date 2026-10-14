@@ -10,8 +10,9 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ### Unreleased
 
-- **Changed** `registry:check` to run the Bun dependency audit first, through
-  `scripts/check-bun-dependencies.mjs`; the workflows no longer audit inline.
+- **Changed** `registry:check` to run the Bun dependency audit last, after
+  formatting, validation, and build, through `scripts/check-bun-dependencies.mjs`;
+  the workflows no longer audit inline.
 - **Changed** `design-lint` into the shared lint baseline. It enables the six
   `@shadcn/lint` rules, exempts installed primitives from the restyle,
   arbitrary-value, and static-class checks, and limits the dialog layout, typing
