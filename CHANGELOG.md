@@ -25,6 +25,10 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
   Consumers import it from `app.css` and remove their copy.
 - **Changed** the install smoke test to install `design-lint` and run the fixture's
   `vp check` with the consumers' Vite+ and `@shadcn/lint` tooling.
+- **Removed** `AppPagination`'s `prefetch` and `cacheTags` props and
+  `EditHistoryPopover`'s `employeeCacheTags`. Page links and causer links no longer
+  prefetch; they load on click. The comments, documents, activity, and realtime
+  surfaces keep forwarding app-owned `invalidateCacheTags`.
 - **Added** `suppressPrefetchesDuringVisits()` to `core` at `@/lib/prefetch-guard`.
   Called once at app boot, it cancels hover prefetches for a URL whose visit is still
   loading, so a late prefetch cannot remount the arrived page.

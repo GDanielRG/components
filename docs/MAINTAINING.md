@@ -19,8 +19,10 @@ names such as `types/edit-history-entry.ts` avoid that external rewriter behavio
 Consumer-owned seams and injected routes are defined in
 [`CONSUMER_CONTRACT.md`](CONSUMER_CONTRACT.md).
 
-Remove `lib/prefetch-guard.ts` once a consumer journey that reproduces the late
-hover-prefetch race passes without it on the installed Inertia version.
+Remove `lib/prefetch-guard.ts` once the late hover-prefetch race no longer
+reproduces on the installed Inertia version: without the guard, hover a link while
+its visit is still loading, change the arrived page, and confirm the late prefetch
+response does not remount it.
 
 ## Verify
 

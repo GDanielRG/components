@@ -1,6 +1,4 @@
 import type { LinkComponentBaseProps } from '@inertiajs/core';
-import { Link } from '@inertiajs/react';
-import type { ComponentProps } from 'react';
 import type { PaginatedData } from '@/components/types/paginated-data';
 import type { RouteDefinition } from '@/components/types/wayfinder';
 import {
@@ -14,17 +12,12 @@ import {
 } from '@/components/ui/pagination';
 import { useSharedComponentCopy } from '@/hooks/use-shared-component-copy';
 
-type PaginationPrefetchProps = Pick<
-    ComponentProps<typeof Link>,
-    'prefetch' | 'cacheTags'
->;
-
 type PaginationVisitOptions = Omit<
     LinkComponentBaseProps,
     'href' | 'method' | 'data' | 'prefetch' | 'cacheFor' | 'cacheTags'
 >;
 
-interface AppPaginationProps<T> extends PaginationPrefetchProps {
+interface AppPaginationProps<T> {
     paginatedData: PaginatedData<T>;
     /** Native `<Link>` visit options for the exact page route each link visits. */
     visitOptions?: (route: RouteDefinition<'get'>) => PaginationVisitOptions;
@@ -32,25 +25,17 @@ interface AppPaginationProps<T> extends PaginationPrefetchProps {
 
 export function AppPagination<T>({
     paginatedData,
-    prefetch,
-    cacheTags,
     visitOptions,
 }: AppPaginationProps<T>) {
     const { paginationNextLabel, paginationPreviousLabel } =
         useSharedComponentCopy();
 
-    function linkProps(
-        url: string | null,
-    ): PaginationVisitOptions & PaginationPrefetchProps {
+    function linkProps(url: string | null): PaginationVisitOptions {
         if (!url) {
             return {};
         }
 
-        return {
-            ...visitOptions?.({ url, method: 'get' }),
-            prefetch,
-            cacheTags,
-        };
+        return visitOptions?.({ url, method: 'get' }) ?? {};
     }
 
     return (

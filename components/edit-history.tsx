@@ -29,7 +29,6 @@ type EditHistoryPopoverProps = {
     history: EditHistoryEntry[];
     dataTestPrefix?: string;
     employeeHref?: EmployeeHref;
-    employeeCacheTags?: string | string[];
     footer?: ReactNode;
 };
 
@@ -37,7 +36,6 @@ export function EditHistoryPopover({
     history,
     dataTestPrefix,
     employeeHref,
-    employeeCacheTags,
     footer,
 }: EditHistoryPopoverProps) {
     const copy: HistoryCopy = useSharedComponentCopy();
@@ -84,7 +82,6 @@ export function EditHistoryPopover({
                             key={entry.id}
                             entry={entry}
                             employeeHref={employeeHref}
-                            employeeCacheTags={employeeCacheTags}
                         />
                     ))}
                     {footer}
@@ -97,11 +94,9 @@ export function EditHistoryPopover({
 function EditHistoryItem({
     entry,
     employeeHref,
-    employeeCacheTags,
 }: {
     entry: EditHistoryEntry;
     employeeHref?: EmployeeHref;
-    employeeCacheTags?: string | string[];
 }) {
     const copy: HistoryCopy = useSharedComponentCopy();
     const firstName = entry.causer?.name.split(' ')[0] ?? copy.historySystem;
@@ -117,7 +112,6 @@ function EditHistoryItem({
                         causer={entry.causer}
                         firstName={firstName}
                         employeeHref={employeeHref}
-                        employeeCacheTags={employeeCacheTags}
                     />
                     <span className="text-muted-foreground text-xs">
                         {entry.formatted_at}
@@ -142,12 +136,10 @@ function EditHistoryCauserName({
     causer,
     firstName,
     employeeHref,
-    employeeCacheTags,
 }: {
     causer: EditHistoryEntry['causer'];
     firstName: string;
     employeeHref?: EmployeeHref;
-    employeeCacheTags?: string | string[];
 }) {
     const copy: HistoryCopy = useSharedComponentCopy();
 
@@ -163,8 +155,6 @@ function EditHistoryCauserName({
         return (
             <Link
                 href={employeeHref(causer.id)}
-                prefetch
-                cacheTags={employeeCacheTags}
                 className="font-semibold hover:underline"
             >
                 {firstName}

@@ -158,12 +158,12 @@ recovery in other callbacks, such as `onSuccess`, `onNetworkError`, or
 `AppPagination` accepts the same optional `visitOptions(route)` factory. Each page
 link with a URL passes its `{ url, method: 'get' }` route to the factory and spreads
 the returned native `<Link>` visit options onto that link, so page changes reach the
-same recovery as search visits. The pagination keeps the link's URL, method, and
-prefetch props; a hover prefetch carries the same request options as the visit.
-Options the factory leaves out keep `<Link>`'s defaults: every prop reloads, and
-state and scroll are not preserved. `<Link>` applies a subset of visit options, so
-share a search factory only when it returns callbacks or other keys `<Link>`
-accepts; keys such as `showProgress` or `invalidateCacheTags` never reach the visit.
+same recovery as search visits. The pagination owns each link's URL and method, and
+page links do not prefetch. Options the factory leaves out keep `<Link>`'s defaults:
+every prop reloads, and state and scroll are not preserved. `<Link>` applies a subset
+of visit options, so share a search factory only when it returns callbacks or other
+keys `<Link>` accepts; keys such as `showProgress` or `invalidateCacheTags` never
+reach the visit.
 
 `SearchAppliedFilters` accepts `additionalAppliedCount` for app-owned filters. The
 app renders those chips and includes their removal through `useSearch`'s
@@ -173,11 +173,11 @@ available when they are the only active filters.
 
 ## Prefetch invalidation
 
-`AppPagination` prefetching is opt-in and follows Inertia's native cache duration. Name
-prefetched resources with `cacheTags` and invalidate those tags after writes.
-`EditHistoryPopover` accepts `employeeCacheTags` for the same reason. The comments and
-documents mutation surfaces accept `invalidateCacheTags` and forward the app-owned tag
-or tag set to Inertia; the registry owns no tag vocabulary or invalidation policy.
+`AppPagination` page links and `EditHistoryPopover` causer links do not prefetch;
+they load on click. The comments and documents mutation surfaces accept
+`invalidateCacheTags` and forward the app-owned tag or tag set to Inertia, so writes
+can invalidate pages the app prefetches; the registry owns no tag vocabulary or
+invalidation policy.
 
 ## Live comment updates
 
