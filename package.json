@@ -12,7 +12,7 @@
         "registry:build": "rm -rf public/r && mkdir -p public/r && shadcn build",
         "registry:validate": "shadcn registry validate",
         "registry:list": "shadcn list GDanielRG/components",
-        "registry:check": "bun run format:check && bun run registry:validate && bun run registry:build",
+        "registry:check": "bun run format:check && bun run registry:validate && bun run registry:build && bun scripts/check-bun-dependencies.mjs",
         "registry:release": "bun scripts/release.mjs",
         "registry:drift": "bun scripts/drift.mjs",
         "smoke": "bun scripts/smoke-baseline.mjs",

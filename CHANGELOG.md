@@ -8,6 +8,44 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ## Snapshots (pre-production)
 
+### Unreleased
+
+- **Changed** `registry:check` to run the Bun dependency audit last, after
+  formatting, validation, and build, through `scripts/check-bun-dependencies.mjs`;
+  the workflows no longer audit inline.
+- **Changed** `design-lint` into the shared lint baseline. It enables the six
+  `@shadcn/lint` rules, exempts installed primitives from the restyle,
+  arbitrary-value, and static-class checks, and limits the dialog layout, typing
+  indicator, and message scroller allowances to their owning files. Consumers keep
+  plugin plumbing and app-specific contracts and remove their copies of the shared
+  rules and registry allowances.
+- **Added** `resources/css/foundations.css` to `foundations`: document typography for
+  bare headings, paragraphs, blockquotes, inline code, and `small`, skipping
+  `data-slot` elements. Inline code uses the standard `px-1 py-0.5` padding.
+  Consumers import it from `app.css` and remove their copy.
+- **Changed** the install smoke test to install `design-lint` and run the fixture's
+  `vp check` with the consumers' Vite+ and `@shadcn/lint` 0.2.1 tooling. 0.2.1 judges
+  classes on a Base UI `render` element against the wrapping component and needs no
+  baseline or allowance changes.
+- **Removed** `AppPagination`'s `prefetch` and `cacheTags` props and
+  `EditHistoryPopover`'s `employeeCacheTags`. Page links and causer links no longer
+  prefetch; they load on click. The comments, documents, activity, and realtime
+  surfaces keep forwarding app-owned `invalidateCacheTags`.
+- **Changed** the edit-history detail toggle into a small ghost `Button` with the
+  same copy. It stays a native button whose `aria-expanded` follows the collapsible.
+- **Added** `suppressPrefetchesDuringVisits()` to `core` at `@/lib/prefetch-guard`.
+  Called once at app boot, it cancels hover prefetches for a URL whose visit is still
+  loading, so a late prefetch cannot remount the arrived page.
+- **Added** an optional `visitOptions(route)` factory to `useSearchNavigation` and
+  `useSearch` for request-scoped native visit options bound to each visit's resolved
+  route. Per-call options still take precedence, and pending-query cleanup still
+  runs before the effective `onFinish`.
+- **Added** an optional `visitOptions(route)` factory to `AppPagination`. Each page
+  link passes its `{ url, method: 'get' }` route to the factory and receives the
+  returned native `<Link>` visit options, so request-scoped recovery covers page
+  changes as well as search visits. `core` now declares `@inertiajs/core@^3.7.1`
+  for the `<Link>` option type.
+
 ### snapshot-20261006-373fc5c — 2026-10-06
 
 - **Added** an optional `footer` to `EditHistoryPopover`, rendered after the entries
