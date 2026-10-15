@@ -8,7 +8,7 @@ release policy. Pin installs to the full 40-character SHA of a release commit, e
 
 ## Snapshots (pre-production)
 
-### Unreleased
+### snapshot-20261014-7a5f937 — 2026-10-14
 
 - **Changed** `registry:check` to run the Bun dependency audit last, after
   formatting, validation, and build, through `scripts/check-bun-dependencies.mjs`;
