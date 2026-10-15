@@ -85,7 +85,9 @@ the baseline:
 - the baseline's file overrides still apply to their own files under the app's rules;
 - an app override for a shared file replaces that file's shared options, so it must
   retain the full shared option list; and
-- `'off'` in the app disables a shared rule; reserve it for a documented decision.
+- `'off'` in `lint.rules` disables a shared rule outside the baseline's file
+  overrides; files the baseline overrides for that rule also need an app override
+  that sets it `'off'`. Reserve both for a documented decision.
 
 Update the config with the components that need it.
 
